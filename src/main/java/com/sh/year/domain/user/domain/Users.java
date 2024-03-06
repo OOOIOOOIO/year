@@ -1,5 +1,6 @@
 package com.sh.year.domain.user.domain;
 
+import com.sh.year.domain.common.BaseTimeEntity;
 import com.sh.year.domain.goal.domain.Goal;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,7 +15,7 @@ import java.util.Set;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Users {
+public class Users extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

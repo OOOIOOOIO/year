@@ -1,5 +1,6 @@
 package com.sh.year.domain.goal.domain;
 
+import com.sh.year.domain.common.BaseTimeEntity;
 import com.sh.year.domain.diary.domain.Diary;
 import com.sh.year.domain.rule.domain.Rule;
 import com.sh.year.domain.user.domain.Users;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Goal {
+public class Goal extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
