@@ -1,5 +1,8 @@
 package com.sh.year.domain.goal.domain;
 
+import com.sh.year.domain.diary.domain.Diary;
+import com.sh.year.domain.rule.domain.Rule;
+import com.sh.year.domain.user.domain.Users;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,10 +24,22 @@ public class Goal {
     private ShareStatus shareStatus;
     @Enumerated(EnumType.STRING)
     private GoalStatus goalStatus;
-//    @ManyToOne()
-    private Long user_id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private Users users;
+
+    @OneToOne(mappedBy = "goal")
+    private Rule rule;
+
+    @OneToOne(mappedBy = "goal")
+    private Diary diary;
 
 
-
-
+    /**
+     * 양방향 연관관계, cascade 유의
+     */
+    public void setUsers(Users users) {
+        this.users = users;
+    }
 }

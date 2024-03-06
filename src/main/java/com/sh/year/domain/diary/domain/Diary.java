@@ -1,5 +1,6 @@
 package com.sh.year.domain.diary.domain;
 
+import com.sh.year.domain.goal.domain.Goal;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,6 +15,9 @@ public class Diary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long diaryId;
     private String contents;
-//    @OneToOne
-    private Long goalId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "goalId")
+    private Goal goal;
+
 }
