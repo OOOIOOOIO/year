@@ -1,6 +1,7 @@
 package com.sh.year.domain.goal.api;
 
 import com.sh.year.domain.goal.application.GoalService;
+import com.sh.year.domain.goal.domain.GoalStatus;
 import com.sh.year.global.resolver.userInfo.UserInfoFromToken;
 import com.sh.year.global.resolver.userInfo.UserInfoFromTokenDto;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class GoalController {
     /**
      * 목표 저장
      */
-    @PostMapping("/{goalId}")
+    @PostMapping("/}")
     public void saveGoal(@PathVariable(value = "goalId") Long goalId){
 
     }

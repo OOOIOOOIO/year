@@ -28,7 +28,7 @@ public class Users extends BaseTimeEntity {
     private String stateMessage;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinTable(name = "USER_ROLES",
+    @JoinTable(name = "USERS_ROLE",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
