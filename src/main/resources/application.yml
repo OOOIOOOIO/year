@@ -1,1 +1,14 @@
+server:
+  port: 7777
 
+spring:
+  thymeleaf:
+    cache: false
+  profiles:
+    include:
+      #      - real
+      - local
+      - oauth
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
