@@ -4,6 +4,7 @@ import com.sh.year.domain.common.BaseTimeEntity;
 import com.sh.year.domain.goal.domain.Goal;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,25 +23,29 @@ public class Users extends BaseTimeEntity {
     private Long userId;
     private String email;
     private String picture;
-    private String password;
+    private String provider;
     private String nickname;
     private String instagramAccount;
     private String stateMessage;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinTable(name = "USERS_ROLE",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToMany(mappedBy = "users", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<Goal> goalList = new ArrayList<>();
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+
+    @Builder
+    public Users(String email, String picture, String provider, Role role) {
+        this.email = email;
+        this.picture = picture;
+        this.provider = provider;
+        this.role = role;
     }
 
-
+    public void updateRole(Role roles) {
+        this.role = roles;
+    }
     /**
      * 양방향 연관관계, cascade 유의
      */
@@ -52,6 +57,24 @@ public class Users extends BaseTimeEntity {
         goal.setUsers(this);
     }
 
+    /**
+     * user 생성
+     */
+    public static Users createUser(String email, String picture, String provider, Role role){
+        return Users.builder()
+                .email(email)
+                .picture(picture)
+                .provider(provider)
+                .role(role)
+                .build();
+    }
 
+    public Users update(String email, String picture, String provider){
+        this.email = email;
+        this.picture = picture;
+        this.provider = provider;
+
+        return this;
+    }
 
 }

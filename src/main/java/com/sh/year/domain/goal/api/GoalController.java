@@ -1,9 +1,8 @@
 package com.sh.year.domain.goal.api;
 
 import com.sh.year.domain.goal.application.GoalService;
-import com.sh.year.domain.goal.domain.GoalStatus;
-import com.sh.year.global.resolver.userInfo.UserInfoFromToken;
-import com.sh.year.global.resolver.userInfo.UserInfoFromTokenDto;
+import com.sh.year.global.resolver.tokeninfo.TokenFromHeader;
+import com.sh.year.global.resolver.tokeninfo.TokenFromHeaderDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +59,7 @@ public class GoalController {
      * 내 목표들 보기
      */
     @GetMapping("/list")
-    public void getGoalList(@UserInfoFromToken UserInfoFromTokenDto userInfoFromTokenDto){
+    public void getGoalList(@TokenFromHeader TokenFromHeaderDto userInfoFromTokenDto){
 
     }
 

@@ -1,29 +1,17 @@
 package com.sh.year.domain.user.domain;
 
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 
 @Getter
-@Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "ROLE")
-public class Role {
+@RequiredArgsConstructor
+public enum Role {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long roleId;
+    GUEST("ROLE_ADMIN", "관리자"),
+    USER("ROLE_USER", "사용자");
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20)
-    private ERole name;
+    private final String key;
+    private final String title;
 
-    @Builder
-    public Role(Long roleId, ERole name) {
-        this.roleId = roleId;
-        this.name = name;
-    }
 }
