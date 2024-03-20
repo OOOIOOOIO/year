@@ -1,10 +1,13 @@
-package com.sh.year.domain.goal.api;
+package com.sh.year.domain.goal.goal.api;
 
-import com.sh.year.domain.goal.application.GoalService;
-import com.sh.year.global.resolver.tokeninfo.TokenFromHeader;
-import com.sh.year.global.resolver.tokeninfo.TokenFromHeaderDto;
+import com.sh.year.domain.goal.goal.api.dto.req.GoalReqDto;
+import com.sh.year.domain.goal.goal.application.GoalService;
+import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeader;
+import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeaderDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -26,8 +29,13 @@ public class GoalController {
     /**
      * 목표 저장
      */
-    @PostMapping("/}")
-    public void saveGoal(@PathVariable(value = "goalId") Long goalId){
+    @PostMapping("/save")
+    public ResponseEntity<Long> saveGoal(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto,
+                                           @RequestBody GoalReqDto goalReqDto){
+
+        Long goalId = goalService.saveGoal(userInfoFromHeaderDto, goalReqDto);
+
+        return new ResponseEntity<>(goalId, HttpStatus.OK);
 
     }
 
@@ -59,7 +67,7 @@ public class GoalController {
      * 내 목표들 보기
      */
     @GetMapping("/list")
-    public void getGoalList(@TokenFromHeader TokenFromHeaderDto userInfoFromTokenDto){
+    public void getGoalList(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto){
 
     }
 

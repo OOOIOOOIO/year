@@ -15,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -29,10 +30,15 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private final JwtUtils jwtUtils;
     private final CustomUserDetailsService customUserDetailsService;
     private final TokenService tokenService;
+    private static final String BEARER = "Bearer ";
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        log.info("=======여기 들어옴=========");
+        String requestURI = request.getRequestURI();
+        log.info(requestURI);
 
         checkToken(request);
 
@@ -45,8 +51,15 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 
 //        String[] excludePath = {"/api/token/**"};
-        String[] excludePath = {"/api/token/issue", "/test/login"};
+        String[] excludePath = {
+                "/api/token/reissue/access-token",
+                "/api/token/reissue/refresh-token",
+                "/login/oauth2/code/kakao",
+                "/test/login",
+                "/favicon.ico"
+        };
         String path = request.getRequestURI();
+
         return Arrays.stream(excludePath).anyMatch(path::startsWith);
 
     }
@@ -65,11 +78,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
         //accessToken 검사
         try{
+            log.info("=========checkAccessToken==========");
+            log.info("===================");
             String accessToken = jwtUtils.getAccessTokenFromHeader(request);
 
             String refreshToken = jwtUtils.getRefreshTokenFromHeader(request);
 
             String accessTokenFromRedis = isAccessTokenNull(accessToken, refreshToken);
+
+            log.info(accessToken);
+            log.info(accessTokenFromRedis);
 
             jwtUtils.validateAccessToken(accessToken); // access token 형식, 만료시간 등 검사
 
@@ -101,6 +119,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             String refreshToken = jwtUtils.getRefreshTokenFromHeader(request);
 
             String refreshTokenFromRedis = isRefreshTokenNull(refreshToken);
+
+            log.info("=========checkRefreshToken==========");
+            log.info("===================");
+            log.info(refreshToken);
+            log.info(refreshTokenFromRedis);
 
             jwtUtils.validateRefreshToken(refreshToken);
 
@@ -140,6 +163,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
 
     private String isRefreshTokenNull(String refreshToken){
+        log.info("=======isRefreshTokenNull========");
         JwtClaimDto claimFromToken = jwtUtils.getClaimFromAccessToken(refreshToken);
 
         String refreshTokenFromRedis = tokenService.getTokenFromRedis(RedisConst.REFRESH_TOKEN.prefix() + claimFromToken.getUserId());
@@ -152,17 +176,19 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
 
     private String isAccessTokenNull(String accessToken, String refreshToken){
+        log.info("=======isAccessTokenNull========");
         JwtClaimDto claimFromToken = jwtUtils.getClaimFromAccessToken(accessToken);
 
         String accessTokenFromRedis = tokenService.getTokenFromRedis(RedisConst.ACCESS_TOKEN.prefix() + claimFromToken.getUserId());
 
+        log.info(accessTokenFromRedis);
         if(accessTokenFromRedis == null){
             isRefreshTokenNull(refreshToken);
 
             throw new JwtCustomException(JwtCustomErrorCode.AccessTokenExpiredException);
         }
 
-        return accessTokenFromRedis;
+        return accessTokenFromRedis.substring(BEARER.length());
 
     }
 

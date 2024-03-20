@@ -1,5 +1,6 @@
 package com.sh.year.global.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sh.year.global.exception.CustomErrorCode;
 import com.sh.year.global.exception.CustomException;
 import com.sh.year.global.exception.JwtCustomErrorCode;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 @Slf4j
@@ -21,25 +23,39 @@ import java.util.Date;
 public class JwtUtils {
 
     private final JwtInfoProperties jwtInfoProperties;
+    private final ObjectMapper objectMapper;
     private final static String ACCESS_TOKEN = "access_token";
     private final static String REFRESH_TOKEN = "refresh_token";
     private final static String ACCESS_TOKEN_HEADER_NAME = "Authorization";
     private final static String REFRESH_TOKEN_HEADER_NAME = "refresh_token";
     private static final String BEARER = "Bearer ";
 
+
     /**
      * header에서 access_token 가져오기
+     * BEARER 제거
      */
     public String getAccessTokenFromHeader(HttpServletRequest request) {
 
-        return request.getHeader(ACCESS_TOKEN_HEADER_NAME).substring(BEARER.length());
+        log.info("=========getAccessTokenFromHeader==========");
+
+        String accessToken = request.getHeader(ACCESS_TOKEN_HEADER_NAME).substring(BEARER.length());
+        log.info("=========" + accessToken + "===========");
+        return accessToken;
+//        return request.getHeader(ACCESS_TOKEN_HEADER_NAME).substring(BEARER.length());
+
     }
 
     /**
      * header에서 refresh_token 가져오기
      */
     public String getRefreshTokenFromHeader(HttpServletRequest request) {
-        return request.getHeader(REFRESH_TOKEN_HEADER_NAME);
+        log.info("=========getRefreshTokenFromHeader==========");
+        String refreshToken = request.getHeader(REFRESH_TOKEN_HEADER_NAME);
+        log.info("=========" + refreshToken + "===========");
+
+        return refreshToken;
+
     }
 
 
@@ -52,9 +68,10 @@ public class JwtUtils {
         return Jwts.parserBuilder()
                 .setSigningKey(jwtInfoProperties.getSecret().getBytes()) // signature를 secrete key로 설정했는지, publickey로 설정했는지 확인! 나는 secret key로 설정
                 .build()
-                .parseClaimsJws(token.substring(BEARER.length()))
+                .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+
     }
 
 
@@ -69,13 +86,21 @@ public class JwtUtils {
      * - tokenType
      */
     public JwtClaimDto getClaimFromAccessToken(String token){
-        return (JwtClaimDto) Jwts.parserBuilder()
+//        Object userInfo = Jwts.parserBuilder()
+//                .setSigningKey(jwtInfoProperties.getSecret().getBytes())
+//                .build()
+//                .parseClaimsJws(token)
+//                .getBody()
+//                .get("userInfo");
+
+        JwtClaimDto userInfo = objectMapper.convertValue(Jwts.parserBuilder()
                 .setSigningKey(jwtInfoProperties.getSecret().getBytes())
                 .build()
-                .parseClaimsJws(token.substring(BEARER.length()))
+                .parseClaimsJws(token)
                 .getBody()
-                .get("userInfo");
+                .get("userInfo"), JwtClaimDto.class);
 
+        return userInfo;
     }
 
     /**
@@ -119,6 +144,7 @@ public class JwtUtils {
      *
      */
     public String generateAccessToken(Long userId, String email, String provider) {
+//        Key key = Keys.hmacShaKeyFor(encodeSecretKey(jwtInfoProperties.getSecret()).getBytes());
         Key key = Keys.hmacShaKeyFor(jwtInfoProperties.getSecret().getBytes());
 
         return BEARER + Jwts.builder()
@@ -131,6 +157,16 @@ public class JwtUtils {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
+    private String encodeSecretKey(String secretKey){
+        String result = Base64.getEncoder().encodeToString(secretKey.getBytes());
+
+        return result;
+    }
+    private byte[] decodeSecretKey(String secretKey){
+        byte[] result = Base64.getDecoder().decode(secretKey);
+
+        return result;
+    }
 
     /**
      * Refresh token 생성
@@ -139,7 +175,11 @@ public class JwtUtils {
      * - 28일
      */
     public String generateRefreshToken(Long userId, String email, String provider) {
+//        Key key = Keys.hmacShaKeyFor(encodeSecretKey(jwtInfoProperties.getSecret()).getBytes());
         Key key = Keys.hmacShaKeyFor(jwtInfoProperties.getSecret().getBytes());
+        /**
+         * decode
+         */
 
         return Jwts.builder()
                 .setHeaderParam("typ", "JWT")
@@ -160,7 +200,7 @@ public class JwtUtils {
             Jwts.parserBuilder()
                     .setSigningKey(jwtInfoProperties.getSecret().getBytes()) // signature를 secrete key로 설정했는지, publickey로 설정했는지 확인! 나는 secret key로 설정
                     .build()
-                    .parseClaimsJws(token.substring(BEARER.length()));  // 여기서 Runtime Exception이 던져진다.
+                    .parseClaimsJws(token);  // 여기서 Runtime Exception이 던져진다.
 
             return true;
         } catch (SignatureException e) {
@@ -182,7 +222,7 @@ public class JwtUtils {
             Jwts.parserBuilder()
                     .setSigningKey(jwtInfoProperties.getSecret().getBytes()) // signature를 secrete key로 설정했는지, publickey로 설정했는지 확인! 나는 secret key로 설정
                     .build()
-                    .parseClaimsJws(token.substring(BEARER.length()));  // 여기서 Runtime Exception이 던져진다.
+                    .parseClaimsJws(token);  // 여기서 Runtime Exception이 던져진다.
 
             return true;
         } catch (SignatureException e) {

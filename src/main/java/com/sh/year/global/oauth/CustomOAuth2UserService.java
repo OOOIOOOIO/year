@@ -69,9 +69,17 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     // 혹시 이미 저장된 정보라면, update 처리
     private Users saveOrUpdate(OAuthAttributes attributes){
-        Users user = usersQueryRepository.findByEmailAndProvider(attributes.getEmail(), attributes.getProvider())
-                .map(entity -> entity.update(attributes.getEmail(), attributes.getPicture(), attributes.getProvider()))
-                .orElse(attributes.createUser());
+//        Users user = usersQueryRepository.findByEmailAndProvider(attributes.getEmail(), attributes.getProvider())
+//                .map(entity -> entity.update(attributes.getEmail(), attributes.getPicture(), attributes.getProvider()))
+//                .orElse(attributes.createUser());
+
+        Users user = usersQueryRepository.findByEmailAndProvider(attributes.getEmail(), attributes.getProvider()).orElseThrow(() ->new RuntimeException("유저 없음"));
+
+        if(user != null){
+            user.update(attributes.getEmail(), attributes.getPicture(), attributes.getProvider());
+
+            return user;
+        }
 
         return userRepository.save(user);
 

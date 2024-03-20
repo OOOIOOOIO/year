@@ -1,7 +1,7 @@
 package com.sh.year.domain.diary.domain;
 
 import com.sh.year.domain.common.BaseTimeEntity;
-import com.sh.year.domain.goal.domain.Goal;
+import com.sh.year.domain.goal.goal.domain.Goal;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

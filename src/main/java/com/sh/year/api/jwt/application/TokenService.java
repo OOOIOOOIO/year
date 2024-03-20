@@ -22,8 +22,16 @@ public class TokenService {
     /**
      * token(access, refresh) 저장
      */
-    public void uploadTokenToRedis(String token){
-        redisUtil.putString(ACCESS_TOKEN.prefix(), token, jwtInfoProperties.getAccessTokenExpireMin());
+    public void uploadAccessTokenToRedis(String token, Long userId){
+        redisUtil.putString(ACCESS_TOKEN.prefix() + userId, token, jwtInfoProperties.getAccessTokenExpireMin());
+
+        System.out.println();
+    }
+
+    public void uploadRefreshTokenToRedis(String token, Long userId){
+        redisUtil.putString(REFRESH_TOKEN.prefix() + userId, token, jwtInfoProperties.getAccessTokenExpireMin());
+
+        System.out.println();
     }
 
     /**

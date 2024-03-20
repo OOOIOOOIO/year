@@ -19,13 +19,14 @@ public class UsersQueryRepositoryImpl implements UsersQueryRepository{
     @Override
     public Optional<Users> findByEmailAndProvider(String email, String provider) {
 
-        Optional.ofNullable(
+        return Optional.ofNullable(
                 queryFactory
                         .select(users)
                         .from(users)
                         .where(users.email.eq(email), users.provider.eq(provider))
                         .fetchOne()
         );
-        return Optional.empty();
     }
+
+
 }

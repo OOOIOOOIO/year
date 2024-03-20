@@ -1,5 +1,6 @@
 package com.sh.year.global.resolver.tokeninfo;
 
+import com.sh.year.global.jwt.JwtClaimDto;
 import com.sh.year.global.jwt.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,25 +16,33 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class TokenFromHeaderArgumentResolver implements HandlerMethodArgumentResolver {
+public class UserInfoFromHeaderArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final JwtUtils jwtUtils;
 
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(TokenFromHeaderDto.class);
+        return parameter.getParameterType().equals(UserInfoFromHeaderDto.class);
     }
 
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
+        log.info("=========UserInfoFromHeaderArgumentResolver==========");
+        log.info("===================");
+
         String accessToken = jwtUtils.getAccessTokenFromHeader((HttpServletRequest) webRequest.getNativeRequest());
         String refreshToken = jwtUtils.getRefreshTokenFromHeader((HttpServletRequest) webRequest.getNativeRequest());
 
+        log.info(accessToken);
+        log.info(refreshToken);
 
-        return new TokenFromHeaderDto(accessToken, refreshToken);
+        JwtClaimDto claimFromAccessToken = jwtUtils.getClaimFromAccessToken(accessToken);
+
+
+        return new UserInfoFromHeaderDto(claimFromAccessToken.getUserId(), claimFromAccessToken.getEmail(), claimFromAccessToken.getProvider());
 
 
     }
