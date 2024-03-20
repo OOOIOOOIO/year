@@ -44,13 +44,13 @@ public class OAuth2AuthenticationSuccessHandlerImpl implements AuthenticationSuc
         String accessToken = jwtUtils.generateAccessToken(userId, email, provider);
 
         // redis로 쏘기
-        tokenService.uploadTokenToRedis(accessToken + userId);
+        tokenService.uploadAccessTokenToRedis(accessToken, userId);
 
         // refresh_token 생성
         String refreshToken = jwtUtils.generateRefreshToken(userId, email, provider);
 
         // redis로 쏘기
-        tokenService.uploadTokenToRedis(refreshToken + userId);
+        tokenService.uploadRefreshTokenToRedis(refreshToken, userId);
 
 
         response.setContentType("application/json");
@@ -61,6 +61,10 @@ public class OAuth2AuthenticationSuccessHandlerImpl implements AuthenticationSuc
         String result = objectMapper.writeValueAsString(tokenIssueResDto);
 
         response.getWriter().write(result);
+
+        log.info("=======onAuthenticationSuccess=======");
+        log.info(accessToken);
+        log.info(refreshToken);
 
 
     }

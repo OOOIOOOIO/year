@@ -4,8 +4,8 @@ import com.sh.year.api.jwt.application.TokenService;
 import com.sh.year.api.jwt.controller.dto.TokenIssueResDto;
 import com.sh.year.global.jwt.JwtClaimDto;
 import com.sh.year.global.jwt.JwtUtils;
-import com.sh.year.global.resolver.tokeninfo.TokenFromHeader;
-import com.sh.year.global.resolver.tokeninfo.TokenFromHeaderDto;
+import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeader;
+import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeaderDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/token/reissue/access")
+@RequestMapping("/api/token/reissue")
 public class TokenIssueController {
 
     private final TokenService tokenService;
@@ -38,13 +38,12 @@ public class TokenIssueController {
      * --> accessToken 재발급
      */
     @PostMapping("/access-token")
-    public ResponseEntity<String> reissueAccessToken(@TokenFromHeader TokenFromHeaderDto tokenFromHeaderDto) {
+    public ResponseEntity<String> reissueAccessToken(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto) {
 
-        JwtClaimDto claimFromRefreshToken = jwtUtils.getClaimFromRefreshToken(tokenFromHeaderDto.getRefreshToken());
 
-        String accessToken = jwtUtils.generateAccessToken(claimFromRefreshToken.getUserId(), claimFromRefreshToken.getEmail(), claimFromRefreshToken.getProvider());
+        String accessToken = jwtUtils.generateAccessToken(userInfoFromHeaderDto.getUserId(), userInfoFromHeaderDto.getEmail(), userInfoFromHeaderDto.getProvider());
 
-        tokenService.uploadTokenToRedis(accessToken); // redis에 쏘기
+        tokenService.uploadAccessTokenToRedis(accessToken, userInfoFromHeaderDto.getUserId()); // redis에 쏘기
 
         return new ResponseEntity<>(accessToken, HttpStatus.OK);
     }
@@ -58,19 +57,17 @@ public class TokenIssueController {
      *
      */
     @PostMapping("/refessh-token")
-    public ResponseEntity<TokenIssueResDto> reissueRefreshToken(@TokenFromHeader TokenFromHeaderDto tokenFromHeaderDto){
+    public ResponseEntity<TokenIssueResDto> reissueRefreshToken(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto){
 
         /**
          * claim 만료시간과 관계 있는지 확인하기
          */
 
-        JwtClaimDto claimFromRefreshToken = jwtUtils.getClaimFromRefreshToken(tokenFromHeaderDto.getRefreshToken());
+        String accessToken = jwtUtils.generateAccessToken(userInfoFromHeaderDto.getUserId(), userInfoFromHeaderDto.getEmail(), userInfoFromHeaderDto.getProvider());
+        String refreshToken = jwtUtils.generateRefreshToken(userInfoFromHeaderDto.getUserId(), userInfoFromHeaderDto.getEmail(), userInfoFromHeaderDto.getProvider());
 
-        String accessToken = jwtUtils.generateAccessToken(claimFromRefreshToken.getUserId(), claimFromRefreshToken.getEmail(), claimFromRefreshToken.getProvider());
-        String refreshToken = jwtUtils.generateRefreshToken(claimFromRefreshToken.getUserId(), claimFromRefreshToken.getEmail(), claimFromRefreshToken.getProvider());
-
-        tokenService.uploadTokenToRedis(accessToken); // redis에 쏘기
-        tokenService.uploadTokenToRedis(refreshToken);
+        tokenService.uploadAccessTokenToRedis(accessToken, userInfoFromHeaderDto.getUserId()); // redis에 쏘기
+        tokenService.uploadRefreshTokenToRedis(refreshToken, userInfoFromHeaderDto.getUserId());
 
         return new ResponseEntity<>(new TokenIssueResDto(accessToken, refreshToken), HttpStatus.OK);
     }

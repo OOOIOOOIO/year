@@ -1,7 +1,7 @@
 package com.sh.year.domain.user.domain;
 
 import com.sh.year.domain.common.BaseTimeEntity;
-import com.sh.year.domain.goal.domain.Goal;
+import com.sh.year.domain.goal.goal.domain.Goal;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -9,9 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter

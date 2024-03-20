@@ -1,10 +1,8 @@
-package com.sh.year.domain.goal.domain.repository;
+package com.sh.year.domain.goal.goal.domain.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 
 @Repository
