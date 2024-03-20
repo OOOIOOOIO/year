@@ -5,6 +5,9 @@ import com.sh.year.domain.goal.goal.domain.Goal;
 import com.sh.year.domain.goal.goal.domain.repository.GoalQueryRepositoryImpl;
 import com.sh.year.domain.goal.goal.domain.repository.GoalRepository;
 import com.sh.year.domain.goal.rule.domain.Rule;
+import com.sh.year.domain.goal.rule.domain.RuleMonthlyDates;
+import com.sh.year.domain.goal.rule.domain.RuleWeeklyDates;
+import com.sh.year.domain.goal.rule.domain.repository.RuleRepository;
 import com.sh.year.domain.user.domain.Users;
 import com.sh.year.domain.user.domain.repository.UsersRepository;
 import com.sh.year.global.exception.CustomErrorCode;
@@ -17,6 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,6 +32,7 @@ public class GoalService {
     private final GoalRepository goalRepository;
     private final GoalQueryRepositoryImpl goalQueryRepository;
     private final UsersRepository usersRepository;
+    private final RuleRepository ruleRepository;
 
 
     /**
@@ -50,21 +57,42 @@ public class GoalService {
         int routine = goalReqDto.getRuleReqDto().getRoutine();
 
         if (routine == 2) {
+            Rule rule = Rule.createRule(goalReqDto.getRuleReqDto(), goal);
+            List<Integer> ruleWeeklyList = goalReqDto.getRuleReqDto().getRuleWeeklyList();
+
+            for(Integer date : ruleWeeklyList){ // cascade(with rule)
+                RuleWeeklyDates weeklyDates = RuleWeeklyDates.createWeeklyDates(date);
+                rule.addWeeklyDates(weeklyDates);
+
+            }
+
+            goal.addRule(rule); //cascade(with goal)
 
 
         }
         else if (routine == 3){
+            Rule rule = Rule.createRule(goalReqDto.getRuleReqDto(), goal);
+            List<Integer> ruleMonthlyList = goalReqDto.getRuleReqDto().getRuleMonthlyList();
+
+            for (Integer day : ruleMonthlyList) {
+                RuleMonthlyDates monthlyDates = RuleMonthlyDates.createMonthlyDates(day);
+                rule.addMonthlyDates(monthlyDates);
+
+            }
+
+            goal.addRule(rule); //cascade(with goal)
+
 
         }
         else{ // routine == 1
-            Rule rule = Rule.createRule(goalReqDto.getRuleReqDto(), goal); // cascade(with goal)
+            Rule rule = Rule.createRule(goalReqDto.getRuleReqDto(), goal);
+            goal.addRule(rule); // cascade(with goal)
 
         }
 
-        Goal savedGoal = goalRepository.save(goal);
+        Goal savedGoal = goalRepository.save(goal); // 마지막으로 저장!
 
         return savedGoal.getGoalId();
-
     }
 
 
@@ -82,6 +110,9 @@ public class GoalService {
      */
     @DeleteMapping("/{goalId}")
     public void deleteGoal(@PathVariable(value = "goalId") Long goalId){
+        Goal goal = goalRepository.findById(goalId).orElseThrow(() -> new RuntimeException("목표가 존재하지 않습니다."));
+
+        goalRepository.delete(goal);
 
     }
 
@@ -103,8 +134,7 @@ public class GoalService {
 
 
     private Users getUsers(UserInfoFromHeaderDto userInfoFromHeaderDto) {
-        log.info("======getUsers=====");
-        log.error(""+userInfoFromHeaderDto.getUserId());
+
         return usersRepository.findById(userInfoFromHeaderDto.getUserId()).orElseThrow(() -> new CustomException(CustomErrorCode.UserNotFoundException));
     }
 

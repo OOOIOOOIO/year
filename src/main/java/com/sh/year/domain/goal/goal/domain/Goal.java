@@ -35,10 +35,10 @@ public class Goal extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private Users users;
 
-    @OneToOne(mappedBy = "goal")
+    @OneToOne(mappedBy = "goal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private Rule rule;
 
-    @OneToOne(mappedBy = "goal")
+    @OneToOne(mappedBy = "goal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private Diary diary;
 
 
@@ -88,6 +88,17 @@ public class Goal extends BaseTimeEntity {
     /**
      * 양방향 연관관계, cascade 유의
      */
+    public void addRule(Rule rule){
+        rule.setGoal(this);
+        this.rule = rule;
+
+    }
+
+    public void addDiary(Diary diary) {
+        diary.setGoal(this);
+        this.diary = diary;
+    }
+
     public void setUsers(Users users) {
         this.users = users;
     }

@@ -25,7 +25,7 @@ public class Rule {
     private LocalTime timeAt; // 시간 -> 매일일 경우 ex)18:00
     private String contents;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goalId")
     private Goal goal;
 

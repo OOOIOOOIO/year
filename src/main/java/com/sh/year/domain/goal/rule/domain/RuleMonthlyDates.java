@@ -1,6 +1,5 @@
 package com.sh.year.domain.goal.rule.domain;
 
-import com.sh.year.domain.goal.goal.api.dto.req.RuleMonthlyReqDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,23 +16,23 @@ public class RuleMonthlyDates {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long monthlyId;
-    private LocalDate days;
+    private Integer days;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ruleId")
     private Rule rule;
 
     @Builder
-    private RuleMonthlyDates(LocalDate days) {
+    private RuleMonthlyDates(Integer days) {
         this.days = days;
     }
 
     /**
      * 생성
      */
-    public static RuleMonthlyDates createMonthlyDates(RuleMonthlyReqDto ruleMonthlyReqDto){
+    public static RuleMonthlyDates createMonthlyDates(Integer day){
         return RuleMonthlyDates.builder()
-                .days(ruleMonthlyReqDto.getDays())
+                .days(day)
                 .build();
     }
 

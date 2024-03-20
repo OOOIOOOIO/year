@@ -21,7 +21,7 @@ public class GoalController {
     /**
      * 상세목표 보기
      */
-    @GetMapping("/info/{goalId}")
+    @GetMapping("/{goalId}")
     public void getGoalInfo(@PathVariable(value = "goalId") Long goalId){
 
     }
@@ -29,7 +29,7 @@ public class GoalController {
     /**
      * 목표 저장
      */
-    @PostMapping("/save")
+    @PostMapping("")
     public ResponseEntity<Long> saveGoal(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto,
                                            @RequestBody GoalReqDto goalReqDto){
 
@@ -53,6 +53,7 @@ public class GoalController {
     @DeleteMapping("/{goalId}")
     public void deleteGoal(@PathVariable(value = "goalId") Long goalId){
 
+        goalService.deleteGoal(goalId);
     }
 
     /**

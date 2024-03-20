@@ -1,7 +1,6 @@
 package com.sh.year.domain.goal.rule.domain;
 
 
-import com.sh.year.domain.goal.goal.api.dto.req.RuleWeeklyReqDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,15 +27,14 @@ public class RuleWeeklyDates {
     }
 
     /**
-     * 생성
+     * 생성, cascade with rule
      */
-    public static RuleWeeklyDates createWeeklyDates(RuleWeeklyReqDto ruleWeeklyReqDto){
+    public static RuleWeeklyDates createWeeklyDates(Integer dates){
         return RuleWeeklyDates.builder()
-                .dates(ruleWeeklyReqDto.getDates())
+                .dates(dates)
                 .build();
 
     }
-
 
 
     public void setRule(Rule rule) {

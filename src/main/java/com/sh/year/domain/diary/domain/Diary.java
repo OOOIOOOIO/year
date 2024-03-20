@@ -21,4 +21,7 @@ public class Diary extends BaseTimeEntity {
     @JoinColumn(name = "goalId")
     private Goal goal;
 
+    public void setGoal(Goal goal) {
+        this.goal = goal;
+    }
 }

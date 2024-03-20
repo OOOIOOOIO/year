@@ -1,5 +1,5 @@
-### Goal save - routine : 1
-POST localhost:7777/api/goal/save
+### Goal save - routine : 1(Every Day)
+POST localhost:7777/api/goal
 Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwb2xpdGUxNTlAZ21haWwuY29tIiwidXNlckluZm8iOnsidXNlcklkIjoxLCJlbWFpbCI6InBvbGl0ZTE1OUBnbWFpbC5jb20iLCJwcm92aWRlciI6Imtha2FvIiwidG9rZW5UeXBlIjoiYWNjZXNzX3Rva2VuIn0sImlhdCI6MTcxMDkwNjUxMCwiZXhwIjoxNzExNTExMzEwfQ.GfwPOuR00pgbra-j8NDxQ2oq9SKPJY5t58rTvK53rjg
 refresh_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwb2xpdGUxNTlAZ21haWwuY29tIiwidXNlckluZm8iOnsidXNlcklkIjoxLCJlbWFpbCI6InBvbGl0ZTE1OUBnbWFpbC5jb20iLCJwcm92aWRlciI6Imtha2FvIiwidG9rZW5UeXBlIjoicmVmcmVzaF90b2tlbiJ9LCJpYXQiOjE3MTA5MDY1MTAsImV4cCI6MTcxNTE0MDExMH0.FAjqMvnvrkxGkSoI7rL8_CNy7Hu7rTY_vDVSMmVDdIA
@@ -22,3 +22,67 @@ refresh_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwb2xpdGUxNTlAZ21h
 }
 
 
+### Goal save - routin : 2(Weekly)
+POST localhost:7777/api/goal
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwb2xpdGUxNTlAZ21haWwuY29tIiwidXNlckluZm8iOnsidXNlcklkIjoxLCJlbWFpbCI6InBvbGl0ZTE1OUBnbWFpbC5jb20iLCJwcm92aWRlciI6Imtha2FvIiwidG9rZW5UeXBlIjoiYWNjZXNzX3Rva2VuIn0sImlhdCI6MTcxMDkwNjUxMCwiZXhwIjoxNzExNTExMzEwfQ.GfwPOuR00pgbra-j8NDxQ2oq9SKPJY5t58rTvK53rjg
+refresh_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwb2xpdGUxNTlAZ21haWwuY29tIiwidXNlckluZm8iOnsidXNlcklkIjoxLCJlbWFpbCI6InBvbGl0ZTE1OUBnbWFpbC5jb20iLCJwcm92aWRlciI6Imtha2FvIiwidG9rZW5UeXBlIjoicmVmcmVzaF90b2tlbiJ9LCJpYXQiOjE3MTA5MDY1MTAsImV4cCI6MTcxNTE0MDExMH0.FAjqMvnvrkxGkSoI7rL8_CNy7Hu7rTY_vDVSMmVDdIA
+
+{
+  "title" : "test title",
+  "contents" : "test contents",
+  "icon" : "icon♥️",
+  "visualization" : "test visualization",
+  "endDate" : "2024-01-06",
+  "shareStatus" : 0,
+  "goalStatus" : 0,
+  "ruleReqDto" :
+  {
+    "routine" : 2,
+    "timeAt" : "18:12",
+    "contents" : "test contents",
+    "ruleWeeklyList" :
+      [
+        1,
+        2,
+        3
+      ]
+  }
+
+}
+
+
+### Goal save - routin : 3(Monthly)
+POST localhost:7777/api/goal
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwb2xpdGUxNTlAZ21haWwuY29tIiwidXNlckluZm8iOnsidXNlcklkIjoxLCJlbWFpbCI6InBvbGl0ZTE1OUBnbWFpbC5jb20iLCJwcm92aWRlciI6Imtha2FvIiwidG9rZW5UeXBlIjoiYWNjZXNzX3Rva2VuIn0sImlhdCI6MTcxMDkwNjUxMCwiZXhwIjoxNzExNTExMzEwfQ.GfwPOuR00pgbra-j8NDxQ2oq9SKPJY5t58rTvK53rjg
+refresh_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwb2xpdGUxNTlAZ21haWwuY29tIiwidXNlckluZm8iOnsidXNlcklkIjoxLCJlbWFpbCI6InBvbGl0ZTE1OUBnbWFpbC5jb20iLCJwcm92aWRlciI6Imtha2FvIiwidG9rZW5UeXBlIjoicmVmcmVzaF90b2tlbiJ9LCJpYXQiOjE3MTA5MDY1MTAsImV4cCI6MTcxNTE0MDExMH0.FAjqMvnvrkxGkSoI7rL8_CNy7Hu7rTY_vDVSMmVDdIA
+
+{
+  "title" : "test title",
+  "contents" : "test contents",
+  "icon" : "icon♥️",
+  "visualization" : "test visualization",
+  "endDate" : "2024-01-06",
+  "shareStatus" : 0,
+  "goalStatus" : 0,
+  "ruleReqDto" :
+  {
+    "routine" : 3,
+    "timeAt" : "18:12",
+    "contents" : "test contents",
+    "ruleMonthlyList" :
+    [
+      10,
+      20,
+      -1
+    ]
+  }
+
+}
+
+
+### Goal 삭제
+DELETE localhost:7777/api/goal/16
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwb2xpdGUxNTlAZ21haWwuY29tIiwidXNlckluZm8iOnsidXNlcklkIjoxLCJlbWFpbCI6InBvbGl0ZTE1OUBnbWFpbC5jb20iLCJwcm92aWRlciI6Imtha2FvIiwidG9rZW5UeXBlIjoiYWNjZXNzX3Rva2VuIn0sImlhdCI6MTcxMDkwNjUxMCwiZXhwIjoxNzExNTExMzEwfQ.GfwPOuR00pgbra-j8NDxQ2oq9SKPJY5t58rTvK53rjg
+refresh_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwb2xpdGUxNTlAZ21haWwuY29tIiwidXNlckluZm8iOnsidXNlcklkIjoxLCJlbWFpbCI6InBvbGl0ZTE1OUBnbWFpbC5jb20iLCJwcm92aWRlciI6Imtha2FvIiwidG9rZW5UeXBlIjoicmVmcmVzaF90b2tlbiJ9LCJpYXQiOjE3MTA5MDY1MTAsImV4cCI6MTcxNTE0MDExMH0.FAjqMvnvrkxGkSoI7rL8_CNy7Hu7rTY_vDVSMmVDdIA
