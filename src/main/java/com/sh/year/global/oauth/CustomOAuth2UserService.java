@@ -1,5 +1,6 @@
 package com.sh.year.global.oauth;
 
+import com.sh.year.domain.user.domain.Role;
 import com.sh.year.domain.user.domain.Users;
 import com.sh.year.domain.user.domain.repository.UsersQueryRepositoryImpl;
 import com.sh.year.domain.user.domain.repository.UsersRepository;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Slf4j
@@ -73,15 +75,16 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 //                .map(entity -> entity.update(attributes.getEmail(), attributes.getPicture(), attributes.getProvider()))
 //                .orElse(attributes.createUser());
 
-        Users user = usersQueryRepository.findByEmailAndProvider(attributes.getEmail(), attributes.getProvider()).orElseThrow(() ->new RuntimeException("유저 없음"));
+        Optional<Users> usersOptional = usersQueryRepository.findByEmailAndProvider(attributes.getEmail(), attributes.getProvider());
 
-        if(user != null){
-            user.update(attributes.getEmail(), attributes.getPicture(), attributes.getProvider());
+        if(usersOptional.isPresent()){
+            Users users = usersOptional.get();
+            users.update(attributes.getEmail(), attributes.getPicture(), attributes.getProvider());
 
-            return user;
+            return users;
         }
 
-        return userRepository.save(user);
+        return userRepository.save(Users.createUser(attributes.getEmail(), attributes.getPicture(), attributes.getProvider(), Role.USER));
 
     }
 

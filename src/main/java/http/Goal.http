@@ -1,14 +1,13 @@
-### Goal save - routine : 1
-POST localhost:7777/api/goal/save
+### Goal save - routine : 1(Every Day)
+POST localhost:7777/api/goal
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwb2xpdGUxNTlAZ21haWwuY29tIiwidXNlckluZm8iOnsidXNlcklkIjoxLCJlbWFpbCI6InBvbGl0ZTE1OUBnbWFpbC5jb20iLCJwcm92aWRlciI6Imtha2FvIiwidG9rZW5UeXBlIjoiYWNjZXNzX3Rva2VuIn0sImlhdCI6MTcxMDkwNjUxMCwiZXhwIjoxNzExNTExMzEwfQ.GfwPOuR00pgbra-j8NDxQ2oq9SKPJY5t58rTvK53rjg
-refresh_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwb2xpdGUxNTlAZ21haWwuY29tIiwidXNlckluZm8iOnsidXNlcklkIjoxLCJlbWFpbCI6InBvbGl0ZTE1OUBnbWFpbC5jb20iLCJwcm92aWRlciI6Imtha2FvIiwidG9rZW5UeXBlIjoicmVmcmVzaF90b2tlbiJ9LCJpYXQiOjE3MTA5MDY1MTAsImV4cCI6MTcxNTE0MDExMH0.FAjqMvnvrkxGkSoI7rL8_CNy7Hu7rTY_vDVSMmVDdIA
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
 
 {
-    "title" : "test title",
-    "contents" : "test contents",
-    "icon" : "icon♥️",
-    "visualization" : "test visualization",
+    "title" : "test title1111",
+    "contents" : "test contents11111",
+    "icon" : "icon♥️11111",
     "endDate" : "2024-01-06",
     "shareStatus" : 0,
     "goalStatus" : 0,
@@ -16,9 +15,228 @@ refresh_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwb2xpdGUxNTlAZ21h
     {
         "routine" : 1,
         "timeAt" : "18:12",
-        "contents" : "test contents"
+        "contents" : "test contents11111"
     }
 
 }
 
 
+### Goal save - routin : 2(Weekly)
+POST localhost:7777/api/goal
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+{
+  "title" : "test title22222",
+  "contents" : "test contents222222",
+  "icon" : "icon♥️",
+  "endDate" : "2024-01-06",
+  "shareStatus" : 0,
+  "goalStatus" : 0,
+  "ruleReqDto" :
+  {
+    "routine" : 2,
+    "timeAt" : "18:12",
+    "contents" : "test contents222222",
+    "ruleRepeatList" :
+      [
+        1,
+        2,
+        3
+      ]
+  }
+
+}
+
+
+### Goal save - routin : 3(Monthly)
+POST localhost:7777/api/goal
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+{
+  "title" : "test title333333",
+  "contents" : "test contents333333",
+  "icon" : "icon♥️",
+  "endDate" : "2024-01-06",
+  "shareStatus" : 0,
+  "goalStatus" : 0,
+  "ruleReqDto" :
+  {
+    "routine" : 3,
+    "timeAt" : "18:12",
+    "contents" : "test contents333333",
+    "ruleRepeatList" :
+    [
+      1,
+      2,
+      -1
+    ]
+  }
+
+}
+
+
+### Goal update - routin 1 -> 2
+PUT localhost:7777/api/goal/1
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+{
+  "title" : "test title1To2",
+  "contents" : "test contents1To2",
+  "icon" : "icon♥️",
+  "endDate" : "2024-01-06",
+  "shareStatus" : 1,
+  "goalStatus" : 1,
+  "ruleReqDto" :
+  {
+    "routine" : 2,
+    "timeAt" : "18:14",
+    "contents" : "test contents1To2",
+    "ruleRepeatList" :
+    [
+      10,
+      20,
+      30
+    ]
+  }
+
+}
+### Goal update - routin 1 -> 3
+PUT localhost:7777/api/goal/4
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+{
+  "title" : "test title1To3",
+  "contents" : "test contents1To3",
+  "icon" : "icon♥️",
+  "endDate" : "2024-01-06",
+  "shareStatus" : 1,
+  "goalStatus" : 1,
+  "ruleReqDto" :
+  {
+    "routine" : 2,
+    "timeAt" : "18:14",
+    "contents" : "test contents1To3",
+    "ruleRepeatList" :
+    [
+      11,
+      21,
+      -1
+    ]
+  }
+
+}
+
+### Goal update - routin 2 -> 1
+PUT localhost:7777/api/goal/2
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+{
+  "title" : "test title2To1",
+  "contents" : "test contents2To1",
+  "icon" : "icon♥️2to1",
+  "endDate" : "2024-01-06",
+  "shareStatus" : 1,
+  "goalStatus" : 1,
+  "ruleReqDto" :
+  {
+    "routine" : 1,
+    "timeAt" : "18:21",
+    "contents" : "test contents2To1"
+  }
+
+}
+
+### Goal update - routin 2 -> 3
+PUT localhost:7777/api/goal/5
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+{
+  "title" : "test title2To3",
+  "contents" : "test contents2To3",
+  "icon" : "icon♥️2to3",
+  "endDate" : "2024-01-06",
+  "shareStatus" : 1,
+  "goalStatus" : 1,
+  "ruleReqDto" :
+  {
+    "routine" : 3,
+    "timeAt" : "18:21",
+    "contents" : "test contents2To3",
+    "ruleRepeatList" :
+    [
+      111,
+      211,
+      -11
+    ]
+  }
+
+}
+
+### Goal update - routin 3 -> 1
+PUT localhost:7777/api/goal/3
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+{
+  "title" : "test title3To1",
+  "contents" : "test contents3To1",
+  "icon" : "icon♥️3to1",
+  "endDate" : "2024-01-06",
+  "shareStatus" : 1,
+  "goalStatus" : 1,
+  "ruleReqDto" :
+  {
+    "routine" : 1,
+    "timeAt" : "18:21",
+    "contents" : "test contents3To1"
+  }
+
+}
+
+### Goal update - routin 3 -> 2
+PUT localhost:7777/api/goal/1
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+{
+  "title" : "test title3To2",
+  "contents" : "test contents3To2",
+  "icon" : "icon♥️3to2",
+  "endDate" : "2024-01-06",
+  "shareStatus" : 1,
+  "goalStatus" : 1,
+  "ruleReqDto" :
+  {
+    "routine" : 2,
+    "timeAt" : "18:21",
+    "contents" : "test contents3To2",
+    "ruleRepeatList" :
+    [
+      11,
+      21,
+      -1
+    ]
+  }
+
+}
+
+
+
+### Goal Delete
+DELETE localhost:7777/api/goal/1
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}

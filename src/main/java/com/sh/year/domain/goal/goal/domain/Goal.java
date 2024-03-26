@@ -24,7 +24,6 @@ public class Goal extends BaseTimeEntity {
     private String title;
     private String contents;
     private String icon;
-    private String visualization;
     private LocalDate endDate;
     @Enumerated(EnumType.STRING)
     private ShareStatus shareStatus;
@@ -35,19 +34,18 @@ public class Goal extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private Users users;
 
-    @OneToOne(mappedBy = "goal")
+    @OneToOne(mappedBy = "goal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
     private Rule rule;
 
-    @OneToOne(mappedBy = "goal")
+    @OneToOne(mappedBy = "goal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
     private Diary diary;
 
 
     @Builder
-    private Goal(String title, String contents, String icon, String visualization, LocalDate endDate, ShareStatus shareStatus, GoalStatus goalStatus, Users users) {
+    private Goal(String title, String contents, String icon, LocalDate endDate, ShareStatus shareStatus, GoalStatus goalStatus, Users users) {
         this.title = title;
         this.contents = contents;
         this.icon = icon;
-        this.visualization = visualization;
         this.endDate = endDate;
         this.shareStatus = shareStatus;
         this.goalStatus = goalStatus;
@@ -63,7 +61,6 @@ public class Goal extends BaseTimeEntity {
                 .title(goalReqDto.getTitle())
                 .contents(goalReqDto.getContents())
                 .icon(goalReqDto.getIcon())
-                .visualization(goalReqDto.getVisualization())
                 .endDate(goalReqDto.getEndDate())
                 .shareStatus(goalReqDto.getShareStatus() == 0 ? ShareStatus.OFF : ShareStatus.ON)
                 .goalStatus(goalReqDto.getGoalStatus() == 0 ? GoalStatus.FAIL : GoalStatus.COMP)
@@ -78,16 +75,27 @@ public class Goal extends BaseTimeEntity {
         this.title = goalReqDto.getTitle();
         this.contents = goalReqDto.getContents();
         this.icon = goalReqDto.getIcon();
-        this.visualization = goalReqDto.getVisualization();
         this.endDate = goalReqDto.getEndDate();
         this.shareStatus = goalReqDto.getShareStatus() == 0 ? ShareStatus.OFF : ShareStatus.ON;
         this.goalStatus = goalReqDto.getGoalStatus() == 0 ? GoalStatus.FAIL : GoalStatus.COMP;
+
     }
 
 
     /**
      * 양방향 연관관계, cascade 유의
      */
+    public void addRule(Rule rule){
+        rule.setGoal(this);
+        this.rule = rule;
+
+    }
+
+    public void addDiary(Diary diary) {
+        diary.setGoal(this);
+        this.diary = diary;
+    }
+
     public void setUsers(Users users) {
         this.users = users;
     }
