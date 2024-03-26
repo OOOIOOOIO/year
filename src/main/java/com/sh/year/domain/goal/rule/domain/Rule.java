@@ -29,11 +29,8 @@ public class Rule {
     @JoinColumn(name = "goalId")
     private Goal goal;
 
-    @OneToMany(mappedBy = "rule", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
-    private List<RuleWeeklyDates> ruleWeeklyDatesList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "rule", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
-    private List<RuleMonthlyDates> ruleMonthlyDatesList = new ArrayList<>();
+    @OneToMany(mappedBy = "rule", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
+    private List<RuleRepeatDates> repeatDatesList = new ArrayList<>();
 
 //    @Builder
 //    private Rule(int routine, LocalTime timeAt, String contents) {
@@ -72,22 +69,21 @@ public class Rule {
     }
 
     /**
-     * 수정
-     * 매일 -> 매주
-     * 매일 -> 매월
      *
-     * 매주 -> 매일
-     * 매주 -> 매월
+     *  1 -> 2, 3
      *
-     * 매월 -> 매일
-     * 매월 -> 매주
+     *  2 -> 1
+     *  2 -> 3
      *
-     * 흠...쓰바
+     *  3 -> 1
+     *  3 -> 2
+     *
      */
-    public void updateRule(RuleReqDto reqDto) {
-        this.routine = routine;
-        this.timeAt = timeAt;
-        this.contents = contents;
+    public void updateRule(RuleReqDto ruleReqDto) {
+        this.routine = ruleReqDto.getRoutine();
+        this.timeAt = ruleReqDto.getTimeAt();
+        this.contents = ruleReqDto.getContents();
+
     }
 
     public void setGoal(Goal goal) {
@@ -98,23 +94,15 @@ public class Rule {
     /**
      * 양방향 연관관계, cascade 유의
      */
-    public void addWeeklyDates(RuleWeeklyDates ruleWeeklyDates){
-        if(ruleWeeklyDates.getRule() != null){
-            ruleWeeklyDates.getRule().getRuleWeeklyDatesList().remove(ruleWeeklyDates);
+    public void addRepeatDates(RuleRepeatDates repeatDates){
+        if(repeatDates.getRule() != null){
+            repeatDates.getRule().getRepeatDatesList().remove(repeatDates);
         }
 
-        ruleWeeklyDates.setRule(this);
-        this.ruleWeeklyDatesList.add(ruleWeeklyDates);
+        repeatDates.setRule(this);
+        this.repeatDatesList.add(repeatDates);
     }
 
-    public void addMonthlyDates(RuleMonthlyDates ruleMonthlyDates) {
-        if (ruleMonthlyDates.getRule() != null) {
-            ruleMonthlyDates.getRule().getRuleMonthlyDatesList().remove(ruleMonthlyDates);
-        }
-
-        ruleMonthlyDates.setRule(this);
-        this.ruleMonthlyDatesList.add(ruleMonthlyDates);
-    }
 
 
 }

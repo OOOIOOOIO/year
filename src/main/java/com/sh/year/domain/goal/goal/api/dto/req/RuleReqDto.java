@@ -14,9 +14,7 @@ public class RuleReqDto {
     private int routine; // 매일 : 1, 매주 : 2, 매월 : 3
     private LocalTime timeAt;
     private String contents;
-    private List<Integer> ruleWeeklyList; // 1 : 일요일, 7 : 토요일
-    private List<Integer> ruleMonthlyList; // if) -1일 경우 마지막 날
-//    private List<LocalDate> ruleMonthlyList; // if) -1일 경우 마지막 날
+    private List<Integer> ruleRepeatList; // week -> 1 : 일요일, 7 : 토요일 /  month -> if) -1일 경우 마지막 날
 
 
 
