@@ -49,6 +49,7 @@ public class WebSecurityConfig {  // extends WebSecurityConfigurerAdapte, Spring
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
+
 //                .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile",).permitAll() //정적리소스 물어보기
         http.cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)

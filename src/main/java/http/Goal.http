@@ -1,5 +1,5 @@
 ### Goal save - routine : 1(Every Day)
-POST localhost:7777/api/goal
+POST localhost:7777/api/bigGoal
 Content-Type: application/json
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
@@ -10,7 +10,7 @@ refresh_token: {{refresh_token}}
     "icon" : "icon♥️11111",
     "endDate" : "2024-01-06",
     "shareStatus" : 0,
-    "goalStatus" : 0,
+    "completeStatus" : 0,
     "ruleReqDto" :
     {
         "routine" : 1,
@@ -22,7 +22,7 @@ refresh_token: {{refresh_token}}
 
 
 ### Goal save - routin : 2(Weekly)
-POST localhost:7777/api/goal
+POST localhost:7777/api/bigGoal
 Content-Type: application/json
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
@@ -33,7 +33,7 @@ refresh_token: {{refresh_token}}
   "icon" : "icon♥️",
   "endDate" : "2024-01-06",
   "shareStatus" : 0,
-  "goalStatus" : 0,
+  "completeStatus" : 0,
   "ruleReqDto" :
   {
     "routine" : 2,
@@ -51,7 +51,7 @@ refresh_token: {{refresh_token}}
 
 
 ### Goal save - routin : 3(Monthly)
-POST localhost:7777/api/goal
+POST localhost:7777/api/bigGoal
 Content-Type: application/json
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
@@ -62,7 +62,7 @@ refresh_token: {{refresh_token}}
   "icon" : "icon♥️",
   "endDate" : "2024-01-06",
   "shareStatus" : 0,
-  "goalStatus" : 0,
+  "completeStatus" : 0,
   "ruleReqDto" :
   {
     "routine" : 3,
@@ -80,7 +80,7 @@ refresh_token: {{refresh_token}}
 
 
 ### Goal update - routin 1 -> 2
-PUT localhost:7777/api/goal/1
+PUT localhost:7777/api/bigGoal/1
 Content-Type: application/json
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
@@ -91,7 +91,7 @@ refresh_token: {{refresh_token}}
   "icon" : "icon♥️",
   "endDate" : "2024-01-06",
   "shareStatus" : 1,
-  "goalStatus" : 1,
+  "completeStatus" : 1,
   "ruleReqDto" :
   {
     "routine" : 2,
@@ -107,7 +107,7 @@ refresh_token: {{refresh_token}}
 
 }
 ### Goal update - routin 1 -> 3
-PUT localhost:7777/api/goal/4
+PUT localhost:7777/api/bigGoal/4
 Content-Type: application/json
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
@@ -118,7 +118,7 @@ refresh_token: {{refresh_token}}
   "icon" : "icon♥️",
   "endDate" : "2024-01-06",
   "shareStatus" : 1,
-  "goalStatus" : 1,
+  "completeStatus" : 1,
   "ruleReqDto" :
   {
     "routine" : 2,
@@ -135,7 +135,7 @@ refresh_token: {{refresh_token}}
 }
 
 ### Goal update - routin 2 -> 1
-PUT localhost:7777/api/goal/2
+PUT localhost:7777/api/bigGoal/2
 Content-Type: application/json
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
@@ -146,7 +146,7 @@ refresh_token: {{refresh_token}}
   "icon" : "icon♥️2to1",
   "endDate" : "2024-01-06",
   "shareStatus" : 1,
-  "goalStatus" : 1,
+  "completeStatus" : 1,
   "ruleReqDto" :
   {
     "routine" : 1,
@@ -157,7 +157,7 @@ refresh_token: {{refresh_token}}
 }
 
 ### Goal update - routin 2 -> 3
-PUT localhost:7777/api/goal/5
+PUT localhost:7777/api/bigGoal/5
 Content-Type: application/json
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
@@ -168,7 +168,7 @@ refresh_token: {{refresh_token}}
   "icon" : "icon♥️2to3",
   "endDate" : "2024-01-06",
   "shareStatus" : 1,
-  "goalStatus" : 1,
+  "completeStatus" : 1,
   "ruleReqDto" :
   {
     "routine" : 3,
@@ -185,7 +185,7 @@ refresh_token: {{refresh_token}}
 }
 
 ### Goal update - routin 3 -> 1
-PUT localhost:7777/api/goal/3
+PUT localhost:7777/api/bigGoal/3
 Content-Type: application/json
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
@@ -196,7 +196,7 @@ refresh_token: {{refresh_token}}
   "icon" : "icon♥️3to1",
   "endDate" : "2024-01-06",
   "shareStatus" : 1,
-  "goalStatus" : 1,
+  "completeStatus" : 1,
   "ruleReqDto" :
   {
     "routine" : 1,
@@ -207,7 +207,7 @@ refresh_token: {{refresh_token}}
 }
 
 ### Goal update - routin 3 -> 2
-PUT localhost:7777/api/goal/1
+PUT localhost:7777/api/bigGoal/1
 Content-Type: application/json
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
@@ -218,7 +218,7 @@ refresh_token: {{refresh_token}}
   "icon" : "icon♥️3to2",
   "endDate" : "2024-01-06",
   "shareStatus" : 1,
-  "goalStatus" : 1,
+  "completeStatus" : 1,
   "ruleReqDto" :
   {
     "routine" : 2,
@@ -237,6 +237,12 @@ refresh_token: {{refresh_token}}
 
 
 ### Goal Delete
-DELETE localhost:7777/api/goal/1
+DELETE localhost:7777/api/bigGoal/1
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+
+### Goal Update ShareState
+PUT localhost:7777/api/bigGoal/share/2
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
