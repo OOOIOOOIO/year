@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static com.sh.year.domain.goal.goal.domain.QBigGoal.bigGoal;
-import static com.sh.year.domain.goal.goal.domain.QSmallGoal.*;
+import static com.sh.year.domain.goal.goal.biggoal.domain.QBigGoal.bigGoal;
+import static com.sh.year.domain.goal.goal.smallgoal.domain.QSmallGoal.smallGoal;
 
 
 @Repository
@@ -26,7 +26,7 @@ public class BigGoalQueryRepositoryImpl implements BigGoalQueryRepository {
         return Optional.ofNullable(
                 queryFactory.select(bigGoal)
                 .from(bigGoal)
-                .join(bigGoal.rule).fetchJoin()
+//                .join(bigGoal.smallGoalList).fetchJoin()
                 .where(bigGoal.bigGoalId.eq(bigGoalId))
                 .fetchOne());
 
@@ -37,12 +37,13 @@ public class BigGoalQueryRepositoryImpl implements BigGoalQueryRepository {
     @Override
     public Optional<SmallGoal> getSmallGoalInfo(Long smallGoalId) {
 
-        return Optional.ofNullable(
-                queryFactory.select(smallGoal)
-                .from(smallGoal)
-                .join(smallGoal.rule).fetchJoin().join(smallGoal.rule.repeatDatesList).fetchJoin()
-                .where(smallGoal.smallGoalId.eq(smallGoalId))
-                .fetchOne());
+        return null;
+//        return Optional.ofNullable(
+//                queryFactory.select(smallGoal)
+//                .from(smallGoal)
+//                .join(smallGoal.rule).fetchJoin().join(smallGoal.rule.repeatDatesList).fetchJoin()
+//                .where(smallGoal.smallGoalId.eq(smallGoalId))
+//                .fetchOne());
 
 
     }

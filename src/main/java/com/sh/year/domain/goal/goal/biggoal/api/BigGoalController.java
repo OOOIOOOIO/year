@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "BigGoal", description = "큰목표 API")
+@Tag(name = "Big Goal", description = "큰목표 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -26,15 +26,15 @@ public class BigGoalController {
     /**
      * 큰목표 상세보기
      */
-    @Operation(
-            summary = "큰목표 API",
-            description = "큰목표 상세조회."
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "큰목표 상세조회에 성공하였습니다."
-    )
-    @GetMapping("/{goalId}")
+//    @Operation(
+//            summary = "큰목표 API",
+//            description = "큰목표 상세조회."
+//    )
+//    @ApiResponse(
+//            responseCode = "200",
+//            description = "큰목표 상세조회에 성공하였습니다."
+//    )
+    @GetMapping("/{bigGoalId}")
     public void getGoalInfo(@PathVariable(value = "bigGoalId") Long bigGoalId){
 
         bigGoalService.getBigGoalInfo(bigGoalId);
@@ -44,7 +44,7 @@ public class BigGoalController {
     /**
      * 큰목표 저장
      */
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<Long> saveGoal(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto,
                                            @RequestBody BigGoalReqDto bigGoalReqDto){
 
@@ -58,8 +58,8 @@ public class BigGoalController {
     /**
      * 큰목표 수정
      */
-    @PutMapping("/{goalId}")
-    public ResponseEntity<String> updateGoal(@PathVariable(value = "goalId") Long bigGoalId,
+    @PutMapping("/{bigGoalId}")
+    public ResponseEntity<String> updateGoal(@PathVariable(value = "bigGoalId") Long bigGoalId,
                            @RequestBody BigGoalReqDto bigGoalReqDto){
 
         bigGoalService.updateGoal(bigGoalId, bigGoalReqDto);
@@ -70,8 +70,8 @@ public class BigGoalController {
     /**
      * 큰목표 삭제
      */
-    @DeleteMapping("/{goalId}")
-    public ResponseEntity<String> deleteGoal(@PathVariable(value = "goalId") Long bigGoalId){
+    @DeleteMapping("/{bigGoalId}")
+    public ResponseEntity<String> deleteGoal(@PathVariable(value = "bigGoalId") Long bigGoalId){
 
         bigGoalService.deleteGoal(bigGoalId);
 
@@ -81,8 +81,8 @@ public class BigGoalController {
     /**
      * 큰목표 공유여부 설정
      */
-    @PutMapping("/share/{goalId}")
-    public ResponseEntity<String> updateShareStatus(@PathVariable(value = "goalId") Long bigGoalId){
+    @PutMapping("/share/{bigGoalId}")
+    public ResponseEntity<String> updateShareStatus(@PathVariable(value = "bigGoalId") Long bigGoalId){
 
         bigGoalService.updateShareStatus(bigGoalId);
 
@@ -92,7 +92,7 @@ public class BigGoalController {
     /**
      * 큰목표 달성여부 설정
      */
-    @PutMapping("/comp/{goalId}")
+    @PutMapping("/comp/{bigGoalId}")
     public ResponseEntity<String> updateCompleteStatus(@PathVariable(value = "bigGoalId") Long bigGoalId){
 
         bigGoalService.updateCompleteStatus(bigGoalId);

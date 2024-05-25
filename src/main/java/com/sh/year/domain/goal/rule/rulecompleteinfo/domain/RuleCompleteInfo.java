@@ -36,12 +36,12 @@ public class RuleCompleteInfo {
     /**
      * 생성
      */
-    public static RuleCompleteInfo createRepeatDates(int year, int month, byte[] completeDayArr, int totalCnt){
+    public static RuleCompleteInfo createRepeatDates(int year, int month, byte[] completeDayArr, int totalDayCnt){
         return RuleCompleteInfo.builder()
                 .year(year)
                 .month(month)
                 .completeDayArr(completeDayArr)
-                .totalCnt(totalCnt)
+                .totalDayCnt(totalDayCnt)
                 .build();
     }
 

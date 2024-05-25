@@ -43,7 +43,6 @@ public class BigGoalService {
 
         BigGoal bigGoal = goalQueryRepository.getBigGoalInfo(bigGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
 
-        new BigGoalResDto(goal, rule, progress)
 
         return null;
     }

@@ -1,5 +1,5 @@
-### Goal save - routine : 1(Every Day)
-POST localhost:7777/api/bigGoal
+### Big Goal save
+POST localhost:7777/api/goal/biggoal
 Content-Type: application/json
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
@@ -7,72 +7,116 @@ refresh_token: {{refresh_token}}
 {
     "title" : "test title1111",
     "contents" : "test contents11111",
-    "icon" : "icon♥️11111",
+    "category" : "icon♥️11111",
     "endDate" : "2024-01-06",
     "shareStatus" : 0,
-    "completeStatus" : 0,
-    "ruleReqDto" :
-    {
-        "routine" : 1,
-        "timeAt" : "18:12",
-        "contents" : "test contents11111"
-    }
-
+    "completeStatus" : 0
 }
 
 
-### Goal save - routin : 2(Weekly)
-POST localhost:7777/api/bigGoal
+### Big Goal update
+PUT localhost:7777/api/goal/biggoal/2
 Content-Type: application/json
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
 
 {
-  "title" : "test title22222",
-  "contents" : "test contents222222",
-  "icon" : "icon♥️",
-  "endDate" : "2024-01-06",
+  "title" : "update test title1111",
+  "contents" : "update test contents11111",
+  "category" : "icon♥ 222222",
+  "endDate" : "2024-05-23",
   "shareStatus" : 0,
+  "completeStatus" : 0
+}
+
+
+### Big Goal CompleteStatus update
+PUT localhost:7777/api/goal/biggoal/comp/2
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+
+### Big Goal ShareStatus update
+PUT localhost:7777/api/goal/biggoal/share/2
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+
+### Big Goal Delete
+DELETE localhost:7777/api/goal/biggoal/1
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+# ============================================================================================================
+# ============================================================================================================
+
+### Small Goal save - routin : 1(Daily)
+POST localhost:7777/api/goal/smallgoal/2
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+{
+  "title" : "루틴1 3개월이상",
+  "icon" : "icon♥️",
+  "endDate" : "2024-08-20",
+  "completeStatus" : 0,
+  "ruleReqDto" :
+  {
+    "routine" : 1,
+    "timeAt" : "18:12",
+    "contents" : "루틴1 3개월이상"
+  }
+
+}
+
+### Small Goal save - routin : 2(Weekly)
+POST localhost:7777/api/goal/smallgoal/2
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+{
+  "title" : "루틴2 3개월이상",
+  "icon" : "icon♥️",
+  "endDate" : "2024-08-20",
   "completeStatus" : 0,
   "ruleReqDto" :
   {
     "routine" : 2,
     "timeAt" : "18:12",
-    "contents" : "test contents222222",
+    "contents" : "루틴2 3개월이상",
     "ruleRepeatList" :
-      [
-        1,
-        2,
-        3
-      ]
+    [
+      2,
+      5,
+      6
+    ]
   }
 
 }
 
-
-### Goal save - routin : 3(Monthly)
-POST localhost:7777/api/bigGoal
+### Small Goal save - routin : 3(Monthly)
+POST localhost:7777/api/goal/smallgoal/2
 Content-Type: application/json
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
 
 {
-  "title" : "test title333333",
-  "contents" : "test contents333333",
+  "title" : "루틴3 3개월미만 그냥",
   "icon" : "icon♥️",
-  "endDate" : "2024-01-06",
-  "shareStatus" : 0,
+  "endDate" : "2024-06-26",
   "completeStatus" : 0,
   "ruleReqDto" :
   {
     "routine" : 3,
     "timeAt" : "18:12",
-    "contents" : "test contents333333",
+    "contents" : "루틴3 3개월미만 그냥",
     "ruleRepeatList" :
     [
-      1,
-      2,
-      -1
+      15
     ]
   }
 

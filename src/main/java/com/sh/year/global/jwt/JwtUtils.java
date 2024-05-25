@@ -145,7 +145,9 @@ public class JwtUtils {
      */
     public String generateAccessToken(Long userId, String email, String provider) {
 //        Key key = Keys.hmacShaKeyFor(encodeSecretKey(jwtInfoProperties.getSecret()).getBytes());
-        Key key = Keys.hmacShaKeyFor(jwtInfoProperties.getSecret().getBytes());
+//        Key key = Keys.hmacShaKeyFor(jwtInfoProperties.getSecret().getBytes());
+//        Key key = Keys.hmacShaKeyFor(Base64.getEncoder().encodeToString(jwtInfoProperties.getSecret().getBytes()).getBytes());
+        String secretKey = Base64.getEncoder().encodeToString(jwtInfoProperties.getSecret().getBytes());
 
         return BEARER + Jwts.builder()
                 .setHeaderParam("typ", "JWT")
@@ -154,7 +156,8 @@ public class JwtUtils {
                 .claim("userInfo", new JwtClaimDto(userId, email, provider, ACCESS_TOKEN))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtInfoProperties.getAccessTokenExpireMin()))
-                .signWith(key, SignatureAlgorithm.HS256)
+//                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
     private String encodeSecretKey(String secretKey){
@@ -176,7 +179,9 @@ public class JwtUtils {
      */
     public String generateRefreshToken(Long userId, String email, String provider) {
 //        Key key = Keys.hmacShaKeyFor(encodeSecretKey(jwtInfoProperties.getSecret()).getBytes());
-        Key key = Keys.hmacShaKeyFor(jwtInfoProperties.getSecret().getBytes());
+//        Key key = Keys.hmacShaKeyFor(jwtInfoProperties.getSecret().getBytes());
+//        Key key = Keys.hmacShaKeyFor(Base64.getEncoder().encodeToString(jwtInfoProperties.getSecret().getBytes()).getBytes());
+        String secretKey = Base64.getEncoder().encodeToString(jwtInfoProperties.getSecret().getBytes());
         /**
          * decode
          */
@@ -188,7 +193,8 @@ public class JwtUtils {
                 .claim("userInfo", new JwtClaimDto(userId, email, provider, REFRESH_TOKEN))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtInfoProperties.getRefreshTokenExpireMin()))
-                .signWith(key, SignatureAlgorithm.HS256)
+//                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 

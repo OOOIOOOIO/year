@@ -1,12 +1,9 @@
 package com.sh.year.domain.goal.goal.smallgoal.application;
 
-import com.sh.year.domain.goal.goal.biggoal.api.dto.req.BigGoalReqDto;
 import com.sh.year.domain.goal.goal.biggoal.api.dto.res.BigGoalResDto;
 import com.sh.year.domain.goal.goal.biggoal.domain.BigGoal;
-import com.sh.year.domain.goal.goal.biggoal.domain.ShareStatus;
 import com.sh.year.domain.goal.goal.biggoal.domain.repository.BigGoalQueryRepositoryImpl;
 import com.sh.year.domain.goal.goal.biggoal.domain.repository.BigGoalRepository;
-import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.RuleReqDto;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.SmallGoalReqDto;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.SmallGoalUpdateReqDto;
 import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
@@ -27,9 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -46,7 +43,6 @@ public class SmallGoalService {
     private final SmallGoalQueryRepositoryImpl smallGoalQueryRepository;
     private final UsersRepository usersRepository;
     private final RuleCompleteInfoRepository ruleRepeatDatesRepository;
-
 
 
 
@@ -91,24 +87,6 @@ public class SmallGoalService {
     /**
      * 작은목표 저장
      */
-    /**
-     *
-     * if choose foreach trim
-     * 날짜계산, now~마지막월까지
-     * 이번달의 며칠! -> 1, 3
-     * 이번주의 무슨요일 -> 2
-     *
-     * 매일 -> 시작일 ~ 12/31까지 개수세기
-     *
-     * 매주
-     *  -> 목표일이 오늘을 지나지 않은 경우 : 이번달 남은 주의 개수 + 12/31까지 남은 달의 개수 * 4
-     *  -> 오늘이 목표일을 지난 경우 : 이번달 남은 주의 개수 -1 + 12/31까지 남은 달의 개수 * 4
-     *      -> 보여줄 때 다음 걸 보여줘야하는데 흠흠 아으 머리아파....
-     *
-     * 매월
-     *  -> 목표일이 오늘을 지나지 않은 경우 : (12/31까지 남은 달의 개수 + 1) * 4
-     *  -> 오늘이 목표일을 지난 경우 : 12/31까지 남은 달의 개수 * 4
-     */
     public Long saveSmallGoal(Long bigGoalId, SmallGoalReqDto smallGoalReqDto) {
 
         BigGoal bigGoal = goalQueryRepository.getBigGoalInfo(bigGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
@@ -116,14 +94,8 @@ public class SmallGoalService {
         // smallGoal
         SmallGoal smallGoal = SmallGoal.createSmallGoal(smallGoalReqDto, bigGoal);
 
-
         // rule
         Rule rule = Rule.createRule(smallGoalReqDto.getRuleReqDto(), smallGoal);
-
-        // ruleCompleteInfo
-        RuleCompleteInfo ruleCompleteInfo = makeRuleCompleteInfo(smallGoalReqDto.getRuleReqDto().getRoutine(), smallGoalReqDto.getRuleReqDto().getRuleRepeatList());
-        rule.addCompleteInfo(ruleCompleteInfo);
-
 
         // ruleRepeatDay
         int routine = smallGoalReqDto.getRuleReqDto().getRoutine();
@@ -131,6 +103,9 @@ public class SmallGoalService {
         // (routine -> 1 : 매일, 2 : 매주, 3 : 매월)
         // 2, 3 : 특정일 필요
         if(routine == 1){ // routine == 1(매일)
+            // cascade(with rule)
+            addRuleCompleteInfo(rule, smallGoalReqDto.getEndDate(), smallGoalReqDto.getRuleReqDto().getRoutine(), smallGoalReqDto.getRuleReqDto().getRuleRepeatList());
+
             smallGoal.addRule(rule); // cascade(with goal)
 
         }
@@ -142,6 +117,9 @@ public class SmallGoalService {
                 rule.addRuleRepeatDay(ruleRepeatDay);
 
             }
+
+            // cascade(with rule)
+            addRuleCompleteInfo(rule, smallGoalReqDto.getEndDate(), smallGoalReqDto.getRuleReqDto().getRoutine(), smallGoalReqDto.getRuleReqDto().getRuleRepeatList());
 
             smallGoal.addRule(rule); // cascade(with goal)
 
@@ -196,8 +174,6 @@ public class SmallGoalService {
     }
 
 
-
-
     private Users getUsers(UserInfoFromHeaderDto userInfoFromHeaderDto) {
 
         return usersRepository.findById(userInfoFromHeaderDto.getUserId()).orElseThrow(() -> new CustomException(CustomErrorCode.UserNotFoundException));
@@ -217,28 +193,8 @@ public class SmallGoalService {
 
 
     /**
-     *
-     * dayOfWeek.getValue
-     * 월(1) ~ 일(7)
-     *
-     * 매주일 경우!
-     *
-     * 우선 총 몇개월인지 구해야함
-     *
-     * - ChronoUnit.MONTHS.between(startDay, endDay) --> 탈락
-     *      - start랑 end의 차이가 30일 미만일 경우 0
-     *
-     *
-     *
-     * 첫주
-     * -> startDay ~~~ 일요일(7)까지 days가 있는지 확인
-     *
-     * 마지막주
-     * -> 월요일(1) ~~~ end까지 days가 있는지 확인
-     *
-     * 그외 남은 개월 * dayList.size() 해서 남은 개월 수 계산!
+     * 알람 totalCnt
      */
-
     private int getCountBetweenTwoDates(LocalDate startDay, LocalDate endDay, int routine, List<Integer> ruleRepeatList) {
         int alramDayCnt = 0;
         int totalDayCnt = getTotalDayCnt(startDay, endDay);
@@ -262,45 +218,42 @@ public class SmallGoalService {
                     if(ruleRepeatList.contains(day)) alramDayCnt++;
                 }
 
-
                 //마지막주
                 for(int day = endDayValue; day >= 1; day--){
                     if(ruleRepeatList.contains(day)) alramDayCnt++;
                 }
 
-
-                //그외
+                //사이
                 int restDayCnt = getRestDayCnt(startDay, endDay);
-                alramDayCnt += (restDayCnt * ruleRepeatList.size());
 
+                alramDayCnt += (restDayCnt * ruleRepeatList.size());
 
             }
 
         }
         else if(routine == 3){ //매월
-            int monthValue = getMonthCntValue(startDay, endDay); // startDay ~ endDay 총 개월수
+            Integer day = ruleRepeatList.get(0);
+            LocalDate targetDay = makeTargetDayForMonthly(day);
 
-            /**
-             * 매월일 경우!
-             *
-             * 첫달
-             * -> startDay(create) ~~~ 마지막까지 day가 있는지 확인
-             *
-             * 마지막달
-             * -> 1일 ~~~ endDate까지 day가 있는지 확인
-             *
-             * 그외 남은 개월 계산!
-             *
-             *
-             * --> 오늘 ~ 이번달에 day가 있는지
-             * --> 다음달 ~ endDate까지 몇달이 있는지 계산
-             *      -> 마지막달에 day가 포함되는지 확인
-             * => 두개 합치면 totalCnt
-             *
-             * 음 근데 5/28 ~ 6/5 이런 경우 달과 달이 섞여있으면 흠...
-             * 이거 monthValue 차이가 0
-             */
+            if(isMoreThanTwoMonth(startDay, endDay)){ // 3달이상
+                //첫달
+                if(isInStartMonth(startDay, targetDay)) alramDayCnt++;
 
+                //마지막달
+                if(isInEndMonth(endDay, targetDay)) alramDayCnt++;
+
+                //사이
+                alramDayCnt += getRestMonthCnt(startDay, endDay);
+
+            }
+            else{ // 3달 미만
+                //첫달
+                if(isInStartMonth(startDay, targetDay)) alramDayCnt++;
+
+                //마지막달
+                if(isInEndMonth(endDay, targetDay)) alramDayCnt++;
+
+            }
         }
         else{ //매일
             alramDayCnt = getTotalDayCnt(startDay, endDay);
@@ -310,36 +263,144 @@ public class SmallGoalService {
         return alramDayCnt;
     }
 
-    private RuleCompleteInfo makeRuleCompleteInfo(int routine, List<Integer> ruleRepeatList){
-        LocalDate now = LocalDate.now();
-        LocalDate start = LocalDate.of( now.getYear(), now.getMonthValue(), now.getDayOfMonth());
-        LocalDate end = LocalDate.of( now.getYear(), now.getMonthValue(), now.getDayOfMonth());
 
-        int year = now.getYear();
-        int month = now.getMonthValue();
+    /**
+     * 1~마지막날 비트로 구분(과거 달성이력)
+     *
+     * 몇달인지만 알면 되지
+     */
+    private void addRuleCompleteInfo(Rule rule, LocalDate end, int routine, List<Integer> ruleRepeatList){
         byte[] repeatDays = new byte[32]; // 저장한 날부터(32개 고정 상관없음 1의 개수를 셀거라서
+        LocalDate start = LocalDate.now(); // 시작일
+        int year = start.getYear();
+        int startMonth = start.getMonthValue(); // 같을 때만 따로
+        int endMonth = end.getMonthValue();
 
+        if(routine == 3){ //매달
+            int totalDayCnt = getCountBetweenTwoDates(start, end, routine, ruleRepeatList);
+            for(int month = startMonth; month <= endMonth; month++){
+                rule.addCompleteInfo(RuleCompleteInfo.createRepeatDates(year, month, repeatDays, totalDayCnt));
+            }
+            return;
+        }
+        else if(routine == 2){ //매주
+            int totalDayCnt = getCountBetweenTwoDates(start, end, routine, ruleRepeatList);
+            for(int month = startMonth; month <= endMonth; month++){
+                rule.addCompleteInfo(RuleCompleteInfo.createRepeatDates(year, month, repeatDays, totalDayCnt));
+            }
+            return;
+        }
+
+        //매일
         int totalDayCnt = getCountBetweenTwoDates(start, end, routine, ruleRepeatList);
-
-
-        return RuleCompleteInfo.createRepeatDates(year, month, repeatDays, totalDayCnt);
+        for(int month = startMonth; month <= endMonth; month++){
+            rule.addCompleteInfo(RuleCompleteInfo.createRepeatDates(year, month, repeatDays, totalDayCnt));
+        }
 
     }
 
-    private int getMonthCntValue(LocalDate start, LocalDate end) {
+
+    /**
+     * 매달일 경우
+     *
+     * targetDay 만들어주기
+     */
+    private LocalDate makeTargetDayForMonthly(Integer day) {
+        LocalDate now = LocalDate.now();
+        LocalDate targetDay;
+
+        if(day == -1){ // 마지막날인 경우
+            YearMonth yearMonth = YearMonth.from(now);
+            targetDay = yearMonth.atEndOfMonth();
+        }
+        else{
+            int year = now.getYear();
+            int month = now.getMonthValue();
+
+            targetDay = LocalDate.of(year, month, day);
+        }
+
+        if(targetDay.isAfter(now) || targetDay.isEqual(now)) return targetDay; // start보다 후에 있을 경우 이번달 n일로 설정
+
+        return targetDay.plusMonths(1); // start보다 전에 있을 경우 다음달 n일로 설정
+    }
+
+    /**
+     * 매달일 경우
+     *
+     * 첫달, 마지막달 제외 사이 몇개월이 있는지
+     */
+    private int getRestMonthCnt(LocalDate start, LocalDate end) {
 
         int monthA = start.getYear() * 12 + start.getMonthValue();
         int monthB = end.getYear() * 12 + end.getMonthValue();
 
-        return monthB - monthA;
+        return (monthB - monthA) + 1; // 5/1 ~ 5/31 : 0으로 나옴 +1 해주기
     }
 
+    /**
+     * 매달일 경우
+     *
+     * 첫달에 targetDay가 있는지
+     */
+    private boolean isInStartMonth(LocalDate start, LocalDate targetDay){
+        YearMonth startYearMonth = YearMonth.from(start);
+        LocalDate endOfMonth = startYearMonth.atEndOfMonth();
+
+        if((start.isBefore(targetDay) || start.isEqual(targetDay)) && (endOfMonth.isAfter(targetDay) || endOfMonth.isEqual(targetDay))) return true;
+
+        return false;
+    }
+
+    /**
+     * 매달일 경우
+     *
+     * 마지막달에 targetDay가 있는지
+     */
+    private boolean isInEndMonth(LocalDate end, LocalDate targetDay){
+        YearMonth endYearMonth = YearMonth.from(end);
+        LocalDate startOfMonth = endYearMonth.atDay(1);
+
+        if((startOfMonth.isBefore(targetDay) || startOfMonth.isEqual(targetDay)) && (end.isAfter(targetDay) || end.isEqual(targetDay))) return true;
+
+        return false;
+
+    }
+
+    /**
+     * 매달일 경우
+     */
+    private boolean isMoreThanTwoMonth(LocalDate start, LocalDate end) {
+        int startYear = start.getYear();
+        int startMonth = start.getMonthValue();
+
+        int endYear = end.getYear();
+        int endMonth = end.getMonthValue();
+
+        YearMonth startYearMonth = YearMonth.of(startYear, startMonth);
+        YearMonth endYearMonth = YearMonth.of(endYear, endMonth);
+
+        LocalDate nextMonthFirstDayFromStartDay = startYearMonth.atEndOfMonth().plusDays(1); // 다음달 첫날
+        LocalDate beforeMonthLastDayFromEndDay = endYearMonth.atDay(1).minusDays(1); // 이전달 마지막날
+
+        return nextMonthFirstDayFromStartDay.isBefore(beforeMonthLastDayFromEndDay);
+    }
+
+
+    /**
+     * 시작일 ~ 마감일 총 날짜수
+     *
+     * 매일일 경우 사용
+     */
     private int getTotalDayCnt(LocalDate start, LocalDate end){
 
         return (int)ChronoUnit.DAYS.between(start, end) + 1; //마지막날 포함
     }
 
 
+    /**
+     * 매주일 경우
+     */
     private int getRestDayCnt(LocalDate start, LocalDate end){
         LocalDate plusDays = start.plusDays((7 - start.getDayOfWeek().getValue()) + 1 ); // 일요일 나옴 / +1 해주면 다음주 월요일
         LocalDate minusDays = end.minusDays(end.getDayOfWeek().getValue());// 그 전주 일요일 나옴
