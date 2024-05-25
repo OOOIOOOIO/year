@@ -9,6 +9,7 @@ src/main/resources/application-local.yml
 src/main/resources/application-oauth.yml
 src/main/resources/application-local-oauth.yml
 src/main/resources/application-real.yml
+src/main/java/http/dev/**
 
 src/main/java/http/http-client.private.env.json
 
