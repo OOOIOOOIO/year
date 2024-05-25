@@ -35,6 +35,7 @@ dependencies {
 
     // swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
+//    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
 
     // apache
