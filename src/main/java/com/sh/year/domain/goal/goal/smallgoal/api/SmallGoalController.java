@@ -30,16 +30,15 @@ public class SmallGoalController {
      * 작은목표 상세보기
      */
     @Operation(
-            summary = "작은목표 API",
-            description = "작은목표 상세조회"
+            summary = "작은목표 상세조회 API",
+            description = "작은목표"
     )
     @ApiResponse(
             responseCode = "200",
             description = "작은목표 상세조회에 성공하였습니다."
     )
     @GetMapping("/{smallGoalId}")
-    public void getGoalInfo(@PathVariable(value = "smallGoalId") Long smallGoalId,
-                            @RequestParam(value = "routine") Integer routine){
+    public void getGoalInfo(@PathVariable(value = "smallGoalId") Long smallGoalId){
 
 
     }
@@ -47,6 +46,14 @@ public class SmallGoalController {
     /**
      * 내 작은 목표들 리스트 보기
      */
+    @Operation(
+            summary = "작은목표 리스트로 조회 API",
+            description = "작은목표"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "작은목표 리스트로 조회에 성공하였습니다."
+    )
     @GetMapping("/list")
     public void getGoalList(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto){
 
@@ -55,6 +62,14 @@ public class SmallGoalController {
     /**
      * 작은목표 저장
      */
+    @Operation(
+            summary = "작은목표 저장 API",
+            description = "작은목표"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "작은목표 저장에 성공하였습니다."
+    )
     @PostMapping("/{bigGoalId}")
     public ResponseEntity<Long> saveGoal(@PathVariable(value = "bigGoalId") Long bigGoalId, @RequestBody SmallGoalReqDto smallGoalReqDto){
 
@@ -68,6 +83,14 @@ public class SmallGoalController {
     /**
      * 작은목표 수정
      */
+    @Operation(
+            summary = "작은목표 수정 API",
+            description = "작은목표"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "작은목표 수정에 성공하였습니다."
+    )
     @PutMapping("/{smallGoalId}")
     public ResponseEntity<String> updateGoal(@PathVariable(value = "smallGoalId") Long smallGoalId, @RequestBody SmallGoalUpdateReqDto smallGoalUpdateReqDto){
 
@@ -79,6 +102,14 @@ public class SmallGoalController {
     /**
      * 작은목표 삭제
      */
+    @Operation(
+            summary = "작은목표 삭제 API",
+            description = "작은목표"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "작은목표 삭제에 성공하였습니다."
+    )
     @DeleteMapping("/{smallGoalId}")
     public ResponseEntity<String> deleteGoal(@PathVariable(value = "smallGoalId") Long smallGoalId){
 
@@ -88,8 +119,16 @@ public class SmallGoalController {
     }
 
     /**
-     * 작은목표 달성여부 설정
+     * 작은목표 달성여부 변경
      */
+    @Operation(
+            summary = "작은목표 달성여부 변경 API",
+            description = "작은목표"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "작은목표 달성여부 변경 성공하였습니다."
+    )
     @PutMapping("/comp/{smallGoalId}")
     public ResponseEntity<String> updateShareStatus(@PathVariable(value = "smallGoalId") Long smallGoalId){
 

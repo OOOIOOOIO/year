@@ -6,6 +6,7 @@ import com.sh.year.domain.goal.goal.biggoal.domain.repository.BigGoalQueryReposi
 import com.sh.year.domain.goal.goal.biggoal.domain.repository.BigGoalRepository;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.SmallGoalReqDto;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.SmallGoalUpdateReqDto;
+import com.sh.year.domain.goal.goal.smallgoal.api.dto.res.SmallGoalResDto;
 import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
 import com.sh.year.domain.goal.goal.smallgoal.domain.repository.SmallGoalQueryRepositoryImpl;
 import com.sh.year.domain.goal.goal.smallgoal.domain.repository.SmallGoalRepository;
@@ -47,12 +48,12 @@ public class SmallGoalService {
 
 
     /**
-     * 작은목표 기본 조회
+     * 작은목표 상세 조회
      */
-    public BigGoalResDto getSmallGoalInfo(Long goalId, Integer routine){
+    public SmallGoalResDto getSmallGoalInfo(Long smallGoalId){
 
-        BigGoal bigGoal = goalQueryRepository.getBigGoalInfo(goalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
-
+//        BigGoal bigGoal = sma.getBigGoalInfo(goalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
+//
 //        Rule rule = bigGoal.getRule();
 //
 //        int originalRoutine = bigGoal.getRule().getRoutine();
@@ -77,11 +78,22 @@ public class SmallGoalService {
 //        else{
 //
 //        }
-
+//
 //        new GoalResDto(goal, rule, progress)
 
         return null;
     }
+
+    /**
+     * 작은목표 리스트 보기
+     */
+    public void getSmallGoalList(UserInfoFromHeaderDto userInfoFromTokenDto){
+
+    }
+
+    /**
+     * 오늘 완료해야하는 리스트
+     */
 
 
     /**
@@ -166,12 +178,12 @@ public class SmallGoalService {
         smallGoal.updateCompleteStatus(smallGoal.getCompleteStatus());
     }
 
-    /**
-     * 작은목표 리스트 보기
-     */
-    public void getSmallGoalList(UserInfoFromHeaderDto userInfoFromTokenDto){
 
-    }
+    /**
+     * ======================================================================================================================================================
+     * ======================================================================================================================================================
+     *
+     */
 
 
     private Users getUsers(UserInfoFromHeaderDto userInfoFromHeaderDto) {

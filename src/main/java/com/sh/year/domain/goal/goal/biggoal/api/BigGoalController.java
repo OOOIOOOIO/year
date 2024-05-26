@@ -26,14 +26,14 @@ public class BigGoalController {
     /**
      * 큰목표 상세보기
      */
-//    @Operation(
-//            summary = "큰목표 API",
-//            description = "큰목표 상세조회."
-//    )
-//    @ApiResponse(
-//            responseCode = "200",
-//            description = "큰목표 상세조회에 성공하였습니다."
-//    )
+    @Operation(
+            summary = "큰목표 상세조회 API",
+            description = "큰목표"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "큰목표 상세조회에 성공하였습니다."
+    )
     @GetMapping("/{bigGoalId}")
     public void getGoalInfo(@PathVariable(value = "bigGoalId") Long bigGoalId){
 
@@ -44,6 +44,14 @@ public class BigGoalController {
     /**
      * 큰목표 저장
      */
+    @Operation(
+            summary = "큰목표 저장 API",
+            description = "큰목표"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "큰목표 저장에 성공하였습니다."
+    )
     @PostMapping("")
     public ResponseEntity<Long> saveGoal(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto,
                                            @RequestBody BigGoalReqDto bigGoalReqDto){
@@ -58,6 +66,14 @@ public class BigGoalController {
     /**
      * 큰목표 수정
      */
+    @Operation(
+            summary = "큰목표 수정 API",
+            description = "큰목표"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "큰목표 수정에 성공하였습니다."
+    )
     @PutMapping("/{bigGoalId}")
     public ResponseEntity<String> updateGoal(@PathVariable(value = "bigGoalId") Long bigGoalId,
                            @RequestBody BigGoalReqDto bigGoalReqDto){
@@ -70,6 +86,14 @@ public class BigGoalController {
     /**
      * 큰목표 삭제
      */
+    @Operation(
+            summary = "큰목표 삭제 API",
+            description = "큰목표"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "큰목표 삭제에 성공하였습니다."
+    )
     @DeleteMapping("/{bigGoalId}")
     public ResponseEntity<String> deleteGoal(@PathVariable(value = "bigGoalId") Long bigGoalId){
 
@@ -79,8 +103,16 @@ public class BigGoalController {
     }
 
     /**
-     * 큰목표 공유여부 설정
+     * 큰목표 공유여부 변경
      */
+    @Operation(
+            summary = "큰목표 공유여부 변경 API",
+            description = "큰목표"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "큰목표 공유여부 변경에 성공하였습니다."
+    )
     @PutMapping("/share/{bigGoalId}")
     public ResponseEntity<String> updateShareStatus(@PathVariable(value = "bigGoalId") Long bigGoalId){
 
@@ -90,8 +122,16 @@ public class BigGoalController {
     }
 
     /**
-     * 큰목표 달성여부 설정
+     * 큰목표 달성여부 변경
      */
+    @Operation(
+            summary = "큰목표 달성여부 변경 API",
+            description = "큰목표"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "큰목표 달성여부 변경에 성공하였습니다."
+    )
     @PutMapping("/comp/{bigGoalId}")
     public ResponseEntity<String> updateCompleteStatus(@PathVariable(value = "bigGoalId") Long bigGoalId){
 
@@ -104,6 +144,14 @@ public class BigGoalController {
     /**
      * 내 큰목표들 보기
      */
+    @Operation(
+            summary = "큰목표 리스트로 조회 API",
+            description = "큰목표"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "큰목표 리스트로 조회에 성공하였습니다."
+    )
     @GetMapping("/list")
     public void getGoalList(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto){
 
