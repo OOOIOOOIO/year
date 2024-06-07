@@ -16,7 +16,7 @@ public class RuleRepeatDay {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ruleRepeatDayId;
 
-    private int day; // 마지막날이면 -1
+    private int day; // 마지막날이면 -1 / 월요일 1, 일요일 7
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ruleId")

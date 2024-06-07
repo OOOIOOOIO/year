@@ -1,8 +1,6 @@
 package com.sh.year.domain.goal.goal.smallgoal.application;
 
-import com.sh.year.domain.goal.goal.biggoal.api.dto.res.BigGoalResDto;
 import com.sh.year.domain.goal.goal.biggoal.domain.BigGoal;
-import com.sh.year.domain.goal.goal.biggoal.domain.repository.BigGoalQueryRepositoryImpl;
 import com.sh.year.domain.goal.goal.biggoal.domain.repository.BigGoalRepository;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.SmallGoalReqDto;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.SmallGoalUpdateReqDto;
@@ -11,8 +9,9 @@ import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
 import com.sh.year.domain.goal.goal.smallgoal.domain.repository.SmallGoalQueryRepositoryImpl;
 import com.sh.year.domain.goal.goal.smallgoal.domain.repository.SmallGoalRepository;
 import com.sh.year.domain.goal.rule.rule.domain.Rule;
+import com.sh.year.domain.goal.rule.rule.domain.repository.RuleQueryRepositoryImpl;
 import com.sh.year.domain.goal.rule.rulecompleteinfo.domain.RuleCompleteInfo;
-import com.sh.year.domain.goal.rule.rulecompleteinfo.domain.repository.RuleCompleteInfoRepository;
+import com.sh.year.domain.goal.rule.rulecompleteinfo.dto.RuleCompleteInfoDto;
 import com.sh.year.domain.goal.rule.rulerepeatday.domain.RuleRepeatDay;
 import com.sh.year.domain.user.domain.Users;
 import com.sh.year.domain.user.domain.repository.UsersRepository;
@@ -28,6 +27,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -39,11 +39,10 @@ public class SmallGoalService {
     private static final Integer DAILY_ALARM_STATE = 1;
     private static final Integer DAILY_REPEAT_SIZE = 7;
     private final BigGoalRepository bigGoalRepository;
-    private final BigGoalQueryRepositoryImpl goalQueryRepository;
     private final SmallGoalRepository smallGoalRepository;
     private final SmallGoalQueryRepositoryImpl smallGoalQueryRepository;
     private final UsersRepository usersRepository;
-    private final RuleCompleteInfoRepository ruleRepeatDatesRepository;
+    private final RuleQueryRepositoryImpl ruleQueryRepository;
 
 
 
@@ -52,42 +51,28 @@ public class SmallGoalService {
      */
     public SmallGoalResDto getSmallGoalInfo(Long smallGoalId){
 
-//        BigGoal bigGoal = sma.getBigGoalInfo(goalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
-//
-//        Rule rule = bigGoal.getRule();
-//
-//        int originalRoutine = bigGoal.getRule().getRoutine();
-//
-//        LocalDate endDate = bigGoal.getEndDate();
-//
-//        if(originalRoutine == 1){
-//
-//            RuleResDto ruleResDto = new RuleResDto(rule, DAILY_ALARM_STATE);
-//
-//            /**
-//             * 매일이면 -> 시작일부터 오늘까지 / 시작일부터 endDate까지의 횟수
-//             * 근데
-//             */
-//            calculateProgress(rule.getRoutine(), DAILY_REPEAT_SIZE, endDate);
-//
-////            new GoalResDto(goal, ruleResDto, progress)
-//        }
-//        else if (originalRoutine == 2) {
-//
-//        }
-//        else{
-//
-//        }
-//
-//        new GoalResDto(goal, rule, progress)
+        SmallGoal smallGoal = smallGoalQueryRepository.findSmallGoalBySmallGoalId(smallGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistSmallGoal));
 
-        return null;
+        SmallGoalResDto smallGoalResDto = new SmallGoalResDto(smallGoal);
+
+        List<RuleCompleteInfoDto> ruleCompleteInfoDtoList = smallGoalResDto.getRuleResDto().getRuleCompleteInfoDtoList();
+
+        int progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
+
+        smallGoalResDto.setProgress(progress);
+
+        return smallGoalResDto;
     }
+
 
     /**
      * 작은목표 리스트 보기
      */
-    public void getSmallGoalList(UserInfoFromHeaderDto userInfoFromTokenDto){
+    public List<SmallGoalResDto> getSmallGoalList(Long bigGoalId){
+
+        return smallGoalQueryRepository.findSmallGoalListByBigGoalId(bigGoalId).stream()
+                .map(SmallGoalResDto::new)
+                .collect(Collectors.toList());
 
     }
 
@@ -101,7 +86,8 @@ public class SmallGoalService {
      */
     public Long saveSmallGoal(Long bigGoalId, SmallGoalReqDto smallGoalReqDto) {
 
-        BigGoal bigGoal = goalQueryRepository.getBigGoalInfo(bigGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
+        // bigGoal
+        BigGoal bigGoal = bigGoalRepository.findById(bigGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
 
         // smallGoal
         SmallGoal smallGoal = SmallGoal.createSmallGoal(smallGoalReqDto, bigGoal);
@@ -150,11 +136,10 @@ public class SmallGoalService {
 
         SmallGoal smallGoal = smallGoalRepository.findById(smallGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistSmallGoal));
 
-        Rule rule = smallGoal.getRule(); // fetch join 생각
-
-        rule.updateContents(smallGoalUpdateReqDto.getContents());
-
         smallGoal.updateSmallGoal(smallGoalUpdateReqDto);
+
+
+
 
     }
 
@@ -170,12 +155,31 @@ public class SmallGoalService {
 
 
     /**
-     * 작은목표 달성여부 설정
+     * 작은목표 달성여부 설정(100% 달성시)
      */
     public void updateCompleteStatus(Long smallGoalId){
         SmallGoal smallGoal = smallGoalRepository.findById(smallGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistSmallGoal));
 
         smallGoal.updateCompleteStatus(smallGoal.getCompleteStatus());
+
+
+    }
+
+    /**
+     * 작은목표의 규칙 달성여부 설정
+     */
+    public void updateRuleCompleteInfo(Long ruleId) {
+        LocalDate now = LocalDate.now();
+
+        Rule rule = ruleQueryRepository.findRuleAndRuleCompleteInfo(now.getYear(), now.getMonth().getValue(), ruleId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
+
+        int today = now.getDayOfMonth();
+        byte[] completeDayArr = rule.getRuleCompleteInfoList().get(0).getCompleteDayArr();
+
+        completeDayArr[today] = 1;
+
+        rule.getRuleCompleteInfoList().get(0).updateCompleteDayArr(completeDayArr);
+
     }
 
 
@@ -184,6 +188,7 @@ public class SmallGoalService {
      * ======================================================================================================================================================
      *
      */
+
 
 
     private Users getUsers(UserInfoFromHeaderDto userInfoFromHeaderDto) {
@@ -203,6 +208,22 @@ public class SmallGoalService {
         return true;
     }
 
+    /**
+     * small goal progress 계산
+     */
+    private int calculateProgress(List<RuleCompleteInfoDto> ruleCompleteInfoDtoList, int totalDayCnt){
+        int cnt = 0;
+
+        for(int i = 0; i < ruleCompleteInfoDtoList.size(); i++){
+            byte[] completeDayArr = ruleCompleteInfoDtoList.get(i).getCompleteDayArr();
+
+            for(int day = 0; day < completeDayArr.length; day++){
+                if(completeDayArr[day] == 1) cnt++;
+            }
+        }
+
+        return Math.round((cnt * 100) / totalDayCnt);
+    }
 
     /**
      * 알람 totalCnt

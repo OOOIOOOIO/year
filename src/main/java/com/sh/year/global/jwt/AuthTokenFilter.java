@@ -52,9 +52,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
 //        String[] excludePath = {"/api/token/**"};
         String[] excludePath = {
+                "/error",
                 "/api/token/reissue/access-token",
                 "/api/token/reissue/refresh-token",
-                "/login/oauth2/code/kakao",
+                "/login/oauth2/redirect",
                 "/test/login",
                 "/favicon.ico",
                 "/swagger-ui/index.html",

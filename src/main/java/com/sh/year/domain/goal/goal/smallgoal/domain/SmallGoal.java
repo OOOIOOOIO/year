@@ -35,10 +35,10 @@ public class SmallGoal extends BaseTimeEntity {
     @JoinColumn(name = "bigGoalId")
     private BigGoal bigGoal;
 
-    @OneToOne(mappedBy = "smallGoal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(mappedBy = "smallGoal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private Rule rule;
 
-    @OneToMany(mappedBy = "smallGoal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "smallGoal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<Diary> diaryList = new ArrayList<>();
 
 

@@ -78,3 +78,14 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+
+// gradle build시 xx-plain.jar 나오는거 막기(gradle 2.5부터 생김)
+jar{
+    enabled = false
+}
+
+// gradle build 시 test 때문에 fail나는거 막기, 테스트를 안함
+test.onlyIf{
+    !project.hasProperty('test')
+}

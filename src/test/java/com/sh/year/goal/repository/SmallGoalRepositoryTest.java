@@ -26,7 +26,18 @@ public class SmallGoalRepositoryTest {
         Long smallGoalIdMoreThan3 = 2L; // Routine 1, 3개월 이상
 
         // when
-        Optional<SmallGoal> smallGoalById = smallGoalQueryRepository.findSmallGoalById(smallGoalIdUnderThan3);
+        Optional<SmallGoal> smallGoalById = smallGoalQueryRepository.findSmallGoalBySmallGoalId(smallGoalIdUnderThan3);
+
+        // then
+
+    }
+
+    @Test
+    public void updateCompleteInfo(){
+        // given
+
+
+        // when
 
         // then
 

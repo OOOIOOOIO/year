@@ -1,6 +1,7 @@
 package com.sh.year.domain.goal.goal.biggoal.api;
 
 import com.sh.year.domain.goal.goal.biggoal.api.dto.req.BigGoalReqDto;
+import com.sh.year.domain.goal.goal.biggoal.api.dto.res.BigGoalResDto;
 import com.sh.year.domain.goal.goal.biggoal.application.BigGoalService;
 import com.sh.year.global.common.ResponseConst;
 import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeader;
@@ -35,10 +36,11 @@ public class BigGoalController {
             description = "큰목표 상세조회에 성공하였습니다."
     )
     @GetMapping("/{bigGoalId}")
-    public void getGoalInfo(@PathVariable(value = "bigGoalId") Long bigGoalId){
+    public ResponseEntity<BigGoalResDto> getGoalInfo(@PathVariable(value = "bigGoalId") Long bigGoalId){
 
-        bigGoalService.getBigGoalInfo(bigGoalId);
+        BigGoalResDto bigGoalInfo = bigGoalService.getBigGoalInfo(bigGoalId);
 
+        return new ResponseEntity<>(bigGoalInfo, HttpStatus.OK);
     }
 
     /**

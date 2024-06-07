@@ -6,6 +6,7 @@ import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.sh.year.domain.goal.goal.smallgoal.domain.QSmallGoal.smallGoal;
@@ -18,16 +19,29 @@ public class SmallGoalQueryRepositoryImpl implements SmallGoalQueryRepository {
 
 
     @Override
-    public Optional<SmallGoal> findSmallGoalById(long smallGoalId) {
+    public Optional<SmallGoal> findSmallGoalBySmallGoalId(Long smallGoalId) {
 
         return Optional.ofNullable(
                 queryFactory.select(smallGoal)
                         .from(smallGoal)
                         .join(smallGoal.rule).fetchJoin()
-//                        .join(smallGoal.rule.ruleCompleteInfoList).fetchJoin()
-                        .join(smallGoal.rule.ruleRepeatDayList).fetchJoin() // 이거 나눠서 가져와야하겠네
                         .where(smallGoal.smallGoalId.eq(smallGoalId))
                         .fetchOne());
     }
 
+
+    @Override
+    public List<SmallGoal> findSmallGoalListByBigGoalId(Long bigGoalId) {
+
+        return queryFactory.select(smallGoal)
+                        .from(smallGoal)
+                        .join(smallGoal.rule).fetchJoin()
+                        .where(smallGoal.bigGoal.bigGoalId.eq(bigGoalId))
+                        .fetch();
+    }
 }
+
+
+/**
+ * 연관관계시 자식타입에 OneTOMany(List) 쪽에 fk 있는쪽에 JsonIgnore 걸기
+ */

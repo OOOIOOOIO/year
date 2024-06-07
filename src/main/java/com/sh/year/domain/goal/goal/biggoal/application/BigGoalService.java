@@ -7,7 +7,8 @@ import com.sh.year.domain.goal.goal.biggoal.domain.ShareStatus;
 import com.sh.year.domain.goal.goal.biggoal.domain.repository.BigGoalQueryRepositoryImpl;
 import com.sh.year.domain.goal.goal.biggoal.domain.repository.BigGoalRepository;
 import com.sh.year.domain.goal.goal.common.CompleteStatus;
-import com.sh.year.domain.goal.rule.rulecompleteinfo.domain.repository.RuleCompleteInfoRepository;
+import com.sh.year.domain.goal.goal.smallgoal.api.dto.res.SmallGoalResDto;
+import com.sh.year.domain.goal.rule.rulecompleteinfo.dto.RuleCompleteInfoDto;
 import com.sh.year.domain.user.domain.Users;
 import com.sh.year.domain.user.domain.repository.UsersRepository;
 import com.sh.year.global.exception.CustomErrorCode;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -33,7 +35,6 @@ public class BigGoalService {
     private final BigGoalRepository bigGoalRepository;
     private final BigGoalQueryRepositoryImpl goalQueryRepository;
     private final UsersRepository usersRepository;
-    private final RuleCompleteInfoRepository ruleRepeatDatesRepository;
 
 
     /**
@@ -43,8 +44,50 @@ public class BigGoalService {
 
         BigGoal bigGoal = goalQueryRepository.getBigGoalInfo(bigGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
 
+        BigGoalResDto bigGoalResDto = new BigGoalResDto(bigGoal);
 
-        return null;
+        List<SmallGoalResDto> smallGoalResDtoList = bigGoalResDto.getSmallGoalResDtoList();
+
+        int progress = calculateProgress(smallGoalResDtoList, smallGoalResDtoList.size());
+
+        bigGoalResDto.setProgress(progress);
+        bigGoalResDto.setSmallGoalCnt(bigGoalResDto.getSmallGoalResDtoList().size());
+
+        return bigGoalResDto;
+    }
+
+    /**
+     * big goal progress 계산
+     */
+    private int calculateProgress(List<SmallGoalResDto> smallGoalResDtoList, int smallGaolListSize){
+        int bigGoalProgress = 0;
+
+        // small goal
+        for(int i = 0; i < smallGoalResDtoList.size(); i++){
+            int completeDayCnt = 0;
+            int smallGoalProgress = 0;
+            int totalDayCnt = 0;
+            List<RuleCompleteInfoDto> ruleCompleteInfoDtoList = smallGoalResDtoList.get(i).getRuleResDto().getRuleCompleteInfoDtoList();
+
+            // rule complete info
+            for(int rci = 0; rci < ruleCompleteInfoDtoList.size(); rci++){
+                byte[] completeDayArr = ruleCompleteInfoDtoList.get(rci).getCompleteDayArr();
+                totalDayCnt = ruleCompleteInfoDtoList.get(rci).getTotalDayCnt();
+
+                for(int day = 0; day < completeDayArr.length; day++){
+                    if(completeDayArr[day] == 1) completeDayCnt++;
+                }
+
+            }
+
+            smallGoalProgress = Math.round((completeDayCnt * 100) / totalDayCnt);
+
+            smallGoalResDtoList.get(i).setProgress(smallGoalProgress);
+
+            bigGoalProgress += smallGoalProgress;
+        }
+
+        return Math.round(bigGoalProgress / smallGaolListSize);
     }
 
     /**
@@ -116,11 +159,13 @@ public class BigGoalService {
 
     }
 
+
+
     /**
-     * 작은목표 리스트 보기
+     * ======================================================================================================================================================
+     * ======================================================================================================================================================
+     *
      */
-
-
 
 
     private Users getUsers(UserInfoFromHeaderDto userInfoFromHeaderDto) {
@@ -141,48 +186,7 @@ public class BigGoalService {
     }
 
 
-    /**
-     * 매일이면 -> 시작일부터 오늘까지 / 시작일부터 endDate까지의 횟수
-     * 근데
-     *
-     * 딱 한번만 계산하면 될텐데
-     */
-    private Long calculateProgress(int routine, int repeatSize, LocalDate endDate){
-        if(routine == 1){
-            LocalDate now = LocalDate.now();
 
-            int totalDates = getCountBetweenTwoDates(now, endDate);
-//            int successDates = repository에서 가져오기, 0 예외처리하기
-
-
-        }
-        else if(routine == 2){
-
-            /**
-             * 시작일
-             *
-             *
-             * 종료일
-             *
-             * 시작일 < 알람일 = +1
-             * 시작일 > 알람일 = 0
-             * 알람일 < 목표일 = +1
-             * 알람일 > 목표일 = 0
-             *
-             * 시작일의 다음달 ~ 목표일의 전달 = +1씩
-             *
-             */
-
-
-        }
-        else{
-
-
-        }
-
-
-        return 1L;
-    }
 
     private int getCountBetweenTwoDates(LocalDate startDate, LocalDate endDate) {
 

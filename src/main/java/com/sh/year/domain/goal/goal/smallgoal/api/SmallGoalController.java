@@ -4,6 +4,7 @@ import com.sh.year.domain.goal.goal.biggoal.api.dto.req.BigGoalReqDto;
 import com.sh.year.domain.goal.goal.biggoal.application.BigGoalService;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.SmallGoalReqDto;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.SmallGoalUpdateReqDto;
+import com.sh.year.domain.goal.goal.smallgoal.api.dto.res.SmallGoalResDto;
 import com.sh.year.domain.goal.goal.smallgoal.application.SmallGoalService;
 import com.sh.year.global.common.ResponseConst;
 import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeader;
@@ -16,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Small Goal", description = "작은목표 API")
 @Slf4j
@@ -38,8 +41,11 @@ public class SmallGoalController {
             description = "작은목표 상세조회에 성공하였습니다."
     )
     @GetMapping("/{smallGoalId}")
-    public void getGoalInfo(@PathVariable(value = "smallGoalId") Long smallGoalId){
+    public ResponseEntity<SmallGoalResDto> getGoalInfo(@PathVariable(value = "smallGoalId") Long smallGoalId){
 
+        SmallGoalResDto smallGoalInfo = smallGoalService.getSmallGoalInfo(smallGoalId);
+
+        return new ResponseEntity<>(smallGoalInfo, HttpStatus.OK);
 
     }
 
@@ -54,9 +60,12 @@ public class SmallGoalController {
             responseCode = "200",
             description = "작은목표 리스트로 조회에 성공하였습니다."
     )
-    @GetMapping("/list")
-    public void getGoalList(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto){
+    @GetMapping("/{bigGoalId}/list")
+    public ResponseEntity<List<SmallGoalResDto>> getGoalList(@PathVariable("bigGoalId") Long bigGoalId){
 
+        List<SmallGoalResDto> smallGoalList = smallGoalService.getSmallGoalList(bigGoalId);
+
+        return new ResponseEntity<>(smallGoalList, HttpStatus.OK);
     }
 
     /**
@@ -119,20 +128,39 @@ public class SmallGoalController {
     }
 
     /**
-     * 작은목표 달성여부 변경
+     * 작은목표 100% 달성시 달성여부 변경
      */
     @Operation(
-            summary = "작은목표 달성여부 변경 API",
+            summary = "작은목표 100% 달성시 달성여부 변경 API",
             description = "작은목표"
     )
     @ApiResponse(
             responseCode = "200",
-            description = "작은목표 달성여부 변경 성공하였습니다."
+            description = "작은목표 100% 달성시 달성여부 변경 성공하였습니다."
     )
     @PutMapping("/comp/{smallGoalId}")
     public ResponseEntity<String> updateShareStatus(@PathVariable(value = "smallGoalId") Long smallGoalId){
 
         smallGoalService.updateCompleteStatus(smallGoalId);
+
+        return new ResponseEntity<>(ResponseConst.SUCCESS.value(), HttpStatus.OK);
+    }
+
+    /**
+     * 작은목표 루틴 달성여부 변경
+     */
+    @Operation(
+            summary = "작은목표 루틴 달성여부 변경 API",
+            description = "작은목표"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "작은목표 루틴 달성여부 변경 성공하였습니다."
+    )
+    @PutMapping("/routine/comp/{smallGoalId}")
+    public ResponseEntity<String> updateRuleCompleteInfo(@PathVariable("ruleId") Long ruleId){
+
+        smallGoalService.updateRuleCompleteInfo(ruleId);
 
         return new ResponseEntity<>(ResponseConst.SUCCESS.value(), HttpStatus.OK);
     }

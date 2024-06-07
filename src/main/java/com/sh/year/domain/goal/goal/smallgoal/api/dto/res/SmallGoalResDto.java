@@ -17,16 +17,20 @@ public class SmallGoalResDto {
     private String icon;
     private LocalDate endDate;
     private CompleteStatus completeStatus;
+    private RuleResDto ruleResDto;
     private Integer progress;
 
-    public SmallGoalResDto(SmallGoal smallGoal, Integer progress) {
+    public SmallGoalResDto(SmallGoal smallGoal) {
         this.smallGoalId = smallGoal.getSmallGoalId();
         this.title = smallGoal.getTitle();
         this.icon = smallGoal.getIcon();
         this.endDate = smallGoal.getEndDate();
         this.completeStatus = smallGoal.getCompleteStatus();
-        this.progress = progress;
+        this.ruleResDto = new RuleResDto(smallGoal.getRule());
+        this.progress = 0;
     }
 
-
+    public void setProgress(Integer progress) {
+        this.progress = progress;
+    }
 }

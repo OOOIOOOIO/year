@@ -12,7 +12,4 @@ public interface BigGoalQueryRepository {
     // 큰목표 기본 조회
     Optional<BigGoal> getBigGoalInfo(Long bigGoalId);
 
-    // 작은목표 기본 조회
-    Optional<SmallGoal> getSmallGoalInfo(Long smallGoalId);
-
 }

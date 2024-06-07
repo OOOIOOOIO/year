@@ -22,31 +22,18 @@ public class BigGoalQueryRepositoryImpl implements BigGoalQueryRepository {
     @Override
     public Optional<BigGoal> getBigGoalInfo(Long bigGoalId) {
 
-
         return Optional.ofNullable(
                 queryFactory.select(bigGoal)
-                .from(bigGoal)
-//                .join(bigGoal.smallGoalList).fetchJoin()
-                .where(bigGoal.bigGoalId.eq(bigGoalId))
-                .fetchOne());
+                    .from(bigGoal)
+                    .join(bigGoal.smallGoalList).fetchJoin()
+                    .where(bigGoal.bigGoalId.eq(bigGoalId))
+                    .fetchOne());
 
 
     }
 
 
-    @Override
-    public Optional<SmallGoal> getSmallGoalInfo(Long smallGoalId) {
 
-        return null;
-//        return Optional.ofNullable(
-//                queryFactory.select(smallGoal)
-//                .from(smallGoal)
-//                .join(smallGoal.rule).fetchJoin().join(smallGoal.rule.repeatDatesList).fetchJoin()
-//                .where(smallGoal.smallGoalId.eq(smallGoalId))
-//                .fetchOne());
-
-
-    }
 
 
 }

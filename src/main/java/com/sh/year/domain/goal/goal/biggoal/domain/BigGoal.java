@@ -36,7 +36,7 @@ public class BigGoal extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private Users users;
 
-    @OneToMany(mappedBy = "bigGoal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "bigGoal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<SmallGoal> smallGoalList = new ArrayList<>();
 
 
