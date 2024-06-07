@@ -31,16 +31,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
         resolvers.add(userInfoFromHeaderArgumentResolver);
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("http://http://211.42.156.199:7777",
-                        "http://localhost:7777")
-                .allowedMethods("*")
-                .allowedHeaders("*")
-//                .allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE")
-//                .allowedHeaders("Authorization", "Content-Type", "refresh_token")
-                .allowCredentials(true)
-                .maxAge(3600);
-    }
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**")
+//                .allowedOrigins("http://211.42.156.199:3000")
+//                .allowedMethods("*")
+//                .allowedHeaders("*")
+////                .allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE")
+////                .allowedHeaders("Authorization", "Content-Type", "refresh_token")
+//                .allowCredentials(true)
+//                .maxAge(3600);
+//    }
 }
