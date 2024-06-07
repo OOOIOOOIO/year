@@ -49,8 +49,10 @@ public class WebSecurityConfig {  // extends WebSecurityConfigurerAdapte, Spring
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
-//                .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile",).permitAll() //정적리소스 물어보기
-        http.cors(AbstractHttpConfigurer::disable)
+
+        http
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
 
                 // disable session
@@ -61,10 +63,14 @@ public class WebSecurityConfig {  // extends WebSecurityConfigurerAdapte, Spring
                         authorizeRequest
                                 .requestMatchers("/api/token/reissue/**").permitAll()
                                 .requestMatchers("/login/oauth2/code/**").permitAll()
+                                .requestMatchers("/login/oauth2/redirect/**").permitAll()
+                                .requestMatchers("/login/**").permitAll()
                                 .requestMatchers("/test/**").permitAll()
-                                .requestMatchers("//favicon.ico").permitAll()
+                                .requestMatchers("/favicon.ico").permitAll()
+                                .requestMatchers("/swagger-ui/**").permitAll()
+                                .requestMatchers("/api-docs/**").permitAll()
 //                                .requestMatchers(new AntPathRequestMatcher("/api/token/**")).permitAll()
-                                .requestMatchers("/error").permitAll()
+                                .requestMatchers("/error/**").permitAll()
                                 .anyRequest().authenticated()
                 )
 

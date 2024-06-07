@@ -29,32 +29,25 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (SignatureException e) {
-            log.error(e.getMessage());
             handleJwtCustomException(response, new JwtCustomException((JwtCustomErrorCode.SignatureException)));
         } catch (MalformedJwtException e) {
-            log.error(e.getMessage());
             handleJwtCustomException(response, new JwtCustomException((JwtCustomErrorCode.MalformedJwtException)));
         } catch (ExpiredJwtException e) {
-            log.error(e.getMessage());
             handleJwtCustomException(response, new JwtCustomException((JwtCustomErrorCode.AccessTokenExpiredException)));
         } catch (UnsupportedJwtException e) {
-            log.error(e.getMessage());
             handleJwtCustomException(response, new JwtCustomException((JwtCustomErrorCode.UnsupportedJwtException)));
         } catch (IllegalArgumentException e) {
-            log.error(e.getMessage());
-            handleCustomException(response, new CustomException((CustomErrorCode.UsernameNotFoundException)));
+            handleCustomException(response, new CustomException((CustomErrorCode.IllegalArgumentException)));
         } catch (UsernameNotFoundException e) {
-            log.error(e.getMessage());
             handleCustomException(response, new CustomException((CustomErrorCode.UsernameNotFoundException)));
         } catch (JwtCustomException e){
-            log.error(e.getMessage());
             handleJwtCustomException(response, new JwtCustomException((e.getJwtCustomErrorCode())));
         }
     }
 
     private void handleJwtCustomException(HttpServletResponse response, JwtCustomException e) {
 
-        log.error("handel JwtException : {}", e.getJwtCustomErrorCode());
+        log.error("handel JwtException : {}, {}", e.getJwtCustomErrorCode().getCode(), e.getJwtCustomErrorCode().getMessage());
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule()); // 날짜 직렬화 문제
@@ -74,7 +67,7 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
 
     private void handleCustomException(HttpServletResponse response, CustomException e) {
 
-        log.error("handel CustomException : {}", e.getCustomErrorCode());
+        log.error("handel CustomException : {}, {}", e.getCustomErrorCode().getCode(), e.getCustomErrorCode().getMessage());
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule()); // 날짜 직렬화 문제

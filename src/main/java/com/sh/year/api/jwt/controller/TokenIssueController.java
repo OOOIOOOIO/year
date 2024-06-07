@@ -6,13 +6,14 @@ import com.sh.year.global.jwt.JwtClaimDto;
 import com.sh.year.global.jwt.JwtUtils;
 import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeader;
 import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeaderDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+@Tag(name = "Token Controller", description = "Token API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
