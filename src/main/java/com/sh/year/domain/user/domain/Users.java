@@ -1,7 +1,7 @@
 package com.sh.year.domain.user.domain;
 
 import com.sh.year.domain.common.BaseTimeEntity;
-import com.sh.year.domain.goal.goal.domain.Goal;
+import com.sh.year.domain.goal.goal.biggoal.domain.BigGoal;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -30,7 +30,7 @@ public class Users extends BaseTimeEntity {
     private Role role;
 
     @OneToMany(mappedBy = "users", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
-    private List<Goal> goalList = new ArrayList<>();
+    private List<BigGoal> bigGoalList = new ArrayList<>();
 
 
     @Builder
@@ -47,12 +47,12 @@ public class Users extends BaseTimeEntity {
     /**
      * 양방향 연관관계, cascade 유의
      */
-    public void addGoal(Goal goal){
-        if(goal.getUsers() != null){
-            goal.getUsers().getGoalList().remove(goal);
+    public void addGoal(BigGoal bigGoal){
+        if(bigGoal.getUsers() != null){
+            bigGoal.getUsers().getBigGoalList().remove(bigGoal);
         }
-        this.goalList.add(goal);
-        goal.setUsers(this);
+        this.bigGoalList.add(bigGoal);
+        bigGoal.setUsers(this);
     }
 
     /**

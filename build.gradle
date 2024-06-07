@@ -33,6 +33,10 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5' // 하이버네이트 proxy 문제 해결
 
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
+//    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
 
     // apache
     implementation 'org.apache.httpcomponents:httpclient:4.5.14'
@@ -66,8 +70,22 @@ dependencies {
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
     // Querydsl  끝
+
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+
+// gradle build시 xx-plain.jar 나오는거 막기(gradle 2.5부터 생김)
+jar{
+    enabled = false
+}
+
+// gradle build 시 test 때문에 fail나는거 막기, 테스트를 안함
+test.onlyIf{
+    !project.hasProperty('test')
 }

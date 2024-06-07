@@ -27,7 +27,8 @@ public enum CustomErrorCode {
     FailToUploadFileToS3Exception(INTERNAL_SERVER_ERROR, "S001", "S3 file upload에 실패하였습니다."),
     FailToSaveFileInRedisException(INTERNAL_SERVER_ERROR,"S002", "redis에 데이터 저장을 실패하였습니다."),
     FailToDeleteFIleInRedisException(INTERNAL_SERVER_ERROR, "S003", "redis에서 데이터 삭제를 실패하였습니다."),
-    NotExistGoal(INTERNAL_SERVER_ERROR, "S004", "해당 목표가 존재하지 않습니다."),
+    NotExistBigGoal(INTERNAL_SERVER_ERROR, "S004", "해당 큰목표가 존재하지 않습니다."),
+    NotExistSmallGoal(INTERNAL_SERVER_ERROR, "S004", "해당 작은목표가 존재하지 않습니다."),
     NotExistRule(INTERNAL_SERVER_ERROR, "S005", "해당 목표의 규칙이 존재하지 않습니다."),
 
 
