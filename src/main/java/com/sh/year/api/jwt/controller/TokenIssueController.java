@@ -38,7 +38,7 @@ public class TokenIssueController {
      * J006
      * --> accessToken 재발급
      */
-    @PostMapping("/access-token")
+    @PostMapping("/access")
     public ResponseEntity<String> reissueAccessToken(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto) {
 
 
@@ -57,7 +57,7 @@ public class TokenIssueController {
      * --> accessToken, refreshToken 재발급
      *
      */
-    @PostMapping("/refessh-token")
+    @PostMapping("/refessh")
     public ResponseEntity<TokenIssueResDto> reissueRefreshToken(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto){
 
         /**
