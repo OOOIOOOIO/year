@@ -196,14 +196,18 @@ public class SmallGoalService {
         return usersRepository.findById(userInfoFromHeaderDto.getUserId()).orElseThrow(() -> new CustomException(CustomErrorCode.UserNotFoundException));
     }
 
+    private boolean getDailyActionDay(){
 
-    private boolean checkWeeklyAlarmState(){
+        return true;
+    }
+
+    private boolean getWeeklyActionDay(){
 
         return true;
     }
 
 
-    private boolean checkMonthlyAlarmState(){
+    private boolean getMonthlyMActionDay(){
 
         return true;
     }

@@ -1,7 +1,7 @@
 package com.sh.year.domain.goal.goal.smallgoal.domain;
 
 import com.sh.year.domain.common.BaseTimeEntity;
-import com.sh.year.domain.goal.diary.domain.Diary;
+import com.sh.year.domain.goal.diary.smallgoaldiary.domain.SmallGoalReview;
 import com.sh.year.domain.goal.goal.biggoal.domain.BigGoal;
 import com.sh.year.domain.goal.goal.common.CompleteStatus;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.SmallGoalReqDto;
@@ -39,7 +39,7 @@ public class SmallGoal extends BaseTimeEntity {
     private Rule rule;
 
     @OneToMany(mappedBy = "smallGoal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
-    private List<Diary> diaryList = new ArrayList<>();
+    private List<SmallGoalReview> smallGoalReviewList = new ArrayList<>();
 
 
     @Builder
@@ -87,13 +87,13 @@ public class SmallGoal extends BaseTimeEntity {
     /**
      * 양방향 연관관계, cascade 유의
      */
-    public void addDiary(Diary diary){
-        if(diary.getSmallGoal() != null){
-            diary.getSmallGoal().getDiaryList().remove(diary);
+    public void addSmallGoalReview(SmallGoalReview smallGoalReview){
+        if(smallGoalReview.getSmallGoal() != null){
+            smallGoalReview.getSmallGoal().getSmallGoalReviewList().remove(smallGoalReview);
         }
 
-        diary.setSmallGoal(this);
-        this.diaryList.add(diary);
+        smallGoalReview.setSmallGoal(this);
+        this.smallGoalReviewList.add(smallGoalReview);
     }
 
 

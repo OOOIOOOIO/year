@@ -36,7 +36,7 @@ public class BigGoalController {
             description = "큰목표 상세조회에 성공하였습니다."
     )
     @GetMapping("/{bigGoalId}")
-    public ResponseEntity<BigGoalResDto> getGoalInfo(@PathVariable(value = "bigGoalId") Long bigGoalId){
+    public ResponseEntity<BigGoalResDto> getBigGoalInfo(@PathVariable(value = "bigGoalId") Long bigGoalId){
 
         BigGoalResDto bigGoalInfo = bigGoalService.getBigGoalInfo(bigGoalId);
 
@@ -55,7 +55,7 @@ public class BigGoalController {
             description = "큰목표 저장에 성공하였습니다."
     )
     @PostMapping("")
-    public ResponseEntity<Long> saveGoal(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto,
+    public ResponseEntity<Long> saveBigGoal(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto,
                                            @RequestBody BigGoalReqDto bigGoalReqDto){
 
         Long goalId = bigGoalService.saveBigGoal(userInfoFromHeaderDto, bigGoalReqDto);
@@ -77,10 +77,10 @@ public class BigGoalController {
             description = "큰목표 수정에 성공하였습니다."
     )
     @PutMapping("/{bigGoalId}")
-    public ResponseEntity<String> updateGoal(@PathVariable(value = "bigGoalId") Long bigGoalId,
+    public ResponseEntity<String> updateBigGoal(@PathVariable(value = "bigGoalId") Long bigGoalId,
                            @RequestBody BigGoalReqDto bigGoalReqDto){
 
-        bigGoalService.updateGoal(bigGoalId, bigGoalReqDto);
+        bigGoalService.updateBigGoal(bigGoalId, bigGoalReqDto);
 
         return new ResponseEntity<>(ResponseConst.SUCCESS.value(), HttpStatus.OK);
     }
@@ -97,9 +97,9 @@ public class BigGoalController {
             description = "큰목표 삭제에 성공하였습니다."
     )
     @DeleteMapping("/{bigGoalId}")
-    public ResponseEntity<String> deleteGoal(@PathVariable(value = "bigGoalId") Long bigGoalId){
+    public ResponseEntity<String> deleteBigGoal(@PathVariable(value = "bigGoalId") Long bigGoalId){
 
-        bigGoalService.deleteGoal(bigGoalId);
+        bigGoalService.deleteBigGoal(bigGoalId);
 
         return new ResponseEntity<>(ResponseConst.SUCCESS.value(), HttpStatus.OK);
     }
@@ -116,9 +116,9 @@ public class BigGoalController {
             description = "큰목표 공유여부 변경에 성공하였습니다."
     )
     @PutMapping("/share/{bigGoalId}")
-    public ResponseEntity<String> updateShareStatus(@PathVariable(value = "bigGoalId") Long bigGoalId){
+    public ResponseEntity<String> updateBigGoalShareStatus(@PathVariable(value = "bigGoalId") Long bigGoalId){
 
-        bigGoalService.updateShareStatus(bigGoalId);
+        bigGoalService.updateBigGoalShareStatus(bigGoalId);
 
         return new ResponseEntity<>(ResponseConst.SUCCESS.value(), HttpStatus.OK);
     }
@@ -135,9 +135,9 @@ public class BigGoalController {
             description = "큰목표 달성여부 변경에 성공하였습니다."
     )
     @PutMapping("/comp/{bigGoalId}")
-    public ResponseEntity<String> updateCompleteStatus(@PathVariable(value = "bigGoalId") Long bigGoalId){
+    public ResponseEntity<String> updateBigGoalCompleteStatus(@PathVariable(value = "bigGoalId") Long bigGoalId){
 
-        bigGoalService.updateCompleteStatus(bigGoalId);
+        bigGoalService.updateBigGoalCompleteStatus(bigGoalId);
 
         return new ResponseEntity<>(ResponseConst.SUCCESS.value(), HttpStatus.OK);
     }
@@ -155,10 +155,12 @@ public class BigGoalController {
             description = "큰목표 리스트로 조회에 성공하였습니다."
     )
     @GetMapping("/list")
-    public void getGoalList(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto){
+    public void getBigGoalList(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto){
 
+        /**
+         * 삭제 예정
+         */
     }
-
 
 
 }

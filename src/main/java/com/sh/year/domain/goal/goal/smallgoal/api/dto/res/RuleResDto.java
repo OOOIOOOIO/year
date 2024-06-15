@@ -3,7 +3,6 @@ package com.sh.year.domain.goal.goal.smallgoal.api.dto.res;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sh.year.domain.goal.rule.rule.domain.Rule;
 import com.sh.year.domain.goal.rule.rulecompleteinfo.dto.RuleCompleteInfoDto;
-import com.sh.year.domain.goal.rule.rulerepeatday.dto.RuleRepeatDayDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +19,8 @@ public class RuleResDto {
     private LocalTime timeAt;
     private String contents;
 
-    private List<RuleRepeatDayDto> ruleRepeatList; // week -> 1 : 일요일, 7 : 토요일 /  month -> if) -1일 경우 마지막 날
+//    private List<RuleRepeatDayDto> ruleRepeatList; // week -> 1 : 일요일, 7 : 토요일 /  month -> if) -1일 경우 마지막 날
+    private List<Integer> ruleRepeatList; // week -> 1 : 일요일, 7 : 토요일 /  month -> if) -1일 경우 마지막 날
     @JsonIgnore
     private List<RuleCompleteInfoDto> ruleCompleteInfoDtoList;
 
@@ -30,8 +30,8 @@ public class RuleResDto {
         this.routine = rule.getRoutine();
         this.timeAt = rule.getTimeAt();
         this.contents = rule.getContents();
-        this.ruleRepeatList = rule.getRuleRepeatDayList().stream() // lazy
-                .map(RuleRepeatDayDto::new)
+        this.ruleRepeatList = rule.getRuleRepeatDayList().stream()// lazy
+                .map((o1) -> o1.getDay())
                 .collect(Collectors.toList());
 
         this.ruleCompleteInfoDtoList = rule.getRuleCompleteInfoList().stream() // lazy

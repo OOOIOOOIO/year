@@ -1,6 +1,7 @@
 package com.sh.year.domain.goal.goal.biggoal.domain;
 
 import com.sh.year.domain.common.BaseTimeEntity;
+import com.sh.year.domain.goal.diary.biggoaldiary.domain.BigGoalReview;
 import com.sh.year.domain.goal.goal.biggoal.api.dto.req.BigGoalReqDto;
 import com.sh.year.domain.goal.goal.common.CompleteStatus;
 import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
@@ -27,6 +28,7 @@ public class BigGoal extends BaseTimeEntity {
     private String contents;
     private String category;
     private LocalDate endDate;
+
     @Enumerated(EnumType.STRING)
     private ShareStatus shareStatus;
     @Enumerated(EnumType.STRING)
@@ -39,6 +41,8 @@ public class BigGoal extends BaseTimeEntity {
     @OneToMany(mappedBy = "bigGoal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<SmallGoal> smallGoalList = new ArrayList<>();
 
+    @OneToOne(mappedBy = "bigGoal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    private BigGoalReview bigGoalReview;
 
     @Builder
     private BigGoal(String title, String contents, String category, LocalDate endDate, ShareStatus shareStatus, CompleteStatus completeStatus, Users users) {
@@ -80,6 +84,7 @@ public class BigGoal extends BaseTimeEntity {
 
     }
 
+
     public void updateShareStatus(ShareStatus shareStatus){
         this.shareStatus = shareStatus.equals(ShareStatus.ON) ? ShareStatus.OFF : ShareStatus.ON;
     }
@@ -101,6 +106,12 @@ public class BigGoal extends BaseTimeEntity {
 
         smallGoal.setBigGoal(this);
         this.smallGoalList.add(smallGoal);
+    }
+
+    public void addBigGoalReview(BigGoalReview bigGoalReview){
+        bigGoalReview.setBigGoal(this);
+        this.bigGoalReview = bigGoalReview;
+
     }
 
 

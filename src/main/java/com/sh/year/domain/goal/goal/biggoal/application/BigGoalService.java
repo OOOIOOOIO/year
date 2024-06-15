@@ -109,7 +109,7 @@ public class BigGoalService {
     /**
      * 큰목표 수정
      */
-    public void updateGoal(Long goalId, BigGoalReqDto bigGoalReqDto){
+    public void updateBigGoal(Long goalId, BigGoalReqDto bigGoalReqDto){
 
         BigGoal bigGoal = bigGoalRepository.findById(goalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
 
@@ -122,7 +122,7 @@ public class BigGoalService {
     /**
      * 큰목표 삭제
      */
-    public void deleteGoal(Long goalId){
+    public void deleteBigGoal(Long goalId){
         BigGoal bigGoal = bigGoalRepository.findById(goalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
 
         bigGoalRepository.delete(bigGoal);
@@ -133,7 +133,7 @@ public class BigGoalService {
     /**
      * 큰목표 공유여부 설정
      */
-    public void updateShareStatus(Long goalId){
+    public void updateBigGoalShareStatus(Long goalId){
         BigGoal bigGoal = bigGoalRepository.findById(goalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
 
         ShareStatus shareStatus = bigGoal.getShareStatus();
@@ -144,7 +144,7 @@ public class BigGoalService {
     /**
      * 큰목표 달성여부 설정
      */
-    public void updateCompleteStatus(Long goalId) {
+    public void updateBigGoalCompleteStatus(Long goalId) {
         BigGoal bigGoal = bigGoalRepository.findById(goalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
 
         CompleteStatus completeStatus = bigGoal.getCompleteStatus();
@@ -158,6 +158,7 @@ public class BigGoalService {
     public void getGoalList(UserInfoFromHeaderDto userInfoFromTokenDto){
 
     }
+
 
 
 
@@ -227,5 +228,15 @@ public class BigGoalService {
     }
 
 
+    public void saveBigGoalDiary() {
 
+    }
+
+    public void updateBigGoalDiary() {
+
+    }
+
+    public void deleteBigGoalDiary() {
+
+    }
 }
