@@ -9,4 +9,5 @@ public interface SmallGoalQueryRepository {
 
     Optional<SmallGoal> findSmallGoalBySmallGoalId(Long smallGoalId);
     List<SmallGoal> findSmallGoalListByBigGoalId(Long smallGoalId);
+
 }

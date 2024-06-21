@@ -22,7 +22,8 @@ public class SmallGoalQueryRepositoryImpl implements SmallGoalQueryRepository {
     public Optional<SmallGoal> findSmallGoalBySmallGoalId(Long smallGoalId) {
 
         return Optional.ofNullable(
-                queryFactory.select(smallGoal)
+                queryFactory
+                        .select(smallGoal)
                         .from(smallGoal)
                         .join(smallGoal.rule).fetchJoin()
                         .where(smallGoal.smallGoalId.eq(smallGoalId))
@@ -33,12 +34,15 @@ public class SmallGoalQueryRepositoryImpl implements SmallGoalQueryRepository {
     @Override
     public List<SmallGoal> findSmallGoalListByBigGoalId(Long bigGoalId) {
 
-        return queryFactory.select(smallGoal)
-                        .from(smallGoal)
-                        .join(smallGoal.rule).fetchJoin()
-                        .where(smallGoal.bigGoal.bigGoalId.eq(bigGoalId))
-                        .fetch();
+        return queryFactory
+                .select(smallGoal)
+                .from(smallGoal)
+                .join(smallGoal.rule).fetchJoin()
+                .where(smallGoal.bigGoal.bigGoalId.eq(bigGoalId))
+                .fetch();
     }
+
+
 }
 
 

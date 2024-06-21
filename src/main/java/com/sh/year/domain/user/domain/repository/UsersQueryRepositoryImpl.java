@@ -28,5 +28,4 @@ public class UsersQueryRepositoryImpl implements UsersQueryRepository{
         );
     }
 
-
 }

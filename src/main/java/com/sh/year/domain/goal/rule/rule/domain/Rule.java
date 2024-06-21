@@ -2,9 +2,10 @@ package com.sh.year.domain.goal.rule.rule.domain;
 
 
 import com.sh.year.domain.common.BaseTimeEntity;
-import com.sh.year.domain.goal.goal.failgoal.domain.FailGoal;
+import com.sh.year.domain.goal.goal.delayGoal.domain.DelayGoal;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.RuleReqDto;
 import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
+import com.sh.year.domain.goal.rule.rulealertinfo.domain.RuleAlertInfo;
 import com.sh.year.domain.goal.rule.rulecompleteinfo.domain.RuleCompleteInfo;
 import com.sh.year.domain.goal.rule.rulerepeatday.domain.RuleRepeatDay;
 import jakarta.persistence.*;
@@ -12,7 +13,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -45,9 +45,11 @@ public class Rule extends BaseTimeEntity {
     @OneToMany(mappedBy = "rule", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<RuleRepeatDay> ruleRepeatDayList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "rule", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    private List<RuleAlertInfo> ruleAlertInfoList = new ArrayList<>();
 
     @OneToOne(mappedBy = "rule", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
-    private FailGoal failGoal;
+    private DelayGoal delayGoal;
 
 
     @Builder
@@ -103,11 +105,20 @@ public class Rule extends BaseTimeEntity {
         this.ruleRepeatDayList.add(ruleRepeatDay);
     }
 
+    public void addAlertInfo(RuleAlertInfo ruleAlertInfo){
+        if(ruleAlertInfo.getRule() != null){
+            ruleAlertInfo.getRule().getRuleCompleteInfoList().remove(ruleAlertInfo);
+        }
 
-    public void addFailGoal(FailGoal failGoal){
-        failGoal.setRule(this);
+        ruleAlertInfo.setRule(this);
+        this.ruleAlertInfoList.add(ruleAlertInfo);
+    }
 
-        this.failGoal = failGoal;
+
+    public void addFailGoal(DelayGoal delayGoal){
+        delayGoal.setRule(this);
+
+        this.delayGoal = delayGoal;
     }
 
 

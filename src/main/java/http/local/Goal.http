@@ -1,10 +1,22 @@
+### Main 조회
+GET localhost:7777/api/main
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+
+# ============================================================================================================
+# ============================================================================================================
+# ============================================================================================================
 
 ### Big Goal 상세 조회
-GET localhost:7777/api/goal/biggoal/2
+GET localhost:7777/api/goal/biggoal/1
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
 
 ### Big Goal 목록 조회
+GET localhost:7777/api/goal/biggoal/list
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
 
 ### Big Goal save
 POST localhost:7777/api/goal/biggoal
@@ -16,14 +28,14 @@ refresh_token: {{refresh_token}}
     "title" : "test title1111",
     "contents" : "test contents11111",
     "category" : "icon♥️11111",
-    "endDate" : "2024-01-06",
+    "endDate" : "2024-12-06",
     "shareStatus" : 0,
     "completeStatus" : 0
 }
 
 
 ### Big Goal update
-PUT localhost:7777/api/goal/biggoal/2
+PUT localhost:7777/api/goal/biggoal/1
 Content-Type: application/json
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
@@ -32,7 +44,7 @@ refresh_token: {{refresh_token}}
   "title" : "update test title1111",
   "contents" : "update test contents11111",
   "category" : "icon♥ 222222",
-  "endDate" : "2024-05-23",
+  "endDate" : "2024-12-23",
   "shareStatus" : 0,
   "completeStatus" : 0
 }
@@ -62,13 +74,13 @@ refresh_token: {{refresh_token}}
 # ============================================================================================================
 
 ### Small Goal 상세조회
-GET localhost:7777/api/goal/smallgoal/7
+GET localhost:7777/api/goal/smallgoal/1
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
 
 
 ### Small Goal 목록 조회
-GET localhost:7777/api/goal/smallgoal/2/list
+GET localhost:7777/api/goal/smallgoal/1/list
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
 
@@ -137,7 +149,32 @@ refresh_token: {{refresh_token}}
     "contents" : "루틴3 3개월미만 그냥",
     "ruleRepeatList" :
     [
-      15
+      16
+    ]
+  }
+
+}
+
+
+### Small Goal save - routin : 3(Monthly)
+POST localhost:7777/api/goal/smallgoal/1
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+{
+  "title" : "루틴3 3개월미만 마지막날",
+  "icon" : "icon♥️",
+  "endDate" : "2024-07-26",
+  "completeStatus" : 0,
+  "ruleReqDto" :
+  {
+    "routine" : 3,
+    "timeAt" : "18:12",
+    "contents" : "루틴3 3개월미만 마지막날",
+    "ruleRepeatList" :
+    [
+      -1
     ]
   }
 

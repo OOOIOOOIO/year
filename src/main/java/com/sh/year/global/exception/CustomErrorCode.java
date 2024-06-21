@@ -30,8 +30,9 @@ public enum CustomErrorCode {
     NotExistBigGoal(INTERNAL_SERVER_ERROR, "S004", "해당 큰목표가 존재하지 않습니다."),
     NotExistSmallGoal(INTERNAL_SERVER_ERROR, "S004", "해당 작은목표가 존재하지 않습니다."),
     NotExistRule(INTERNAL_SERVER_ERROR, "S005", "해당 목표의 규칙이 존재하지 않습니다."),
-
     NotExistGoalReview(INTERNAL_SERVER_ERROR, "S006", "해당 후기가 존재하지 않습니다."),
+    NotExistDelayGoal(INTERNAL_SERVER_ERROR, "S007", "연기된 목표가 존재하지 않습니다."),
+
 
 
     // security

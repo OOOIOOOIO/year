@@ -1,6 +1,8 @@
 package com.sh.year.domain.goal.goal.smallgoal.api.dto.res;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sh.year.api.main.controller.dto.res.TodayAlertSmallGoalInterface;
 import com.sh.year.domain.goal.rule.rule.domain.Rule;
 import com.sh.year.domain.goal.rule.rulecompleteinfo.dto.RuleCompleteInfoDto;
 import lombok.AccessLevel;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 public class RuleResDto {
     private Long ruleId;
     private int routine; // 매일 : 1, 매주 : 2, 매월 : 3
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "kk:mm:ss", timezone = "Asia/Seoul")
     private LocalTime timeAt;
     private String contents;
 
@@ -30,6 +33,21 @@ public class RuleResDto {
         this.routine = rule.getRoutine();
         this.timeAt = rule.getTimeAt();
         this.contents = rule.getContents();
+        this.ruleRepeatList = rule.getRuleRepeatDayList().stream()// lazy
+                .map((o1) -> o1.getDay())
+                .collect(Collectors.toList());
+
+        this.ruleCompleteInfoDtoList = rule.getRuleCompleteInfoList().stream() // lazy
+                .map(RuleCompleteInfoDto::new)
+                .collect(Collectors.toList());
+
+    }
+
+    public RuleResDto(TodayAlertSmallGoalInterface todayAlertSmallGoalInterface, Rule rule) {
+        this.ruleId = todayAlertSmallGoalInterface.getRuleId();
+        this.routine = todayAlertSmallGoalInterface.getRoutine();
+        this.timeAt = todayAlertSmallGoalInterface.getTimeAt();
+        this.contents = todayAlertSmallGoalInterface.getContents();
         this.ruleRepeatList = rule.getRuleRepeatDayList().stream()// lazy
                 .map((o1) -> o1.getDay())
                 .collect(Collectors.toList());

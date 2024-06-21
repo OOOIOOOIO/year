@@ -1,7 +1,7 @@
 package com.sh.year.api.main.controller;
 
-import com.sh.year.domain.goal.goal.biggoal.api.dto.res.BigGoalResDto;
-import com.sh.year.domain.goal.goal.biggoal.application.BigGoalService;
+import com.sh.year.api.main.application.MainApiService;
+import com.sh.year.api.main.controller.dto.res.MainResDto;
 import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeader;
 import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeaderDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,8 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/main")
 public class MainApiController {
 
-    private final BigGoalService bigGoalService;
-
+    private final MainApiService mainApiService;
     /**
      * 큰목표 상세보기
      */
@@ -34,13 +32,13 @@ public class MainApiController {
     )
     @ApiResponse(
             responseCode = "200",
-            description = "Main view"
+            description = "Main view 조회에 성공하였습니다."
     )
     @GetMapping("")
-    public ResponseEntity<BigGoalResDto> getGoalInfo(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto){
+    public ResponseEntity<MainResDto> mainView(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto){
 
-
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        MainResDto mainResDto = mainApiService.mainView(userInfoFromTokenDto);
+        return new ResponseEntity<>(mainResDto, HttpStatus.OK);
     }
 
 

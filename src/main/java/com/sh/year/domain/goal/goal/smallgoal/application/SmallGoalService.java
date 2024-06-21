@@ -1,5 +1,7 @@
 package com.sh.year.domain.goal.goal.smallgoal.application;
 
+import com.sh.year.api.main.controller.dto.res.TodayAlertSmallGoalResDto;
+import com.sh.year.api.main.controller.dto.res.TodayAlertSmallGoalInterface;
 import com.sh.year.domain.goal.goal.biggoal.domain.BigGoal;
 import com.sh.year.domain.goal.goal.biggoal.domain.repository.BigGoalRepository;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.SmallGoalReqDto;
@@ -10,23 +12,26 @@ import com.sh.year.domain.goal.goal.smallgoal.domain.repository.SmallGoalQueryRe
 import com.sh.year.domain.goal.goal.smallgoal.domain.repository.SmallGoalRepository;
 import com.sh.year.domain.goal.rule.rule.domain.Rule;
 import com.sh.year.domain.goal.rule.rule.domain.repository.RuleQueryRepositoryImpl;
+import com.sh.year.domain.goal.rule.rule.domain.repository.RuleRepository;
+import com.sh.year.domain.goal.rule.rulealertinfo.domain.RuleAlertInfo;
 import com.sh.year.domain.goal.rule.rulecompleteinfo.domain.RuleCompleteInfo;
 import com.sh.year.domain.goal.rule.rulecompleteinfo.dto.RuleCompleteInfoDto;
 import com.sh.year.domain.goal.rule.rulerepeatday.domain.RuleRepeatDay;
-import com.sh.year.domain.user.domain.Users;
-import com.sh.year.domain.user.domain.repository.UsersRepository;
 import com.sh.year.global.exception.CustomErrorCode;
 import com.sh.year.global.exception.CustomException;
-import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeaderDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -36,13 +41,11 @@ import java.util.stream.Collectors;
 @Transactional
 public class SmallGoalService {
 
-    private static final Integer DAILY_ALARM_STATE = 1;
-    private static final Integer DAILY_REPEAT_SIZE = 7;
     private final BigGoalRepository bigGoalRepository;
     private final SmallGoalRepository smallGoalRepository;
     private final SmallGoalQueryRepositoryImpl smallGoalQueryRepository;
-    private final UsersRepository usersRepository;
     private final RuleQueryRepositoryImpl ruleQueryRepository;
+    private final RuleRepository ruleRepository;
 
 
 
@@ -67,18 +70,70 @@ public class SmallGoalService {
 
     /**
      * 작은목표 리스트 보기
+     *
+     *
+     * --> 필요 없는 것 같은데
      */
     public List<SmallGoalResDto> getSmallGoalList(Long bigGoalId){
 
-        return smallGoalQueryRepository.findSmallGoalListByBigGoalId(bigGoalId).stream()
-                .map(SmallGoalResDto::new)
-                .collect(Collectors.toList());
+        List<SmallGoal> smallGoalList = smallGoalQueryRepository.findSmallGoalListByBigGoalId(bigGoalId);
+
+        List<SmallGoalResDto> smallGoalResDtoList = new ArrayList<>();
+
+        for (SmallGoal smallGoal : smallGoalList) {
+            SmallGoalResDto smallGoalResDto = new SmallGoalResDto(smallGoal);
+
+            List<RuleCompleteInfoDto> ruleCompleteInfoDtoList = smallGoalResDto.getRuleResDto().getRuleCompleteInfoDtoList();
+
+            int progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
+
+            smallGoalResDto.setProgress(progress);
+
+            smallGoalResDtoList.add(smallGoalResDto);
+        }
+
+        return smallGoalResDtoList;
 
     }
 
     /**
-     * 오늘 완료해야하는 리스트
+     * 오늘자 small Goal 확인하기
      */
+    public  List<TodayAlertSmallGoalResDto> getTodayAlertSmallGoalList(){
+        List<TodayAlertSmallGoalResDto> todayAlertSmallGoalResDtoList = new ArrayList<>();
+
+        LocalDate localDate = LocalDate.now();
+        int today = localDate.getDayOfMonth();
+        int year = localDate.getYear();
+        int month = localDate.getMonthValue();
+
+        List<TodayAlertSmallGoalInterface> todayAlertGoalList = smallGoalRepository.getTodayAlertGoalList(year, month);
+
+        for (TodayAlertSmallGoalInterface todaySmallGoal : todayAlertGoalList) {
+
+            // 6월 중 오늘에 해당하는 애들이 있는지 확인하기
+            // 있다면, rpd 가져와서 넣고, rci 가져와서 process 계산 넣기
+            byte[] alertDay1 = todaySmallGoal.getAlertDay();
+            if(alertDay1[today] == 1){
+                Rule rule = ruleRepository.findById(todaySmallGoal.getRuleId()).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
+
+                TodayAlertSmallGoalResDto todayAlertSmallGoalResDto = new TodayAlertSmallGoalResDto(todaySmallGoal, rule);
+
+                List<RuleCompleteInfoDto> ruleCompleteInfoDtoList = todayAlertSmallGoalResDto.getRuleResDto().getRuleCompleteInfoDtoList();
+
+                int progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
+
+                todayAlertSmallGoalResDto.setProgress(progress);
+
+                todayAlertSmallGoalResDtoList.add(todayAlertSmallGoalResDto);
+            }
+
+
+        }
+
+        return todayAlertSmallGoalResDtoList;
+
+    }
 
 
     /**
@@ -103,8 +158,7 @@ public class SmallGoalService {
         if(routine == 1){ // routine == 1(매일)
             // cascade(with rule)
             addRuleCompleteInfo(rule, smallGoalReqDto.getEndDate(), smallGoalReqDto.getRuleReqDto().getRoutine(), smallGoalReqDto.getRuleReqDto().getRuleRepeatList());
-
-            smallGoal.addRule(rule); // cascade(with goal)
+            addRuleAlertInfo(rule, smallGoalReqDto.getEndDate(), smallGoalReqDto.getRuleReqDto().getRoutine(), smallGoalReqDto.getRuleReqDto().getRuleRepeatList());
 
         }
         else { // routine == 2 && 3(매주)
@@ -118,10 +172,11 @@ public class SmallGoalService {
 
             // cascade(with rule)
             addRuleCompleteInfo(rule, smallGoalReqDto.getEndDate(), smallGoalReqDto.getRuleReqDto().getRoutine(), smallGoalReqDto.getRuleReqDto().getRuleRepeatList());
-
-            smallGoal.addRule(rule); // cascade(with goal)
+            addRuleAlertInfo(rule, smallGoalReqDto.getEndDate(), smallGoalReqDto.getRuleReqDto().getRoutine(), smallGoalReqDto.getRuleReqDto().getRuleRepeatList());
 
         }
+
+        smallGoal.addRule(rule); // cascade(with goal)
 
         SmallGoal savedSmallGoal = smallGoalRepository.save(smallGoal);
 
@@ -133,13 +188,9 @@ public class SmallGoalService {
      * 작은목표 수정
      */
     public void updateSmallGoal(Long smallGoalId,  SmallGoalUpdateReqDto smallGoalUpdateReqDto){
-
         SmallGoal smallGoal = smallGoalRepository.findById(smallGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistSmallGoal));
 
         smallGoal.updateSmallGoal(smallGoalUpdateReqDto);
-
-
-
 
     }
 
@@ -162,7 +213,6 @@ public class SmallGoalService {
 
         smallGoal.updateCompleteStatus(smallGoal.getCompleteStatus());
 
-
     }
 
     /**
@@ -174,7 +224,7 @@ public class SmallGoalService {
         Rule rule = ruleQueryRepository.findRuleAndRuleCompleteInfo(now.getYear(), now.getMonth().getValue(), ruleId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
 
         int today = now.getDayOfMonth();
-        byte[] completeDayArr = rule.getRuleCompleteInfoList().get(0).getCompleteDayArr();
+        byte[] completeDayArr = rule.getRuleCompleteInfoList().get(0).getCompleteDay();
 
         completeDayArr[today] = 1;
 
@@ -191,35 +241,16 @@ public class SmallGoalService {
 
 
 
-    private Users getUsers(UserInfoFromHeaderDto userInfoFromHeaderDto) {
-
-        return usersRepository.findById(userInfoFromHeaderDto.getUserId()).orElseThrow(() -> new CustomException(CustomErrorCode.UserNotFoundException));
-    }
-
-    private boolean getDailyActionDay(){
-
-        return true;
-    }
-
-    private boolean getWeeklyActionDay(){
-
-        return true;
-    }
-
-
-    private boolean getMonthlyMActionDay(){
-
-        return true;
-    }
-
     /**
      * small goal progress 계산
      */
     private int calculateProgress(List<RuleCompleteInfoDto> ruleCompleteInfoDtoList, int totalDayCnt){
         int cnt = 0;
 
+        if(totalDayCnt == 0) return 0;
+
         for(int i = 0; i < ruleCompleteInfoDtoList.size(); i++){
-            byte[] completeDayArr = ruleCompleteInfoDtoList.get(i).getCompleteDayArr();
+            byte[] completeDayArr = ruleCompleteInfoDtoList.get(i).getCompleteDay();
 
             for(int day = 0; day < completeDayArr.length; day++){
                 if(completeDayArr[day] == 1) cnt++;
@@ -230,7 +261,7 @@ public class SmallGoalService {
     }
 
     /**
-     * 알람 totalCnt
+     * 알람 totalDayCnt
      */
     private int getCountBetweenTwoDates(LocalDate startDay, LocalDate endDay, int routine, List<Integer> ruleRepeatList) {
         int alramDayCnt = 0;
@@ -238,7 +269,7 @@ public class SmallGoalService {
 
         if(routine == 2){ //매주
 
-            if(getRestDayCnt(startDay, endDay) < 0){ // 2주 이하 -> 돌려주기
+            if(getTotalDayCntForWeekly(startDay, endDay) < 0){ // 2주 이하 -> 돌려주기
                 for(int day = 0; day < totalDayCnt; day++){
                     int plusDay = startDay.plusDays(day).getDayOfWeek().getValue();
 
@@ -261,7 +292,7 @@ public class SmallGoalService {
                 }
 
                 //사이
-                int restDayCnt = getRestDayCnt(startDay, endDay);
+                int restDayCnt = getTotalDayCntForWeekly(startDay, endDay);
 
                 alramDayCnt += (restDayCnt * ruleRepeatList.size());
 
@@ -302,9 +333,8 @@ public class SmallGoalService {
 
 
     /**
-     * 1~마지막날 비트로 구분(과거 달성이력)
+     * 1~마지막날 비트로 구분(달성이력 생성)
      *
-     * 몇달인지만 알면 되지
      */
     private void addRuleCompleteInfo(Rule rule, LocalDate end, int routine, List<Integer> ruleRepeatList){
         byte[] repeatDays = new byte[32]; // 저장한 날부터(32개 고정 상관없음 1의 개수를 셀거라서
@@ -316,14 +346,14 @@ public class SmallGoalService {
         if(routine == 3){ //매달
             int totalDayCnt = getCountBetweenTwoDates(start, end, routine, ruleRepeatList);
             for(int month = startMonth; month <= endMonth; month++){
-                rule.addCompleteInfo(RuleCompleteInfo.createRepeatDates(year, month, repeatDays, totalDayCnt));
+                rule.addCompleteInfo(RuleCompleteInfo.createRuleCompleteInfo(year, month, repeatDays, totalDayCnt));
             }
             return;
         }
         else if(routine == 2){ //매주
             int totalDayCnt = getCountBetweenTwoDates(start, end, routine, ruleRepeatList);
             for(int month = startMonth; month <= endMonth; month++){
-                rule.addCompleteInfo(RuleCompleteInfo.createRepeatDates(year, month, repeatDays, totalDayCnt));
+                rule.addCompleteInfo(RuleCompleteInfo.createRuleCompleteInfo(year, month, repeatDays, totalDayCnt));
             }
             return;
         }
@@ -331,9 +361,147 @@ public class SmallGoalService {
         //매일
         int totalDayCnt = getCountBetweenTwoDates(start, end, routine, ruleRepeatList);
         for(int month = startMonth; month <= endMonth; month++){
-            rule.addCompleteInfo(RuleCompleteInfo.createRepeatDates(year, month, repeatDays, totalDayCnt));
+            rule.addCompleteInfo(RuleCompleteInfo.createRuleCompleteInfo(year, month, repeatDays, totalDayCnt));
         }
 
+    }
+
+    /**
+     * 1~마지막날 비트로 구분(과거 달성이력)
+     *
+     */
+    private void addRuleAlertInfo(Rule rule, LocalDate endDay, int routine, List<Integer> ruleRepeatList){
+        LocalDate startDay = LocalDate.now(); // 시작일
+        int startYear = startDay.getYear();
+        int startMonth = startDay.getMonthValue(); // 같을 때만 따로
+
+        List<LocalDate> dateList = new ArrayList<>();
+
+
+        if(routine == 3){ //매달
+
+            // 1~31 or -1
+            int targetDay = ruleRepeatList.get(0);
+            LocalDate target;
+
+            if(targetDay == -1){ //마지막날
+                target = YearMonth.of(startYear, startMonth).atEndOfMonth();
+            }
+            else{
+                target = LocalDate.of(startYear, startMonth, targetDay);
+
+            }
+
+            // endDay 전까지 7씩 더해주면서 쭉 넣어준다
+            while(target.isBefore(endDay)){
+                dateList.add(target);
+                target = target.plusMonths(1);
+            }
+
+            // 날짜순으로 정렬해준다
+            Collections.sort(dateList);
+
+            //이후 해당 월에 맞춰 rai를 만들어준다.
+            Map<Month, List<LocalDate>> groupedDates = groupDatesByMonth(dateList);
+
+            // 월 별로 돌려서 마킹하기
+            for (Month month : groupedDates.keySet()) {
+                int monthValue = month.getValue();
+                byte[] monthlyAlertDays = new byte[32]; // 저장한 날부터(32개 고정 상관없음 1의 개수를 셀거라서
+                List<LocalDate> alertDayList = groupedDates.get(month);
+
+                System.out.println(month + ": " + groupedDates.get(month));
+
+                for (LocalDate day : alertDayList) {
+                    int dayOfMonth = day.getDayOfMonth();
+
+                    monthlyAlertDays[dayOfMonth] = 1;
+                }
+
+                rule.addAlertInfo(RuleAlertInfo.createRuleAlertInfo(startYear, monthValue, monthlyAlertDays));
+            }
+
+
+        }
+        else if(routine == 2){ //매주
+
+            // month의 시작일(1일) 부터 7 더한 날들 구하기
+            for(int i = 0; i < 7; i++){
+                LocalDate target = YearMonth.of(startYear, startMonth).atDay(1).plusDays(i);
+
+                // 요일 확인해서 날짜값 구하기
+                int targetDayValue = target.getDayOfWeek().getValue();
+
+                // ruleRepeatList에 있다면
+                if(ruleRepeatList.contains(targetDayValue)) {
+                    // endDay 전까지 7씩 더해주면서 쭉 넣어준다
+                    while(target.isBefore(endDay)){
+                        dateList.add(target);
+                        target = target.plusDays(7);
+                    }
+
+                }
+            }
+
+            // 날짜순으로 정렬해준다
+            Collections.sort(dateList);
+
+            //이후 해당 월에 맞춰 rai를 만들어준다.
+            Map<Month, List<LocalDate>> groupedDates = groupDatesByMonth(dateList);
+
+            // 월 별로 돌려서 마킹하기
+            for (Month month : groupedDates.keySet()) {
+                int monthValue = month.getValue();
+                byte[] weeklyAlertDays = new byte[32]; // 저장한 날부터(32개 고정 상관없음 1의 개수를 셀거라서
+                List<LocalDate> alertDayList = groupedDates.get(month);
+
+                for(LocalDate day : alertDayList){
+                    int dayOfMonth = day.getDayOfMonth();
+
+                    weeklyAlertDays[dayOfMonth] = 1;
+                }
+
+                rule.addAlertInfo(RuleAlertInfo.createRuleAlertInfo(startYear, monthValue, weeklyAlertDays));
+            }
+
+        }
+        else{ //매일
+            LocalDate target = startDay;
+
+            // endDay 전까지 1씩 더해주면서 쭉 넣어준다
+            while(target.isBefore(endDay)){
+                dateList.add(target);
+                target = target.plusDays(1);
+            }
+
+            // 날짜순으로 정렬해준다
+            Collections.sort(dateList);
+
+            //이후 해당 월에 맞춰 rai를 만들어준다.
+            Map<Month, List<LocalDate>> groupedDates = groupDatesByMonth(dateList);
+
+            // 월 별로 돌려서 마킹하기
+            for (Month month : groupedDates.keySet()) {
+                int monthValue = month.getValue();
+                byte[] dailyAlertDays = new byte[32];
+                List<LocalDate> alertDayList = groupedDates.get(month);
+
+                for (LocalDate day : alertDayList) {
+                    int dayOfMonth = day.getDayOfMonth();
+
+                    dailyAlertDays[dayOfMonth] = 1;
+                }
+
+                rule.addAlertInfo(RuleAlertInfo.createRuleAlertInfo(startYear, monthValue, dailyAlertDays));
+            }
+
+        }
+
+    }
+
+    private Map<Month, List<LocalDate>> groupDatesByMonth(List<LocalDate> dateList) {
+        return dateList.stream()
+                .collect(Collectors.groupingBy(LocalDate::getMonth));
     }
 
 
@@ -417,10 +585,10 @@ public class SmallGoalService {
         YearMonth startYearMonth = YearMonth.of(startYear, startMonth);
         YearMonth endYearMonth = YearMonth.of(endYear, endMonth);
 
-        LocalDate nextMonthFirstDayFromStartDay = startYearMonth.atEndOfMonth().plusDays(1); // 다음달 첫날
-        LocalDate beforeMonthLastDayFromEndDay = endYearMonth.atDay(1).minusDays(1); // 이전달 마지막날
+        LocalDate firstDayOfNextMonthFromStartDay = startYearMonth.atEndOfMonth().plusDays(1); // 다음달 첫날
+        LocalDate lastOfPrevMonthDayFromEndDay = endYearMonth.atDay(1).minusDays(1); // 이전달 마지막날
 
-        return nextMonthFirstDayFromStartDay.isBefore(beforeMonthLastDayFromEndDay);
+        return firstDayOfNextMonthFromStartDay.isBefore(lastOfPrevMonthDayFromEndDay);
     }
 
 
@@ -438,7 +606,7 @@ public class SmallGoalService {
     /**
      * 매주일 경우
      */
-    private int getRestDayCnt(LocalDate start, LocalDate end){
+    private int getTotalDayCntForWeekly(LocalDate start, LocalDate end){
         LocalDate plusDays = start.plusDays((7 - start.getDayOfWeek().getValue()) + 1 ); // 일요일 나옴 / +1 해주면 다음주 월요일
         LocalDate minusDays = end.minusDays(end.getDayOfWeek().getValue());// 그 전주 일요일 나옴
 

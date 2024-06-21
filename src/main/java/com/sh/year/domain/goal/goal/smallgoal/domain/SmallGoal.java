@@ -1,7 +1,7 @@
 package com.sh.year.domain.goal.goal.smallgoal.domain;
 
 import com.sh.year.domain.common.BaseTimeEntity;
-import com.sh.year.domain.goal.diary.smallgoaldiary.domain.SmallGoalReview;
+import com.sh.year.domain.goal.review.smallgoalreview.domain.SmallGoalReview;
 import com.sh.year.domain.goal.goal.biggoal.domain.BigGoal;
 import com.sh.year.domain.goal.goal.common.CompleteStatus;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.SmallGoalReqDto;

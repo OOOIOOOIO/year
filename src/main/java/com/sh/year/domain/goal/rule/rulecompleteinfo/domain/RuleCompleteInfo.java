@@ -18,7 +18,7 @@ public class RuleCompleteInfo {
     private int year;
     private int month;
 
-    private byte[] completeDayArr;
+    private byte[] completeDay;
     private int totalDayCnt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,10 +26,10 @@ public class RuleCompleteInfo {
     private Rule rule;
 
     @Builder
-    public RuleCompleteInfo(int year, int month, byte[] completeDayArr, int totalDayCnt) {
+    public RuleCompleteInfo(int year, int month, byte[] completeDay, int totalDayCnt) {
         this.year = year;
         this.month = month;
-        this.completeDayArr = completeDayArr;
+        this.completeDay = completeDay;
         this.totalDayCnt = totalDayCnt;
     }
 
@@ -37,17 +37,17 @@ public class RuleCompleteInfo {
     /**
      * 생성
      */
-    public static RuleCompleteInfo createRepeatDates(int year, int month, byte[] completeDayArr, int totalDayCnt){
+    public static RuleCompleteInfo createRuleCompleteInfo(int year, int month, byte[] completeDayArr, int totalDayCnt){
         return RuleCompleteInfo.builder()
                 .year(year)
                 .month(month)
-                .completeDayArr(completeDayArr)
+                .completeDay(completeDayArr)
                 .totalDayCnt(totalDayCnt)
                 .build();
     }
 
-    public void updateCompleteDayArr(byte[] completeDayArr){
-        this.completeDayArr = completeDayArr;
+    public void updateCompleteDayArr(byte[] completeDay){
+        this.completeDay = completeDay;
 
     }
 

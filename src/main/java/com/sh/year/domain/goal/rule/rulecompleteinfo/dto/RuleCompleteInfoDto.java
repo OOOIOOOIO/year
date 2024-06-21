@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 public class RuleCompleteInfoDto {
     private int year;
     private int month;
-    private byte[] completeDayArr;
+    private byte[] completeDay;
     private int totalDayCnt;
 
     public RuleCompleteInfoDto(RuleCompleteInfo ruleCompleteInfo) {
         this.year = ruleCompleteInfo.getYear();
         this.month = ruleCompleteInfo.getMonth();
-        this.completeDayArr = ruleCompleteInfo.getCompleteDayArr();
+        this.completeDay = ruleCompleteInfo.getCompleteDay();
         this.totalDayCnt = ruleCompleteInfo.getTotalDayCnt();
     }
 }

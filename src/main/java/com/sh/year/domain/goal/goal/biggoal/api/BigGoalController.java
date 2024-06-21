@@ -1,7 +1,9 @@
 package com.sh.year.domain.goal.goal.biggoal.api;
 
 import com.sh.year.domain.goal.goal.biggoal.api.dto.req.BigGoalReqDto;
+import com.sh.year.api.main.controller.dto.res.BigGoalMainResDto;
 import com.sh.year.domain.goal.goal.biggoal.api.dto.res.BigGoalResDto;
+import com.sh.year.domain.goal.goal.biggoal.api.dto.res.BigGoalListResDto;
 import com.sh.year.domain.goal.goal.biggoal.application.BigGoalService;
 import com.sh.year.global.common.ResponseConst;
 import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeader;
@@ -14,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Big Goal", description = "큰목표 API")
 @Slf4j
@@ -41,6 +45,25 @@ public class BigGoalController {
         BigGoalResDto bigGoalInfo = bigGoalService.getBigGoalInfo(bigGoalId);
 
         return new ResponseEntity<>(bigGoalInfo, HttpStatus.OK);
+    }
+
+    /**
+     * 내 큰목표들 보기
+     */
+    @Operation(
+            summary = "큰목표 리스트로 조회 API",
+            description = "큰목표"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "큰목표 리스트로 조회에 성공하였습니다."
+    )
+    @GetMapping("/list")
+    public ResponseEntity<BigGoalListResDto> getBigGoalList(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto){
+
+        List<BigGoalMainResDto> bigGoalList = bigGoalService.getBigGoalList(userInfoFromTokenDto);
+
+        return new ResponseEntity<>(new BigGoalListResDto(bigGoalList), HttpStatus.OK);
     }
 
     /**
@@ -143,24 +166,7 @@ public class BigGoalController {
     }
 
 
-    /**
-     * 내 큰목표들 보기
-     */
-    @Operation(
-            summary = "큰목표 리스트로 조회 API",
-            description = "큰목표"
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "큰목표 리스트로 조회에 성공하였습니다."
-    )
-    @GetMapping("/list")
-    public void getBigGoalList(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto){
 
-        /**
-         * 삭제 예정
-         */
-    }
 
 
 }
