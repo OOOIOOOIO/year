@@ -16,9 +16,11 @@ import com.sh.year.domain.user.domain.Users;
 import com.sh.year.domain.user.domain.repository.UsersRepository;
 import com.sh.year.global.exception.CustomErrorCode;
 import com.sh.year.global.exception.CustomException;
+import com.sh.year.global.log.LogTrace;
 import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeaderDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +44,7 @@ public class BigGoalService {
     /**
      * 큰목표 기본 조회
      */
+    @LogTrace
     public BigGoalResDto getBigGoalInfo(Long bigGoalId){
 
         BigGoal bigGoal = bigGoalQueryRepository.getBigGoalInfoByBigGoalId(bigGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
@@ -61,14 +64,19 @@ public class BigGoalService {
         return bigGoalResDto;
     }
 
+
+
     /**
-     * 큰 목표 리스트 조회
+     * 큰 목표 리스트 조회 페이징 처리
      *
      */
-    public List<BigGoalMainResDto> getBigGoalList(UserInfoFromHeaderDto userInfoFromTokenDto){
+    @LogTrace
+    public List<BigGoalMainResDto> getBigGoalPaging(UserInfoFromHeaderDto userInfoFromTokenDto,
+                                                  Pageable pageable){
         Users users = getUsers(userInfoFromTokenDto);
 
-        List<BigGoal> bigGoalList = bigGoalRepository.findAllByUsers(users);
+        List<BigGoal> bigGoalList = bigGoalRepository.findAllByUsers(users, pageable);
+
 
         List<BigGoalMainResDto> bigGoalMainResDtoList = new ArrayList<>();
 
@@ -89,41 +97,66 @@ public class BigGoalService {
             bigGoalMainResDtoList.add(bigGoalMainResDto);
 
         }
+        log.info("===========");
+        log.info("===========");
+        log.info("===========");
+        log.info("===========");
+        List<BigGoal> bigGoalList2 = bigGoalQueryRepository.getBigGoalListByUserId(userInfoFromTokenDto.getUserId());
 
         return bigGoalMainResDtoList;
 
     }
+
+
+//    /**
+//     * main에서 사용,
+//     * 유저의 bigGoal들에 해댱하는 SmallGoal 가져오기
+//     */
+//    @LogTrace
+//    public List<BigGoalMainResDto> getBigGoalListForMain(UserInfoFromHeaderDto userInfoFromHeaderDto){
+////        List<BigGoal> bigGoalList = bigGoalQueryRepository.getBigGoalListByUserId(userInfoFromHeaderDto.getUserId());
+//        Users users = getUsers(userInfoFromHeaderDto);
+//        List<BigGoal> bigGoalList = bigGoalRepository.findAllByUsers(users);
+//        List<BigGoalMainResDto> bigGoalMainResDtoList = new ArrayList<>();
+//
+//
+//        for(BigGoal bigGoal : bigGoalList){
+//
+//            List<SmallGoal> smallGoalList = bigGoal.getSmallGoalList();
+//
+//            int progress = calculateBigGoalProgressByEntity(smallGoalList);
+//
+//            BigGoalMainResDto bigGoalMainResDto = new BigGoalMainResDto(bigGoal);
+//
+//            bigGoalMainResDto.setProgress(progress);
+//            bigGoalMainResDto.setSmallGoalCnt(smallGoalList.size());
+//
+//            bigGoalMainResDtoList.add(bigGoalMainResDto);
+//        }
+//
+//        return bigGoalMainResDtoList;
+//
+//    }
 
 
     /**
      * main에서 사용,
      * 유저의 bigGoal들에 해댱하는 SmallGoal 가져오기
      */
-    public List<BigGoalMainResDto> getGoalListForAlert(UserInfoFromHeaderDto userInfoFromHeaderDto){
-        List<BigGoal> bigGoalList = bigGoalQueryRepository.getBigGoalListByUserId(userInfoFromHeaderDto.getUserId());
-        List<BigGoalMainResDto> bigGoalMainResDtoList = new ArrayList<>();
+    @LogTrace
+    public List<BigGoal> getBigGoalListForMain(UserInfoFromHeaderDto userInfoFromHeaderDto){
+//        List<BigGoal> bigGoalList = bigGoalQueryRepository.getBigGoalListByUserId(userInfoFromHeaderDto.getUserId());
+        Users users = getUsers(userInfoFromHeaderDto);
+        List<BigGoal> bigGoalList = bigGoalRepository.findAllByUsers(users);
 
-        for(BigGoal bigGoal : bigGoalList){
-
-            List<SmallGoal> smallGoalList = bigGoal.getSmallGoalList();
-
-            int progress = calculateBigGoalProgressByEntity(smallGoalList);
-
-            BigGoalMainResDto bigGoalMainResDto = new BigGoalMainResDto(bigGoal);
-
-            bigGoalMainResDto.setProgress(progress);
-            bigGoalMainResDto.setSmallGoalCnt(smallGoalList.size());
-
-            bigGoalMainResDtoList.add(bigGoalMainResDto);
-        }
-
-        return bigGoalMainResDtoList;
+        return bigGoalList;
 
     }
 
     /**
      * 큰목표 저장
      */
+    @LogTrace
     public Long saveBigGoal(UserInfoFromHeaderDto userInfoFromHeaderDto, BigGoalReqDto bigGoalReqDto) {
 
         Users users = getUsers(userInfoFromHeaderDto);
@@ -140,6 +173,7 @@ public class BigGoalService {
     /**
      * 큰목표 수정
      */
+    @LogTrace
     public void updateBigGoal(Long goalId, BigGoalReqDto bigGoalReqDto){
 
         BigGoal bigGoal = bigGoalRepository.findById(goalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
@@ -153,6 +187,7 @@ public class BigGoalService {
     /**
      * 큰목표 삭제
      */
+    @LogTrace
     public void deleteBigGoal(Long goalId){
         BigGoal bigGoal = bigGoalRepository.findById(goalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
 
@@ -164,6 +199,7 @@ public class BigGoalService {
     /**
      * 큰목표 공유여부 설정
      */
+    @LogTrace
     public void updateBigGoalShareStatus(Long goalId){
         BigGoal bigGoal = bigGoalRepository.findById(goalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
 
@@ -175,6 +211,7 @@ public class BigGoalService {
     /**
      * 큰목표 달성여부 설정
      */
+    @LogTrace
     public void updateBigGoalCompleteStatus(Long goalId) {
         BigGoal bigGoal = bigGoalRepository.findById(goalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistBigGoal));
 

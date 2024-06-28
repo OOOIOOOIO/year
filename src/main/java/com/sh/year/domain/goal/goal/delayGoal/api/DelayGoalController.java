@@ -4,6 +4,7 @@ import com.sh.year.api.main.controller.dto.res.DelayGoalListResDto;
 import com.sh.year.api.main.controller.dto.res.DelayGoalResDto;
 import com.sh.year.domain.goal.goal.delayGoal.application.DelayGoalService;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.res.SmallGoalResDto;
+import com.sh.year.global.log.LogTrace;
 import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeader;
 import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeaderDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,6 +37,7 @@ public class DelayGoalController {
             responseCode = "200",
             description = "Delay Goal 상세 조회에 성공했습니다."
     )
+    @LogTrace
     @GetMapping("/{delayGoalId}")
     public ResponseEntity<SmallGoalResDto> getDelayGoalInfo(@PathVariable(value = "delayGoalId") Long delayGoalId){
         SmallGoalResDto delayGoalInfo = delayGoalService.getDelayGoalInfo(delayGoalId);
@@ -56,6 +58,7 @@ public class DelayGoalController {
             responseCode = "200",
             description = "Delay Goal 리스트 조회에 성공했습니다."
     )
+    @LogTrace
     @GetMapping("/list")
     public ResponseEntity<DelayGoalListResDto> getDelayGoalList(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto){
         List<DelayGoalResDto> delayGoalList = delayGoalService.getDelayGoalList(userInfoFromTokenDto);
@@ -74,6 +77,7 @@ public class DelayGoalController {
             responseCode = "200",
             description = "Delay Goal 저장에 성공했습니다."
     )
+    @LogTrace
     @PostMapping("/ruleId")
     public ResponseEntity<String> saveDelayGoal(@PathVariable(value = "ruleId") Long ruleId,
                                                 @UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto){
@@ -94,6 +98,7 @@ public class DelayGoalController {
             responseCode = "200",
             description = "Delay Goal 삭제에 성공했습니다."
     )
+    @LogTrace
     @DeleteMapping("/{delayGoalId}")
     public void deleteDelayGoal(@PathVariable(value = "delayGoalId") Long delayGoalId){
         delayGoalService.deleteDelayGoal(delayGoalId);
@@ -111,6 +116,7 @@ public class DelayGoalController {
             responseCode = "200",
             description = "Delay Goal 성공 처리에 성공했습니다."
     )
+    @LogTrace
     @PatchMapping("/{delayGoalId}")
     public void updateFailStatus(@PathVariable(value = "delayGoalId") Long delayGoalId){
 
