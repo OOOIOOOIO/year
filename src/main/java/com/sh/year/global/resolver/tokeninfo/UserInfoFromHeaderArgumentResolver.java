@@ -31,7 +31,6 @@ public class UserInfoFromHeaderArgumentResolver implements HandlerMethodArgument
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
         log.info("=========UserInfoFromHeaderArgumentResolver==========");
-        log.info("===================");
 
         String accessToken = jwtUtils.getAccessTokenFromHeader((HttpServletRequest) webRequest.getNativeRequest());
         String refreshToken = jwtUtils.getRefreshTokenFromHeader((HttpServletRequest) webRequest.getNativeRequest());

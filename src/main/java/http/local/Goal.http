@@ -1,8 +1,15 @@
 ### Main 조회
-GET localhost:7777/api/main
+GET localhost:7777/api/main?page=50
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
 
+
+
+
+### Big Goal 목록 조회(Paging)
+GET localhost:7777/api/goal/biggoal/list?page=1
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
 
 # ============================================================================================================
 # ============================================================================================================

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TodayAlertSmallGoalResDto {
+public class SmallGoalListForTodayAlertResDto {
 
     private Long smallGoalId;
     private String title;
@@ -16,7 +16,7 @@ public class TodayAlertSmallGoalResDto {
     private RuleResDto ruleResDto;
     private Integer progress;
 
-    public TodayAlertSmallGoalResDto(TodayAlertSmallGoalInterface todayAlertSmallGoalInterface, Rule rule) {
+    public SmallGoalListForTodayAlertResDto(TodayAlertSmallGoalInterface todayAlertSmallGoalInterface, Rule rule) {
         this.smallGoalId = todayAlertSmallGoalInterface.getSmallGoalId();
         this.title = todayAlertSmallGoalInterface.getTitle();
         this.icon = todayAlertSmallGoalInterface.getIcon();

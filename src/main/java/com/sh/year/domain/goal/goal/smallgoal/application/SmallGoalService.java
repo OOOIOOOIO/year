@@ -1,6 +1,7 @@
 package com.sh.year.domain.goal.goal.smallgoal.application;
 
-import com.sh.year.api.main.controller.dto.res.TodayAlertSmallGoalResDto;
+import com.sh.year.api.main.controller.dto.res.BigGoalMainResDto;
+import com.sh.year.api.main.controller.dto.res.SmallGoalListForTodayAlertResDto;
 import com.sh.year.api.main.controller.dto.res.TodayAlertSmallGoalInterface;
 import com.sh.year.domain.goal.goal.biggoal.domain.BigGoal;
 import com.sh.year.domain.goal.goal.biggoal.domain.repository.BigGoalRepository;
@@ -19,6 +20,7 @@ import com.sh.year.domain.goal.rule.rulecompleteinfo.dto.RuleCompleteInfoDto;
 import com.sh.year.domain.goal.rule.rulerepeatday.domain.RuleRepeatDay;
 import com.sh.year.global.exception.CustomErrorCode;
 import com.sh.year.global.exception.CustomException;
+import com.sh.year.global.log.LogTrace;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -52,6 +54,7 @@ public class SmallGoalService {
     /**
      * 작은목표 상세 조회
      */
+    @LogTrace
     public SmallGoalResDto getSmallGoalInfo(Long smallGoalId){
 
         SmallGoal smallGoal = smallGoalQueryRepository.findSmallGoalBySmallGoalId(smallGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistSmallGoal));
@@ -74,6 +77,7 @@ public class SmallGoalService {
      *
      * --> 필요 없는 것 같은데
      */
+    @LogTrace
     public List<SmallGoalResDto> getSmallGoalList(Long bigGoalId){
 
         List<SmallGoal> smallGoalList = smallGoalQueryRepository.findSmallGoalListByBigGoalId(bigGoalId);
@@ -99,39 +103,44 @@ public class SmallGoalService {
     /**
      * 오늘자 small Goal 확인하기
      */
-    public  List<TodayAlertSmallGoalResDto> getTodayAlertSmallGoalList(){
-        List<TodayAlertSmallGoalResDto> todayAlertSmallGoalResDtoList = new ArrayList<>();
+    @LogTrace
+    public List<SmallGoalListForTodayAlertResDto> getSmallGoalListForTodayAlert(List<BigGoal> bigGoalList){
+        List<SmallGoalListForTodayAlertResDto> smallGoalListForTodayAlertResDtoList = new ArrayList<>();
 
         LocalDate localDate = LocalDate.now();
         int today = localDate.getDayOfMonth();
         int year = localDate.getYear();
         int month = localDate.getMonthValue();
 
-        List<TodayAlertSmallGoalInterface> todayAlertGoalList = smallGoalRepository.getTodayAlertGoalList(year, month);
+        for (BigGoal bigGoal : bigGoalList) {
+            Long bigGoalId = bigGoal.getBigGoalId();
 
-        for (TodayAlertSmallGoalInterface todaySmallGoal : todayAlertGoalList) {
+            List<TodayAlertSmallGoalInterface> todayAlertGoalList = smallGoalRepository.getTodayAlertGoalList(bigGoalId, year, month);
 
-            // 6월 중 오늘에 해당하는 애들이 있는지 확인하기
-            // 있다면, rpd 가져와서 넣고, rci 가져와서 process 계산 넣기
-            byte[] alertDay1 = todaySmallGoal.getAlertDay();
-            if(alertDay1[today] == 1){
-                Rule rule = ruleRepository.findById(todaySmallGoal.getRuleId()).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
+            for (TodayAlertSmallGoalInterface todaySmallGoal : todayAlertGoalList) {
 
-                TodayAlertSmallGoalResDto todayAlertSmallGoalResDto = new TodayAlertSmallGoalResDto(todaySmallGoal, rule);
+                // 6월 중 오늘에 해당하는 애들이 있는지 확인하기
+                // 있다면, rpd 가져와서 넣고, rci 가져와서 process 계산 넣기
+                byte[] alertDay1 = todaySmallGoal.getAlertDay();
+                if(alertDay1[today] == 1){
+                    Rule rule = ruleRepository.findById(todaySmallGoal.getRuleId()).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
 
-                List<RuleCompleteInfoDto> ruleCompleteInfoDtoList = todayAlertSmallGoalResDto.getRuleResDto().getRuleCompleteInfoDtoList();
+                    SmallGoalListForTodayAlertResDto smallGoalListForTodayAlertResDto = new SmallGoalListForTodayAlertResDto(todaySmallGoal, rule);
 
-                int progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
+                    List<RuleCompleteInfoDto> ruleCompleteInfoDtoList = smallGoalListForTodayAlertResDto.getRuleResDto().getRuleCompleteInfoDtoList();
 
-                todayAlertSmallGoalResDto.setProgress(progress);
+                    int progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
 
-                todayAlertSmallGoalResDtoList.add(todayAlertSmallGoalResDto);
+                    smallGoalListForTodayAlertResDto.setProgress(progress);
+
+                    smallGoalListForTodayAlertResDtoList.add(smallGoalListForTodayAlertResDto);
+                }
+
+
             }
-
-
         }
 
-        return todayAlertSmallGoalResDtoList;
+        return smallGoalListForTodayAlertResDtoList;
 
     }
 
@@ -139,6 +148,7 @@ public class SmallGoalService {
     /**
      * 작은목표 저장
      */
+    @LogTrace
     public Long saveSmallGoal(Long bigGoalId, SmallGoalReqDto smallGoalReqDto) {
 
         // bigGoal
@@ -187,6 +197,7 @@ public class SmallGoalService {
     /**
      * 작은목표 수정
      */
+    @LogTrace
     public void updateSmallGoal(Long smallGoalId,  SmallGoalUpdateReqDto smallGoalUpdateReqDto){
         SmallGoal smallGoal = smallGoalRepository.findById(smallGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistSmallGoal));
 
@@ -198,6 +209,7 @@ public class SmallGoalService {
     /**
      * 작은목표 삭제
      */
+    @LogTrace
     public void deleteSmallGoal(Long smallGoalId){
         SmallGoal smallGoal = smallGoalRepository.findById(smallGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistSmallGoal));
 
@@ -208,6 +220,7 @@ public class SmallGoalService {
     /**
      * 작은목표 달성여부 설정(100% 달성시)
      */
+    @LogTrace
     public void updateCompleteStatus(Long smallGoalId){
         SmallGoal smallGoal = smallGoalRepository.findById(smallGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistSmallGoal));
 
@@ -218,6 +231,7 @@ public class SmallGoalService {
     /**
      * 작은목표의 규칙 달성여부 설정
      */
+    @LogTrace
     public void updateRuleCompleteInfo(Long ruleId) {
         LocalDate now = LocalDate.now();
 

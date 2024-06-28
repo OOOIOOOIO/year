@@ -11,15 +11,15 @@ import java.util.List;
 public class MainResDto {
 
     private List<BigGoalMainResDto> bigGoalMainResDtoList;
-    private List<TodayAlertSmallGoalResDto> todayAlertSmallGoalResDtoList;
+    private List<SmallGoalListForTodayAlertResDto> smallGoalListForTodayAlertResDtoList;
 
     private List<DelayGoalResDto> delayGoalResDtoList;
 
     public MainResDto(List<BigGoalMainResDto> bigGoalMainResDtoList,
-                      List<TodayAlertSmallGoalResDto> todayAlertSmallGoalResDtoList,
+                      List<SmallGoalListForTodayAlertResDto> smallGoalListForTodayAlertResDtoList,
                       List<DelayGoalResDto> delayGoalResDtoList) {
         this.bigGoalMainResDtoList = bigGoalMainResDtoList;
-        this.todayAlertSmallGoalResDtoList = todayAlertSmallGoalResDtoList;
+        this.smallGoalListForTodayAlertResDtoList = smallGoalListForTodayAlertResDtoList;
         this.delayGoalResDtoList = delayGoalResDtoList;
     }
 }
