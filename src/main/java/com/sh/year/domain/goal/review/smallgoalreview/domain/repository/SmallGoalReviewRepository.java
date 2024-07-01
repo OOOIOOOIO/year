@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface SmallGoalReviewRepository extends JpaRepository<SmallGoalReview, Long> {
 
-    List<SmallGoalReview> findAllBySmallGaol(SmallGoal smallGoal, Pageable pageable);
+    List<SmallGoalReview> findAllBySmallGoal(SmallGoal smallGoal, Pageable pageable);
 }

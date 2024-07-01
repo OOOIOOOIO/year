@@ -35,7 +35,7 @@ public class SmallGoalReviewService {
     public SmallGoalReviewResListDto getSmallGoalReview(Long smallGoalId, Pageable pageable) {
         SmallGoal smallGoal = smallGoalRepository.findById(smallGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistSmallGoal));
 
-        List<SmallGoalReviewResDto> smallGoalReviewResDtos = smallGoalReviewRepository.findAllBySmallGaol(smallGoal, pageable).stream()
+        List<SmallGoalReviewResDto> smallGoalReviewResDtos = smallGoalReviewRepository.findAllBySmallGoal(smallGoal, pageable).stream()
                 .map(SmallGoalReviewResDto::new)
                 .collect(Collectors.toList());
 

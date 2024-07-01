@@ -28,7 +28,7 @@ public class SmallGoalResDto {
         this.title = smallGoal.getTitle();
         this.icon = smallGoal.getIcon();
         this.endDate = smallGoal.getEndDate();
-        this.completeStatus = smallGoal.getCompleteStatus().equals("COMP") ? 1 : 0;
+        this.completeStatus = smallGoal.getCompleteStatus().equals(CompleteStatus.COMP) ? 1 : 0;
         this.ruleResDto = new RuleResDto(smallGoal.getRule());
         this.progress = 0;
     }

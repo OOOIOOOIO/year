@@ -112,8 +112,13 @@ public class SmallGoalService {
         int year = localDate.getYear();
         int month = localDate.getMonthValue();
 
+        log.info("today : " + today);
+        log.info("year : " + year);
+        log.info("month : " + month);
+
         for (BigGoal bigGoal : bigGoalList) {
             Long bigGoalId = bigGoal.getBigGoalId();
+            log.info("bigGoalId : " + bigGoalId);
 
             List<TodayAlertSmallGoalInterface> todayAlertGoalList = smallGoalRepository.getTodayAlertGoalList(bigGoalId, year, month);
 
@@ -482,8 +487,11 @@ public class SmallGoalService {
         else{ //매일
             LocalDate target = startDay;
 
+            /**
+             * 첫날, 마지막날 안들어가지네
+             */
             // endDay 전까지 1씩 더해주면서 쭉 넣어준다
-            while(target.isBefore(endDay)){
+            while(target.isEqual(endDay) || target.isBefore(endDay)){
                 dateList.add(target);
                 target = target.plusDays(1);
             }
