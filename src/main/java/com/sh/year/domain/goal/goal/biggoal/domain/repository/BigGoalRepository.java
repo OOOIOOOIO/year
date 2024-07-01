@@ -2,12 +2,15 @@ package com.sh.year.domain.goal.goal.biggoal.domain.repository;
 
 import com.sh.year.domain.goal.goal.biggoal.domain.BigGoal;
 import com.sh.year.domain.user.domain.Users;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface BigGoalRepository extends JpaRepository<BigGoal, Long> {
     List<BigGoal> findAllByUsers(Users users);
+
+    List<BigGoal> findAllByUsers(Users users, Pageable pageable);
 
 
     /*

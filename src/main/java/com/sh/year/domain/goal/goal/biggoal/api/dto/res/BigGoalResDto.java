@@ -2,16 +2,15 @@ package com.sh.year.domain.goal.goal.biggoal.api.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sh.year.domain.goal.goal.biggoal.domain.BigGoal;
-import com.sh.year.domain.goal.goal.smallgoal.api.dto.res.RuleResDto;
+import com.sh.year.domain.goal.goal.biggoal.domain.ShareStatus;
+import com.sh.year.domain.goal.goal.common.CompleteStatus;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.res.SmallGoalResDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,8 +33,8 @@ public class BigGoalResDto {
         this.contents = bigGoal.getContents();
         this.category = bigGoal.getCategory();
         this.endDate = bigGoal.getEndDate();
-        this.shareStatus = bigGoal.getShareStatus().equals("ON") ? 1 : 0;
-        this.completeStatus = bigGoal.getCompleteStatus().equals("COMP") ? 1 : 0;
+        this.shareStatus = bigGoal.getShareStatus().equals(ShareStatus.ON) ? 1 : 0;
+        this.completeStatus = bigGoal.getCompleteStatus().equals(CompleteStatus.COMP) ? 1 : 0;
 
     }
 

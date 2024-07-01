@@ -2,6 +2,7 @@ package com.sh.year.domain.goal.review.smallgoalreview.api;
 
 
 import com.sh.year.domain.goal.review.smallgoalreview.api.dto.req.SmallGoalReviewReqDto;
+import com.sh.year.domain.goal.review.smallgoalreview.api.dto.res.SmallGoalReviewResListDto;
 import com.sh.year.domain.goal.review.smallgoalreview.application.SmallGoalReviewService;
 import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeader;
 import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeaderDto;
@@ -10,6 +11,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,27 +27,25 @@ public class SmallGoalReviewController {
 
     private final SmallGoalReviewService smallGoalReviewService;
 
+
     /**
-     * 리스트로 가져오기
-     */
-    /**
-     * 큰목표 후기 저장
+     * 직은 목표 후기 리스트 조회
      */
     @Operation(
-            summary = "작은목표 후기 저장 API",
+            summary = "작은목표 후기 리스트 조회 API",
             description = "큰목표"
     )
     @ApiResponse(
             responseCode = "200",
-            description = "작은목표 후기 저장에 성공하였습니다."
+            description = "작은목표 후기 리스트 조회에 성공하였습니다."
     )
     @GetMapping("/{smallGoalId}")
-    public ResponseEntity<String> getSmallGoalReviewList(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto,
-                                                      @PathVariable("smallGoalId") Long smallGoalId){
+    public ResponseEntity<SmallGoalReviewResListDto> getSmallGoalReviewList(@PathVariable("smallGoalId") Long smallGoalId,
+                                                      @PageableDefault(size = 5, sort="createdAt", direction = Sort.Direction.DESC) Pageable pageable){
 
-        smallGoalReviewService.getSmallGoalReview(smallGoalId);
+        SmallGoalReviewResListDto smallGoalReviewList = smallGoalReviewService.getSmallGoalReview(smallGoalId, pageable);
 
-        return new ResponseEntity<>("success", HttpStatus.OK);
+        return new ResponseEntity<>(smallGoalReviewList, HttpStatus.OK);
     }
 
 
@@ -60,8 +62,7 @@ public class SmallGoalReviewController {
             description = "작은목표 후기 저장에 성공하였습니다."
     )
     @PostMapping("/{smallGoalId}")
-    public ResponseEntity<String> saveSmallGoalReview(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto,
-                                        @PathVariable("smallGoalId") Long smallGoalId,
+    public ResponseEntity<String> saveSmallGoalReview(@PathVariable("smallGoalId") Long smallGoalId,
                                         @RequestBody SmallGoalReviewReqDto smallGoalReviewReqDto){
 
         smallGoalReviewService.saveSmallGoalReview(smallGoalId, smallGoalReviewReqDto);
@@ -69,42 +70,42 @@ public class SmallGoalReviewController {
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
-    /**
-     * 큰목표 후기 수정
-     */
-    @Operation(
-            summary = "작은목표 후기 수정 API",
-            description = "큰목표"
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "작은목표 후기 수정에 성공하였습니다."
-    )
-    @PutMapping("/{reviewId}")
-    public ResponseEntity<String> updateSmallGoalReview(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto,
-                                      @PathVariable("reviewId") Long reviewId,
-                                      @RequestBody SmallGoalReviewReqDto smallGoalReviewReqDto){
+//    /**
+//     * 큰목표 후기 수정
+//     */
+//    @Operation(
+//            summary = "작은목표 후기 수정 API",
+//            description = "큰목표"
+//    )
+//    @ApiResponse(
+//            responseCode = "200",
+//            description = "작은목표 후기 수정에 성공하였습니다."
+//    )
+//    @PutMapping("/{reviewId}")
+//    public ResponseEntity<String> updateSmallGoalReview(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto,
+//                                      @PathVariable("reviewId") Long reviewId,
+//                                      @RequestBody SmallGoalReviewReqDto smallGoalReviewReqDto){
+//
+//        return new ResponseEntity<>("success", HttpStatus.OK);
+//    }
 
-        return new ResponseEntity<>("success", HttpStatus.OK);
-    }
-
-    /**
-     * 큰목표 후기 삭제
-     */
-    @Operation(
-            summary = "작은목표 후기 삭제 API",
-            description = "큰목표"
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "작은목표 후기 삭제에 성공하였습니다."
-    )
-    @DeleteMapping("/{reviewId}")
-    public ResponseEntity<String> deleteSmallGoalReview(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto,
-                                      @PathVariable("reviewId") Long reviewId){
-
-        return new ResponseEntity<>("success", HttpStatus.OK);
-    }
+//    /**
+//     * 큰목표 후기 삭제
+//     */
+//    @Operation(
+//            summary = "작은목표 후기 삭제 API",
+//            description = "큰목표"
+//    )
+//    @ApiResponse(
+//            responseCode = "200",
+//            description = "작은목표 후기 삭제에 성공하였습니다."
+//    )
+//    @DeleteMapping("/{reviewId}")
+//    public ResponseEntity<String> deleteSmallGoalReview(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto,
+//                                      @PathVariable("reviewId") Long reviewId){
+//
+//        return new ResponseEntity<>("success", HttpStatus.OK);
+//    }
 
 
 }

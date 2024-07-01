@@ -1,15 +1,22 @@
 ### Main 조회
-GET localhost:7777/api/main
+GET localhost:7777/api/main?page=5
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
 
+
+
+
+### Big Goal 목록 조회(Paging)
+GET localhost:7777/api/goal/biggoal/list?page=1
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
 
 # ============================================================================================================
 # ============================================================================================================
 # ============================================================================================================
 
 ### Big Goal 상세 조회
-GET localhost:7777/api/goal/biggoal/1
+GET localhost:7777/api/goal/biggoal/2
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
 
@@ -92,9 +99,9 @@ Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
 
 {
-  "title" : "루틴1 3개월이상",
+  "title" : "aaaaaa루틴1 3개월이상",
   "icon" : "icon♥️",
-  "endDate" : "2024-08-20",
+  "endDate" : "2024-12-31",
   "completeStatus" : 0,
   "ruleReqDto" :
   {
@@ -181,7 +188,7 @@ refresh_token: {{refresh_token}}
 }
 
 
-### Goal update
+### Small Goal update
 PUT localhost:7777/api/goal/smallgoal/2
 Content-Type: application/json
 Authorization: {{Authorization}}
@@ -201,6 +208,11 @@ Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
 
 
+### Small Goal Update CompleteStatus
+PUT localhost:7777/api/goal/smallgoal/comp/2
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
 ### Rule Complete info update
 PUT localhost:7777/api/goal/smallgoal/routine/comp/7
 Content-Type: application/json
@@ -212,7 +224,3 @@ refresh_token: {{refresh_token}}
 
 
 
-### Goal Update ShareState
-PUT localhost:7777/api/bigGoal/share/2
-Authorization: {{Authorization}}
-refresh_token: {{refresh_token}}

@@ -7,6 +7,7 @@ import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.SmallGoalUpdateReqDto;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.res.SmallGoalResDto;
 import com.sh.year.domain.goal.goal.smallgoal.application.SmallGoalService;
 import com.sh.year.global.common.ResponseConst;
+import com.sh.year.global.log.LogTrace;
 import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeader;
 import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeaderDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,6 +41,7 @@ public class SmallGoalController {
             responseCode = "200",
             description = "작은목표 상세조회에 성공하였습니다."
     )
+    @LogTrace
     @GetMapping("/{smallGoalId}")
     public ResponseEntity<SmallGoalResDto> getGoalInfo(@PathVariable(value = "smallGoalId") Long smallGoalId){
 
@@ -60,6 +62,7 @@ public class SmallGoalController {
             responseCode = "200",
             description = "작은목표 리스트로 조회에 성공하였습니다."
     )
+    @LogTrace
     @GetMapping("/{bigGoalId}/list")
     public ResponseEntity<List<SmallGoalResDto>> getGoalList(@PathVariable("bigGoalId") Long bigGoalId){
 
@@ -79,6 +82,7 @@ public class SmallGoalController {
             responseCode = "200",
             description = "작은목표 저장에 성공하였습니다."
     )
+    @LogTrace
     @PostMapping("/{bigGoalId}")
     public ResponseEntity<Long> saveGoal(@PathVariable(value = "bigGoalId") Long bigGoalId, @RequestBody SmallGoalReqDto smallGoalReqDto){
 
@@ -100,6 +104,7 @@ public class SmallGoalController {
             responseCode = "200",
             description = "작은목표 수정에 성공하였습니다."
     )
+    @LogTrace
     @PutMapping("/{smallGoalId}")
     public ResponseEntity<String> updateGoal(@PathVariable(value = "smallGoalId") Long smallGoalId, @RequestBody SmallGoalUpdateReqDto smallGoalUpdateReqDto){
 
@@ -119,6 +124,7 @@ public class SmallGoalController {
             responseCode = "200",
             description = "작은목표 삭제에 성공하였습니다."
     )
+    @LogTrace
     @DeleteMapping("/{smallGoalId}")
     public ResponseEntity<String> deleteGoal(@PathVariable(value = "smallGoalId") Long smallGoalId){
 
@@ -138,6 +144,7 @@ public class SmallGoalController {
             responseCode = "200",
             description = "작은목표 100% 달성시 달성여부 변경 성공하였습니다."
     )
+    @LogTrace
     @PutMapping("/comp/{smallGoalId}")
     public ResponseEntity<String> updateShareStatus(@PathVariable(value = "smallGoalId") Long smallGoalId){
 
@@ -157,6 +164,7 @@ public class SmallGoalController {
             responseCode = "200",
             description = "작은목표 루틴 달성여부 변경 성공하였습니다."
     )
+    @LogTrace
     @PutMapping("/routine/comp/{smallGoalId}")
     public ResponseEntity<String> updateRuleCompleteInfo(@PathVariable("ruleId") Long ruleId){
 

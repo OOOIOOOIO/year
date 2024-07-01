@@ -1,6 +1,6 @@
 package com.sh.year.goal.repository;
 
-import com.sh.year.api.main.controller.dto.res.TodayAlertSmallGoalResDto;
+import com.sh.year.api.main.controller.dto.res.SmallGoalListForTodayAlertResDto;
 import com.sh.year.api.main.controller.dto.res.TodayAlertSmallGoalInterface;
 import com.sh.year.domain.goal.goal.smallgoal.domain.repository.SmallGoalRepository;
 import com.sh.year.domain.goal.rule.rule.domain.Rule;
@@ -42,8 +42,8 @@ public class MainTest {
                 0,0,0,0,0,0,0,0,
                 0,0,0,0,1,0,0,0,
                 0,0,0,0,0,0,0,0,};
-        List<TodayAlertSmallGoalResDto> todayAlertSmallGoalResDtoList = new ArrayList<>();
-        List<TodayAlertSmallGoalInterface> todayAlertGoalList = smallGoalRepository.getTodayAlertGoalList(2024, 6);
+        List<SmallGoalListForTodayAlertResDto> smallGoalListForTodayAlertResDtoList = new ArrayList<>();
+        List<TodayAlertSmallGoalInterface> todayAlertGoalList = smallGoalRepository.getTodayAlertGoalList(1L,2024, 6);
         LocalDate localDate = LocalDate.now();
         int dayOfMonth = localDate.getDayOfMonth();
         // when
@@ -56,20 +56,20 @@ public class MainTest {
             if(alertDay1[dayOfMonth] == 1){
                 Rule rule = ruleRepository.findById(today.getRuleId()).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
 
-                TodayAlertSmallGoalResDto todayAlertSmallGoalResDto = new TodayAlertSmallGoalResDto(today, rule);
+                SmallGoalListForTodayAlertResDto smallGoalListForTodayAlertResDto = new SmallGoalListForTodayAlertResDto(today, rule);
 
-                List<RuleCompleteInfoDto> ruleCompleteInfoDtoList = todayAlertSmallGoalResDto.getRuleResDto().getRuleCompleteInfoDtoList();
+                List<RuleCompleteInfoDto> ruleCompleteInfoDtoList = smallGoalListForTodayAlertResDto.getRuleResDto().getRuleCompleteInfoDtoList();
 
 //                int progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
 
 //                todayAlertGoalResDto.setProgress(progress);
 
-                todayAlertSmallGoalResDtoList.add(todayAlertSmallGoalResDto);
+                smallGoalListForTodayAlertResDtoList.add(smallGoalListForTodayAlertResDto);
             }
 
         }
 
-        log.info("size : " + todayAlertSmallGoalResDtoList.size());
+        log.info("size : " + smallGoalListForTodayAlertResDtoList.size());
 
 
     }

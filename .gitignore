@@ -12,8 +12,8 @@ src/main/resources/application-local-oauth.yml
 src/main/resources/application-real.yml
 src/main/java/http/dev/**
 
-src/main/java/http/http-client.private.env.json
 src/main/java/http/local/http-client.private.env.json
+src/main/java/http/dev/
 
 ### STS ###
 .apt_generated

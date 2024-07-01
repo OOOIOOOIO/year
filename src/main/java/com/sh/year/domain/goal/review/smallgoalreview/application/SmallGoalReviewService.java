@@ -1,6 +1,8 @@
 package com.sh.year.domain.goal.review.smallgoalreview.application;
 
 import com.sh.year.domain.goal.review.smallgoalreview.api.dto.req.SmallGoalReviewReqDto;
+import com.sh.year.domain.goal.review.smallgoalreview.api.dto.res.SmallGoalReviewResDto;
+import com.sh.year.domain.goal.review.smallgoalreview.api.dto.res.SmallGoalReviewResListDto;
 import com.sh.year.domain.goal.review.smallgoalreview.domain.SmallGoalReview;
 import com.sh.year.domain.goal.review.smallgoalreview.domain.repository.SmallGoalReviewRepository;
 import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
@@ -9,9 +11,12 @@ import com.sh.year.global.exception.CustomErrorCode;
 import com.sh.year.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -24,48 +29,50 @@ public class SmallGoalReviewService {
 
 
     /**
-     * 큰목표 후기 리스트로 조회
+     * 작은 후기 리스트로 조회
      *
-     * 날짜순(createdAt)으로 ASC 정렬
-     * page=1&size=5
-     *  @PagingDefault
-     * 5개씩
-     *
-     * 파라미터로 page 받기 0부터 시작
      */
-    public void getSmallGoalReview(Long smallGoalId) {
+    public SmallGoalReviewResListDto getSmallGoalReview(Long smallGoalId, Pageable pageable) {
+        SmallGoal smallGoal = smallGoalRepository.findById(smallGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistSmallGoal));
 
-//        smallGoalReviewRepository.findAll(Sort.Direction.ASC, "createdAt")
+        List<SmallGoalReviewResDto> smallGoalReviewResDtos = smallGoalReviewRepository.findAllBySmallGoal(smallGoal, pageable).stream()
+                .map(SmallGoalReviewResDto::new)
+                .collect(Collectors.toList());
+
+
+        return new SmallGoalReviewResListDto(smallGoalReviewResDtos);
 
     }
 
 
     /**
-     * 큰목표 후기 저장
+     * 작은목표 후기 저장
      */
     public void saveSmallGoalReview(Long smallGoalId, SmallGoalReviewReqDto smallGoalReviewReqDto){
         SmallGoal smallGoal = smallGoalRepository.findById(smallGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistSmallGoal));
 
         SmallGoalReview smallGoalReview = SmallGoalReview.createSmallGoalReview(smallGoalReviewReqDto);
         smallGoalReview.setSmallGoal(smallGoal);
+
+        smallGoalReviewRepository.save(smallGoalReview);
     }
 
-    /**
-     * 큰목표 후기 수정
-     */
-    public void updateSmallGoalReview(Long reviewId, SmallGoalReviewReqDto smallGoalReviewReqDto){
-        SmallGoalReview smallGoalReview = smallGoalReviewRepository.findById(reviewId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistGoalReview));
-
-        smallGoalReview.updateSmallGoalReview(smallGoalReviewReqDto);
-    }
-
-    /**
-     * 큰목표 후기 삭제
-     */
-    public void deleteSmallGoalReview(Long reviewId){
-        smallGoalReviewRepository.deleteById(reviewId);
-
-    }
+//    /**
+//     * 작은목표 후기 수정
+//     */
+//    public void updateSmallGoalReview(Long reviewId, SmallGoalReviewReqDto smallGoalReviewReqDto){
+//        SmallGoalReview smallGoalReview = smallGoalReviewRepository.findById(reviewId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistGoalReview));
+//
+//        smallGoalReview.updateSmallGoalReview(smallGoalReviewReqDto);
+//    }
+//
+//    /**
+//     * 큰목표 후기 삭제
+//     */
+//    public void deleteSmallGoalReview(Long reviewId){
+//        smallGoalReviewRepository.deleteById(reviewId);
+//
+//    }
 
 
 }

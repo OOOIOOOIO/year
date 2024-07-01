@@ -25,8 +25,9 @@ and rai.alert_day IN (0x00010000010000010100000100000101000001000001010000010000
     "from small_goal sg " +
     "join rule as r on sg.small_goal_id = r.small_goal_id " +
     "join rule_alert_info rai on r.rule_id = rai.rule_id " +
-    "where rai.year = :year and rai.month = :month", nativeQuery = true)
-    List<TodayAlertSmallGoalInterface> getTodayAlertGoalList(@Param("year") int year,
+    "where sg.big_goal_id = :bigGoalId and rai.year = :year and rai.month = :month", nativeQuery = true)
+    List<TodayAlertSmallGoalInterface> getTodayAlertGoalList(@Param("bigGoalId") Long bigGoalId,
+                                                             @Param("year") int year,
                                                              @Param("month") int month);
 }
 
