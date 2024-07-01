@@ -19,8 +19,8 @@ public class RedisConfig {
     private String host;
     @Value("${spring.data.redis.port}")
     private int port;
-//    @Value("${spring.data.redis.password}")
-//    private String password;
+    @Value("${spring.data.redis.password}")
+    private String password;
 
 
 
@@ -28,8 +28,7 @@ public class RedisConfig {
     @Bean
     public RedisConnectionFactory redisConnectionFactory(){
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
-//        System.out.println("==========" + password);
-//        config.setPassword(RedisPassword.of(password));
+        config.setPassword(RedisPassword.of(password));
 
         return new LettuceConnectionFactory(config); // Redis Client는 Lettuce 사용
     }
