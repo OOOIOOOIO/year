@@ -35,9 +35,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        log.info("=======여기 들어옴=========");
+        log.info("======= Request Path =========");
         String requestURI = request.getRequestURI();
-        log.info(requestURI);
+        log.info("======= " + requestURI+" =======");
 
         checkToken(request);
 
@@ -90,12 +90,12 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
         //accessToken 검사
         try{
-            log.info("=========checkAccessToken==========");
+            log.info("========= Check Access Token ==========");
             String accessToken = jwtUtils.getAccessTokenFromHeader(request);
 
             String refreshToken = jwtUtils.getRefreshTokenFromHeader(request);
 
-            String accessTokenFromRedis = checkTokenInRedis(accessToken, refreshToken);
+            String accessTokenFromRedis = getAccessTokenFromRedis(accessToken, refreshToken);
 
 
             jwtUtils.validateAccessToken(accessToken); // access token 형식, 만료시간 등 검사
@@ -127,9 +127,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         try {
             String refreshToken = jwtUtils.getRefreshTokenFromHeader(request);
 
-            String refreshTokenFromRedis = checkRefeshTokenInRedis(refreshToken);
+            String refreshTokenFromRedis = getRefreshTokenFromRedis(refreshToken);
 
-            log.info("=========checkRefreshToken==========");
+            log.info("========= Check Refresh Token==========");
             log.info(refreshToken);
             log.info(refreshTokenFromRedis);
 
@@ -170,14 +170,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
 
 
-    private String checkRefeshTokenInRedis(String refreshToken){
-        log.info("==== Check Refresh Token ====");
+    private String getRefreshTokenFromRedis(String refreshToken){
+        log.info("==== Get Refresh Token From Redis ====");
         JwtClaimDto claimFromToken = jwtUtils.getClaimFromAccessToken(refreshToken);
 
         String refreshTokenFromRedis = tokenService.getTokenFromRedis(RedisConst.REFRESH_TOKEN.prefix() + claimFromToken.getUserId());
-
+        log.info("refreshTokenFromRedis : " + refreshTokenFromRedis);
         if(refreshTokenFromRedis == null){
-
+            log.info("===== Refresh Token From Redis is Null ====");
             throw new JwtCustomException(JwtCustomErrorCode.RefreshTokenExpiredException);
         }
 
@@ -186,16 +186,18 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
 
 
-    private String checkTokenInRedis(String accessToken, String refreshToken){
-        log.info("==== Check Access Token ====");
+    private String getAccessTokenFromRedis(String accessToken, String refreshToken){
+        log.info("==== Get Access Token From Redis ====");
         JwtClaimDto claimFromToken = jwtUtils.getClaimFromAccessToken(accessToken);
 
         String accessTokenFromRedis = tokenService.getTokenFromRedis(RedisConst.ACCESS_TOKEN.prefix() + claimFromToken.getUserId());
+        log.info("accessTokenFromRedis : " + accessTokenFromRedis);
 
-        log.info(accessTokenFromRedis);
         if(accessTokenFromRedis == null){
-            checkRefeshTokenInRedis(refreshToken);
-            log.info("Access Token is Null");
+            log.info("===== Access Token From Redis is Null ====");
+
+            getRefreshTokenFromRedis(refreshToken);
+
             throw new JwtCustomException(JwtCustomErrorCode.AccessTokenExpiredException);
         }
 
