@@ -97,11 +97,6 @@ public class BigGoalService {
             bigGoalMainResDtoList.add(bigGoalMainResDto);
 
         }
-        log.info("===========");
-        log.info("===========");
-        log.info("===========");
-        log.info("===========");
-        List<BigGoal> bigGoalList2 = bigGoalQueryRepository.getBigGoalListByUserId(userInfoFromTokenDto.getUserId());
 
         return bigGoalMainResDtoList;
 
