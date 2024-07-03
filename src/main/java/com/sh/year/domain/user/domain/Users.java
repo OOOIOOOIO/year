@@ -3,6 +3,7 @@ package com.sh.year.domain.user.domain;
 import com.sh.year.domain.common.BaseTimeEntity;
 import com.sh.year.domain.goal.goal.biggoal.domain.BigGoal;
 import com.sh.year.domain.goal.goal.delayGoal.domain.DelayGoal;
+import com.sh.year.domain.user.api.dto.UserInfoUpdateReqDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -24,6 +25,7 @@ public class Users extends BaseTimeEntity {
     private String picture;
     private String provider;
     private String nickname;
+    private String profileImg;
     private String instagramAccount;
     private String stateMessage;
 
@@ -85,6 +87,13 @@ public class Users extends BaseTimeEntity {
         this.provider = provider;
 
         return this;
+    }
+
+    public void updateUserInfo(UserInfoUpdateReqDto userInfoUpdateReqDto) {
+        this.nickname = userInfoUpdateReqDto.getNickname();
+        this.profileImg = userInfoUpdateReqDto.getProfileImg();
+        this.instagramAccount = userInfoUpdateReqDto.getInstagramAccount();
+        this.stateMessage = userInfoUpdateReqDto.getStateMessage();
     }
 
 }
