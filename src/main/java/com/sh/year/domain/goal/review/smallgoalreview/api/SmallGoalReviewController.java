@@ -51,7 +51,7 @@ public class SmallGoalReviewController {
 
 
     /**
-     * 큰목표 후기 저장
+     * 작은목표 후기 저장
      */
     @Operation(
             summary = "작은목표 후기 저장 API",
@@ -61,11 +61,12 @@ public class SmallGoalReviewController {
             responseCode = "200",
             description = "작은목표 후기 저장에 성공하였습니다."
     )
-    @PostMapping("/{smallGoalId}")
+    @PostMapping("/{smallGoalId}/{ruleId}")
     public ResponseEntity<String> saveSmallGoalReview(@PathVariable("smallGoalId") Long smallGoalId,
+                                                      @PathVariable("ruleId") Long ruleId,
                                         @RequestBody SmallGoalReviewReqDto smallGoalReviewReqDto){
 
-        smallGoalReviewService.saveSmallGoalReview(smallGoalId, smallGoalReviewReqDto);
+        smallGoalReviewService.saveSmallGoalReview(smallGoalId, ruleId, smallGoalReviewReqDto);
 
         return new ResponseEntity<>("success", HttpStatus.OK);
     }

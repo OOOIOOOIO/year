@@ -3,6 +3,18 @@ GET localhost:7777/api/main?page=7
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
 
+### Small Goal Reviw save
+POST localhost:7777/api/smallgoal/review/5/5
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+{
+  "contents": "후기",
+  "starRating": 3
+
+}
+
 
 ### Rule Complete info update
 PUT localhost:7777/api/goal/smallgoal/routine/comp/1
@@ -227,6 +239,20 @@ refresh_token: {{refresh_token}}
 
 
 
+# ============================================================================================================
+# ============================================================================================================
+# ============================================================================================================
 
+### Small Goal Reviw save
+POST localhost:7777/api/smallgoal/review/{smallGoalId}/{ruleId}
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+{
+  "contents": "후기",
+  "starRating": 3
+
+}
 
 

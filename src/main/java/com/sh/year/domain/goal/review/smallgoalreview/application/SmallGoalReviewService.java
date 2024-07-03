@@ -7,6 +7,8 @@ import com.sh.year.domain.goal.review.smallgoalreview.domain.SmallGoalReview;
 import com.sh.year.domain.goal.review.smallgoalreview.domain.repository.SmallGoalReviewRepository;
 import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
 import com.sh.year.domain.goal.goal.smallgoal.domain.repository.SmallGoalRepository;
+import com.sh.year.domain.goal.rule.rule.domain.Rule;
+import com.sh.year.domain.goal.rule.rule.domain.repository.RuleQueryRepositoryImpl;
 import com.sh.year.global.exception.CustomErrorCode;
 import com.sh.year.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +29,7 @@ public class SmallGoalReviewService {
 
     private final SmallGoalReviewRepository smallGoalReviewRepository;
     private final SmallGoalRepository smallGoalRepository;
+    private final RuleQueryRepositoryImpl ruleQueryRepository;
 
 
     /**
@@ -48,14 +52,31 @@ public class SmallGoalReviewService {
     /**
      * 작은목표 후기 저장
      */
-    public void saveSmallGoalReview(Long smallGoalId, SmallGoalReviewReqDto smallGoalReviewReqDto){
+    public void saveSmallGoalReview(Long smallGoalId, Long ruleId, SmallGoalReviewReqDto smallGoalReviewReqDto){
         SmallGoal smallGoal = smallGoalRepository.findById(smallGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistSmallGoal));
 
+        // review 저장
         SmallGoalReview smallGoalReview = SmallGoalReview.createSmallGoalReview(smallGoalReviewReqDto);
         smallGoalReview.setSmallGoal(smallGoal);
 
         smallGoalReviewRepository.save(smallGoalReview);
+
+        // rci 저장
+        LocalDate now = LocalDate.now();
+
+        Rule rule = ruleQueryRepository.findRuleAndRuleCompleteInfo(now.getYear(), now.getMonth().getValue(), ruleId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
+
+        int today = now.getDayOfMonth();
+        byte[] completeDayArr = rule.getRuleCompleteInfoList().get(0).getCompleteDay();
+
+        completeDayArr[today] = 1;
+
+        rule.getRuleCompleteInfoList().get(0).updateCompleteDayArr(completeDayArr);
+
+
     }
+
+
 
 //    /**
 //     * 작은목표 후기 수정
