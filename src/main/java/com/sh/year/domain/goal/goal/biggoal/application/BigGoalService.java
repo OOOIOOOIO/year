@@ -55,7 +55,7 @@ public class BigGoalService {
 
         BigGoalResDto bigGoalResDto = new BigGoalResDto(bigGoal);
 
-        int progress = calculateBigGoalProgressByDto(smallGoalResDtoList);
+        float progress = calculateBigGoalProgressByDto(smallGoalResDtoList);
 
         bigGoalResDto.setProgress(progress);
         bigGoalResDto.setSmallGoalResDtoList(smallGoalResDtoList);
@@ -90,7 +90,7 @@ public class BigGoalService {
 
             bigGoalMainResDto.setSmallGoalCnt(smallGoalSize);
 
-            int progress = calculateBigGoalProgressByEntity(smallGoalList);
+            float progress = calculateBigGoalProgressByEntity(smallGoalList);
 
             bigGoalMainResDto.setProgress(progress);
 
@@ -102,36 +102,6 @@ public class BigGoalService {
 
     }
 
-
-//    /**
-//     * main에서 사용,
-//     * 유저의 bigGoal들에 해댱하는 SmallGoal 가져오기
-//     */
-//    @LogTrace
-//    public List<BigGoalMainResDto> getBigGoalListForMain(UserInfoFromHeaderDto userInfoFromHeaderDto){
-////        List<BigGoal> bigGoalList = bigGoalQueryRepository.getBigGoalListByUserId(userInfoFromHeaderDto.getUserId());
-//        Users users = getUsers(userInfoFromHeaderDto);
-//        List<BigGoal> bigGoalList = bigGoalRepository.findAllByUsers(users);
-//        List<BigGoalMainResDto> bigGoalMainResDtoList = new ArrayList<>();
-//
-//
-//        for(BigGoal bigGoal : bigGoalList){
-//
-//            List<SmallGoal> smallGoalList = bigGoal.getSmallGoalList();
-//
-//            int progress = calculateBigGoalProgressByEntity(smallGoalList);
-//
-//            BigGoalMainResDto bigGoalMainResDto = new BigGoalMainResDto(bigGoal);
-//
-//            bigGoalMainResDto.setProgress(progress);
-//            bigGoalMainResDto.setSmallGoalCnt(smallGoalList.size());
-//
-//            bigGoalMainResDtoList.add(bigGoalMainResDto);
-//        }
-//
-//        return bigGoalMainResDtoList;
-//
-//    }
 
 
     /**
@@ -237,8 +207,8 @@ public class BigGoalService {
     /**
      * big goal progress 계산
      */
-    private int calculateBigGoalProgressByDto(List<SmallGoalResDto> smallGoalResDtoList){
-        int bigGoalProgress = 0;
+    private float calculateBigGoalProgressByDto(List<SmallGoalResDto> smallGoalResDtoList){
+        float bigGoalProgress = 0;
         int size = smallGoalResDtoList.size();
 
         // smallGoal이 없을 경우
@@ -247,7 +217,7 @@ public class BigGoalService {
         // small goal
         for(int i = 0; i < size; i++){
             int completeDayCnt = 0;
-            int smallGoalProgress = 0;
+            float smallGoalProgress = 0;
             int totalDayCnt = 0;
 
             List<RuleCompleteInfoDto> ruleCompleteInfoDtoList = smallGoalResDtoList.get(i).getRuleResDto().getRuleCompleteInfoDtoList();
@@ -275,7 +245,8 @@ public class BigGoalService {
             bigGoalProgress += smallGoalProgress;
         }
 
-        return Math.round(bigGoalProgress / size);
+        return bigGoalProgress / size;
+//        return Math.round(bigGoalProgress / size);
     }
 
     private int calculateBigGoalProgressByEntity(List<SmallGoal> smallGoalList){

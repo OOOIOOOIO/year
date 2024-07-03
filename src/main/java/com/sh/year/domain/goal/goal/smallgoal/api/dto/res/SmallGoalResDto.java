@@ -21,7 +21,7 @@ public class SmallGoalResDto {
     private LocalDate endDate;
     private int completeStatus;
     private RuleResDto ruleResDto;
-    private Integer progress;
+    private float progress;
 
     public SmallGoalResDto(SmallGoal smallGoal) {
         this.smallGoalId = smallGoal.getSmallGoalId();
@@ -33,7 +33,7 @@ public class SmallGoalResDto {
         this.progress = 0;
     }
 
-    public void setProgress(Integer progress) {
+    public void setProgress(float progress) {
         this.progress = progress;
     }
 }

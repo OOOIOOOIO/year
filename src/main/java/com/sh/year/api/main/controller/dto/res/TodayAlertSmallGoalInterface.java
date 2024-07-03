@@ -19,4 +19,9 @@ public interface TodayAlertSmallGoalInterface {
     // rai
     byte[] getAlertDay();
 
+    // rci
+    byte[] getCompleteDay();
+
+    int getTotalDayCnt();
+
 }

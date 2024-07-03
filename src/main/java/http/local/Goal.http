@@ -1,8 +1,14 @@
 ### Main 조회
-GET localhost:7777/api/main?page=5
+GET localhost:7777/api/main?page=7
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
 
+
+### Rule Complete info update
+PUT localhost:7777/api/goal/smallgoal/routine/comp/1
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
 
 
 

@@ -24,7 +24,7 @@ public class BigGoalResDto {
     private int shareStatus; // 0 : 공유 안함 / 1 : 공유 함
     private int completeStatus; // 0 : 실패 / 1 : 성공
     private List<SmallGoalResDto> smallGoalResDtoList;
-    private Integer progress;
+    private float progress;
     private Integer smallGoalCnt;
 
 
@@ -38,7 +38,7 @@ public class BigGoalResDto {
 
     }
 
-    public void setProgress(Integer progress) {
+    public void setProgress(float progress) {
         this.progress = progress;
     }
 

@@ -14,7 +14,7 @@ public class SmallGoalListForTodayAlertResDto {
     private String title;
     private String icon;
     private RuleResDto ruleResDto;
-    private Integer progress;
+    private float progress;
 
     public SmallGoalListForTodayAlertResDto(TodayAlertSmallGoalInterface todayAlertSmallGoalInterface, Rule rule) {
         this.smallGoalId = todayAlertSmallGoalInterface.getSmallGoalId();
@@ -25,7 +25,7 @@ public class SmallGoalListForTodayAlertResDto {
 
     }
 
-    public void setProgress(Integer progress) {
+    public void setProgress(float progress) {
         this.progress = progress;
     }
 

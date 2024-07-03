@@ -126,8 +126,14 @@ public class SmallGoalService {
 
                 // 6월 중 오늘에 해당하는 애들이 있는지 확인하기
                 // 있다면, rpd 가져와서 넣고, rci 가져와서 process 계산 넣기
-                byte[] alertDay1 = todaySmallGoal.getAlertDay();
-                if(alertDay1[today] == 1){
+                byte[] alertDay = todaySmallGoal.getAlertDay();
+                byte[] completeDay = todaySmallGoal.getCompleteDay();
+                    log.info("================");
+                    log.info("smallGoalId = " + todaySmallGoal.getSmallGoalId());
+                    log.info("alertDay = " + alertDay[today]);
+                    log.info("completeDay = " + completeDay[today]);
+                    log.info("================");
+                if(alertDay[today] == 1 && completeDay[today] != 1){
                     Rule rule = ruleRepository.findById(todaySmallGoal.getRuleId()).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
 
                     SmallGoalListForTodayAlertResDto smallGoalListForTodayAlertResDto = new SmallGoalListForTodayAlertResDto(todaySmallGoal, rule);
@@ -278,6 +284,7 @@ public class SmallGoalService {
 
         return Math.round((cnt * 100) / totalDayCnt);
     }
+
 
     /**
      * 알람 totalDayCnt

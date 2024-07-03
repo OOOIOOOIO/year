@@ -165,7 +165,7 @@ public class SmallGoalController {
             description = "작은목표 루틴 달성여부 변경 성공하였습니다."
     )
     @LogTrace
-    @PutMapping("/routine/comp/{smallGoalId}")
+    @PutMapping("/routine/comp/{ruleId}")
     public ResponseEntity<String> updateRuleCompleteInfo(@PathVariable("ruleId") Long ruleId){
 
         smallGoalService.updateRuleCompleteInfo(ruleId);

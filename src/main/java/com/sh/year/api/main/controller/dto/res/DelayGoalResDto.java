@@ -22,7 +22,7 @@ public class DelayGoalResDto {
     private LocalDate endDate;
     private int failStatus;
     private RuleResDto ruleResDto;
-    private Integer progress;
+    private float progress;
 
     public DelayGoalResDto(SmallGoal smallGoal, Rule rule, int failStatus, Long delayGoalId) {
         this.delayGoalId = delayGoalId;
@@ -36,7 +36,7 @@ public class DelayGoalResDto {
 
     }
 
-    public void setProgress(Integer progress) {
+    public void setProgress(float progress) {
         this.progress = progress;
     }
 }
