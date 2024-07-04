@@ -52,8 +52,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 //        String[] excludePath = {"/api/token/**"};
         String[] excludePath = {
                 "/error",
-                "/api/token/reissue/access-token",
-                "/api/token/reissue/refresh-token",
+                "/api/token/reissue/access",
+                "/api/token/reissue/refresh",
                 "/login/oauth2/redirect",
                 "/test/login",
                 "/favicon.ico",
@@ -96,7 +96,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             String refreshToken = jwtUtils.getRefreshTokenFromHeader(request);
 
             String accessTokenFromRedis = getAccessTokenFromRedis(accessToken, refreshToken);
-
+            log.info("header : " + accessToken);
+            log.info("redis : " + accessTokenFromRedis);
 
             jwtUtils.validateAccessToken(accessToken); // access token 형식, 만료시간 등 검사
 
@@ -130,8 +131,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             String refreshTokenFromRedis = getRefreshTokenFromRedis(refreshToken);
 
             log.info("========= Check Refresh Token==========");
-            log.info(refreshToken);
-            log.info(refreshTokenFromRedis);
+            log.info("header : " + refreshToken);
+            log.info("redis : " + refreshTokenFromRedis);
 
             jwtUtils.validateRefreshToken(refreshToken);
 
