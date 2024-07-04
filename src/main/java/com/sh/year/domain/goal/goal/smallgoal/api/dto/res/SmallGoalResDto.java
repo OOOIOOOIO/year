@@ -21,7 +21,7 @@ public class SmallGoalResDto {
     private LocalDate endDate;
     private int completeStatus;
     private RuleResDto ruleResDto;
-    private float progress;
+    private String progress;
 
     public SmallGoalResDto(SmallGoal smallGoal) {
         this.smallGoalId = smallGoal.getSmallGoalId();
@@ -30,10 +30,10 @@ public class SmallGoalResDto {
         this.endDate = smallGoal.getEndDate();
         this.completeStatus = smallGoal.getCompleteStatus().equals(CompleteStatus.COMP) ? 1 : 0;
         this.ruleResDto = new RuleResDto(smallGoal.getRule());
-        this.progress = 0;
     }
 
     public void setProgress(float progress) {
-        this.progress = progress;
+
+        this.progress = String.format("%.5f", progress);
     }
 }

@@ -65,6 +65,14 @@ public class SmallGoalService {
 
         int progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
 
+        if(checkCompleteStatus(ruleCompleteInfoDtoList)){
+            smallGoalResDto.getRuleResDto().setCompleteStatus(1);
+        }
+        else{
+            smallGoalResDto.getRuleResDto().setCompleteStatus(0);
+        }
+
+
         smallGoalResDto.setProgress(progress);
 
         return smallGoalResDto;
@@ -112,13 +120,8 @@ public class SmallGoalService {
         int year = localDate.getYear();
         int month = localDate.getMonthValue();
 
-        log.info("today : " + today);
-        log.info("year : " + year);
-        log.info("month : " + month);
-
         for (BigGoal bigGoal : bigGoalList) {
             Long bigGoalId = bigGoal.getBigGoalId();
-            log.info("bigGoalId : " + bigGoalId);
 
             List<TodayAlertSmallGoalInterface> todayAlertGoalList = smallGoalRepository.getTodayAlertGoalList(bigGoalId, year, month);
 
@@ -128,11 +131,6 @@ public class SmallGoalService {
                 // 있다면, rpd 가져와서 넣고, rci 가져와서 process 계산 넣기
                 byte[] alertDay = todaySmallGoal.getAlertDay();
                 byte[] completeDay = todaySmallGoal.getCompleteDay();
-                    log.info("================");
-                    log.info("smallGoalId = " + todaySmallGoal.getSmallGoalId());
-                    log.info("alertDay = " + alertDay[today]);
-                    log.info("completeDay = " + completeDay[today]);
-                    log.info("================");
                 if(alertDay[today] == 1 && completeDay[today] != 1){
                     Rule rule = ruleRepository.findById(todaySmallGoal.getRuleId()).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
 
@@ -283,6 +281,33 @@ public class SmallGoalService {
         }
 
         return Math.round((cnt * 100) / totalDayCnt);
+    }
+
+    /**
+     * samll goal 상세, rule 달성했는지 확인
+     */
+    private boolean checkCompleteStatus(List<RuleCompleteInfoDto> ruleCompleteInfoDtoList){
+        LocalDate today = LocalDate.now();
+        int year = today.getDayOfYear();
+        int month = today.getMonthValue();
+        int day = today.getDayOfMonth();
+
+        for (RuleCompleteInfoDto rci : ruleCompleteInfoDtoList) {
+            int targetYear = rci.getYear();
+            int targetMonth = rci.getMonth();
+
+            if(targetYear == year && targetMonth == month){
+                if(rci.getCompleteDay()[day] == 1){
+                    return true;
+                }
+                else{
+                    break;
+                }
+            }
+
+        }
+
+        return false;
     }
 
 

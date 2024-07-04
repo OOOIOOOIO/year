@@ -24,6 +24,7 @@ public class RuleResDto {
 
 //    private List<RuleRepeatDayDto> ruleRepeatList; // week -> 1 : 일요일, 7 : 토요일 /  month -> if) -1일 경우 마지막 날
     private List<Integer> ruleRepeatList; // week -> 1 : 일요일, 7 : 토요일 /  month -> if) -1일 경우 마지막 날
+    private int completeStatus;
     @JsonIgnore
     private List<RuleCompleteInfoDto> ruleCompleteInfoDtoList;
 
@@ -56,6 +57,10 @@ public class RuleResDto {
                 .map(RuleCompleteInfoDto::new)
                 .collect(Collectors.toList());
 
+    }
+
+    public void setCompleteStatus(int completeStatus) {
+        this.completeStatus = completeStatus;
     }
 
 }

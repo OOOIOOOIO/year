@@ -17,7 +17,7 @@ public class BigGoalMainResDto {
     private String category;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate endDate;
-    private float progress;
+    private String progress;
     private Integer smallGoalCnt;
 
     public BigGoalMainResDto(BigGoal bigGoal) {
@@ -28,7 +28,7 @@ public class BigGoalMainResDto {
     }
 
     public void setProgress(float progress) {
-        this.progress = progress;
+        this.progress = String.format("%.5f", progress);
     }
 
     public void setSmallGoalCnt(Integer smallGoalCnt) {

@@ -14,19 +14,18 @@ public class SmallGoalListForTodayAlertResDto {
     private String title;
     private String icon;
     private RuleResDto ruleResDto;
-    private float progress;
+    private String progress;
 
     public SmallGoalListForTodayAlertResDto(TodayAlertSmallGoalInterface todayAlertSmallGoalInterface, Rule rule) {
         this.smallGoalId = todayAlertSmallGoalInterface.getSmallGoalId();
         this.title = todayAlertSmallGoalInterface.getTitle();
         this.icon = todayAlertSmallGoalInterface.getIcon();
         this.ruleResDto = new RuleResDto(rule);
-        this.progress = 0;
 
     }
 
     public void setProgress(float progress) {
-        this.progress = progress;
+        this.progress = String.format("%.5f", progress);
     }
 
 }
