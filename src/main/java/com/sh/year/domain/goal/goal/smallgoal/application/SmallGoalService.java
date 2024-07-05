@@ -63,7 +63,7 @@ public class SmallGoalService {
 
         List<RuleCompleteInfoDto> ruleCompleteInfoDtoList = smallGoalResDto.getRuleResDto().getRuleCompleteInfoDtoList();
 
-        int progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
+        float progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
 
         if(checkCompleteStatus(ruleCompleteInfoDtoList)){
             smallGoalResDto.getRuleResDto().setCompleteStatus(1);
@@ -97,7 +97,7 @@ public class SmallGoalService {
 
             List<RuleCompleteInfoDto> ruleCompleteInfoDtoList = smallGoalResDto.getRuleResDto().getRuleCompleteInfoDtoList();
 
-            int progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
+            float progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
 
             smallGoalResDto.setProgress(progress);
 
@@ -138,7 +138,7 @@ public class SmallGoalService {
 
                     List<RuleCompleteInfoDto> ruleCompleteInfoDtoList = smallGoalListForTodayAlertResDto.getRuleResDto().getRuleCompleteInfoDtoList();
 
-                    int progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
+                    float progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
 
                     smallGoalListForTodayAlertResDto.setProgress(progress);
 
@@ -267,7 +267,7 @@ public class SmallGoalService {
     /**
      * small goal progress 계산
      */
-    private int calculateProgress(List<RuleCompleteInfoDto> ruleCompleteInfoDtoList, int totalDayCnt){
+    private float calculateProgress(List<RuleCompleteInfoDto> ruleCompleteInfoDtoList, int totalDayCnt){
         int cnt = 0;
 
         if(totalDayCnt == 0) return 0;
@@ -280,7 +280,7 @@ public class SmallGoalService {
             }
         }
 
-        return Math.round((cnt * 100) / totalDayCnt);
+        return ((float)cnt / (float)totalDayCnt) * 100;
     }
 
     /**

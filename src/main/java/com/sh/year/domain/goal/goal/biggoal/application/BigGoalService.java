@@ -233,11 +233,11 @@ public class BigGoalService {
 
             }
 
-            if(totalDayCnt == 0){
+            if(completeDayCnt == 0 || totalDayCnt == 0){
                 smallGoalProgress = 0;
             }
             else{
-                smallGoalProgress = Math.round((completeDayCnt * 100) / totalDayCnt);
+                smallGoalProgress = ((float)completeDayCnt / (float)totalDayCnt) * 100;
             }
 
             smallGoalResDtoList.get(i).setProgress(smallGoalProgress);
@@ -245,12 +245,11 @@ public class BigGoalService {
             bigGoalProgress += smallGoalProgress;
         }
 
-        return bigGoalProgress / size;
-//        return Math.round(bigGoalProgress / size);
+        return (bigGoalProgress / (float)size);
     }
 
-    private int calculateBigGoalProgressByEntity(List<SmallGoal> smallGoalList){
-        int bigGoalProgress = 0;
+    private float calculateBigGoalProgressByEntity(List<SmallGoal> smallGoalList){
+        float bigGoalProgress = 0;
         int size = smallGoalList.size();
 
         // smallGoal이 없을 경우
@@ -259,7 +258,7 @@ public class BigGoalService {
         // small goal
         for(int i = 0; i < size; i++){
             int completeDayCnt = 0;
-            int smallGoalProgress = 0;
+            float smallGoalProgress = 0;
             int totalDayCnt = 0;
 
             List<RuleCompleteInfo> ruleCompleteInfoList = smallGoalList.get(i).getRule().getRuleCompleteInfoList();
@@ -279,13 +278,13 @@ public class BigGoalService {
                 smallGoalProgress = 0;
             }
             else{
-                smallGoalProgress = Math.round((completeDayCnt * 100) / totalDayCnt);
+                smallGoalProgress = ((float)completeDayCnt / (float)totalDayCnt) * 100;
             }
 
             bigGoalProgress += smallGoalProgress;
         }
 
-        return Math.round(bigGoalProgress / size);
+        return (bigGoalProgress / (float)size);
     }
 
 
