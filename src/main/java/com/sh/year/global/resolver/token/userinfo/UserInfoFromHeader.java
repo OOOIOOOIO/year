@@ -1,4 +1,4 @@
-package com.sh.year.global.resolver.tokeninfo;
+package com.sh.year.global.resolver.token.userinfo;
 
 
 import java.lang.annotation.ElementType;

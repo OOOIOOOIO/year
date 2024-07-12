@@ -1,4 +1,4 @@
-package com.sh.year.global.resolver.tokeninfo;
+package com.sh.year.global.resolver.token.userinfo;
 
 import com.sh.year.global.jwt.JwtClaimDto;
 import com.sh.year.global.jwt.JwtUtils;
@@ -34,9 +34,6 @@ public class UserInfoFromHeaderArgumentResolver implements HandlerMethodArgument
 
         String accessToken = jwtUtils.getAccessTokenFromHeader((HttpServletRequest) webRequest.getNativeRequest());
         String refreshToken = jwtUtils.getRefreshTokenFromHeader((HttpServletRequest) webRequest.getNativeRequest());
-
-        log.info(accessToken);
-        log.info(refreshToken);
 
         JwtClaimDto claimFromAccessToken = jwtUtils.getClaimFromAccessToken(accessToken);
 

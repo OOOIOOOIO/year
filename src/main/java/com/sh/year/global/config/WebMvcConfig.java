@@ -1,10 +1,10 @@
 package com.sh.year.global.config;
 
-import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeaderArgumentResolver;
+import com.sh.year.global.resolver.token.reissue.TokenForReIssueFromHeaderArgumentResolver;
+import com.sh.year.global.resolver.token.userinfo.UserInfoFromHeaderArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -20,6 +20,7 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final UserInfoFromHeaderArgumentResolver userInfoFromHeaderArgumentResolver;
+    private final TokenForReIssueFromHeaderArgumentResolver tokenForReIssueFromHeaderArgumentResolver;
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
@@ -29,6 +30,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(userInfoFromHeaderArgumentResolver);
+        resolvers.add(tokenForReIssueFromHeaderArgumentResolver);
     }
 
 //    @Override
