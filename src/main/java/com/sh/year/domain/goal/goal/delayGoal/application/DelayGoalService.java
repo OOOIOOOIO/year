@@ -64,7 +64,8 @@ public class DelayGoalService {
     public List<DelayGoalResDto> getDelayGoalList(UserInfoFromHeaderDto userInfoFromTokenDto){
         Users users = getUsers(userInfoFromTokenDto);
 
-        List<DelayGoal> delayGoalList = delayGoalRepository.findAllByUsers(users);
+//        List<DelayGoal> delayGoalList = delayGoalRepository.findAllByUsers(users);
+        List<DelayGoal> delayGoalList = delayGoalRepository.findAllByUsersAndCompleteStatus(userInfoFromTokenDto.getUserId());
 
         List<DelayGoalResDto> delayGoalResDtoList = new ArrayList<>();
 
