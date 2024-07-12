@@ -38,8 +38,7 @@ public class SmallGoal extends BaseTimeEntity {
     @OneToOne(mappedBy = "smallGoal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private Rule rule;
 
-    @OneToMany(mappedBy = "smallGoal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
-    private List<SmallGoalReview> smallGoalReviewList = new ArrayList<>();
+
 
 
     @Builder
@@ -84,17 +83,7 @@ public class SmallGoal extends BaseTimeEntity {
 
     }
 
-    /**
-     * 양방향 연관관계, cascade 유의
-     */
-    public void addSmallGoalReview(SmallGoalReview smallGoalReview){
-        if(smallGoalReview.getSmallGoal() != null){
-            smallGoalReview.getSmallGoal().getSmallGoalReviewList().remove(smallGoalReview);
-        }
 
-        smallGoalReview.setSmallGoal(this);
-        this.smallGoalReviewList.add(smallGoalReview);
-    }
 
 
 

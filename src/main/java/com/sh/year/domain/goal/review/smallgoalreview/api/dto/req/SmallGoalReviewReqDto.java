@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SmallGoalReviewReqDto {
     private String contents;
+    private int completeStatus;
     private int starRating;
 
 }

@@ -5,6 +5,7 @@ import com.sh.year.domain.common.BaseTimeEntity;
 import com.sh.year.domain.goal.goal.delayGoal.domain.DelayGoal;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.RuleReqDto;
 import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
+import com.sh.year.domain.goal.review.smallgoalreview.domain.SmallGoalReview;
 import com.sh.year.domain.goal.rule.rulealertinfo.domain.RuleAlertInfo;
 import com.sh.year.domain.goal.rule.rulecompleteinfo.domain.RuleCompleteInfo;
 import com.sh.year.domain.goal.rule.rulerepeatday.domain.RuleRepeatDay;
@@ -30,8 +31,6 @@ public class Rule extends BaseTimeEntity {
     private int routine; // 매일 : 1, 매주 : 2, 매월 : 3
     private LocalTime timeAt; // 시간 -> 매일일 경우 ex)18:00
 
-
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "smallGoalId")
     private SmallGoal smallGoal;
@@ -48,8 +47,12 @@ public class Rule extends BaseTimeEntity {
     @OneToMany(mappedBy = "rule", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<RuleAlertInfo> ruleAlertInfoList = new ArrayList<>();
 
-    @OneToOne(mappedBy = "rule", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
-    private DelayGoal delayGoal;
+    @OneToMany(mappedBy = "rule", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
+    private List<DelayGoal> delayGoalList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "rule", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    private List<SmallGoalReview> smallGoalReviewList = new ArrayList<>();
+
 
 
     @Builder
@@ -114,11 +117,23 @@ public class Rule extends BaseTimeEntity {
         this.ruleAlertInfoList.add(ruleAlertInfo);
     }
 
-
-    public void addFailGoal(DelayGoal delayGoal){
+    public void addDelayGoal(DelayGoal delayGoal){
+        if(delayGoal.getRule() != null){
+            delayGoal.getRule().getDelayGoalList().remove(delayGoal);
+        }
         delayGoal.setRule(this);
 
-        this.delayGoal = delayGoal;
+        this.delayGoalList.add(delayGoal);
+    }
+
+
+    public void addSmallGoalReview(SmallGoalReview smallGoalReview){
+        if(smallGoalReview.getRule() != null){
+            smallGoalReview.getRule().getSmallGoalReviewList().remove(smallGoalReview);
+        }
+
+        smallGoalReview.setRule(this);
+        this.smallGoalReviewList.add(smallGoalReview);
     }
 
 

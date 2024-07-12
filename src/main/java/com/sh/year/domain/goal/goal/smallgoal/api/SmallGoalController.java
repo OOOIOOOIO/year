@@ -1,15 +1,11 @@
 package com.sh.year.domain.goal.goal.smallgoal.api;
 
-import com.sh.year.domain.goal.goal.biggoal.api.dto.req.BigGoalReqDto;
-import com.sh.year.domain.goal.goal.biggoal.application.BigGoalService;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.SmallGoalReqDto;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.SmallGoalUpdateReqDto;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.res.SmallGoalResDto;
 import com.sh.year.domain.goal.goal.smallgoal.application.SmallGoalService;
 import com.sh.year.global.common.ResponseConst;
 import com.sh.year.global.log.LogTrace;
-import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeader;
-import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeaderDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

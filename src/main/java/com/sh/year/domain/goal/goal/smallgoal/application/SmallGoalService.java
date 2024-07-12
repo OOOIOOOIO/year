@@ -288,7 +288,7 @@ public class SmallGoalService {
      */
     private boolean checkCompleteStatus(List<RuleCompleteInfoDto> ruleCompleteInfoDtoList){
         LocalDate today = LocalDate.now();
-        int year = today.getDayOfYear();
+        int year = today.getYear();
         int month = today.getMonthValue();
         int day = today.getDayOfMonth();
 
@@ -297,6 +297,7 @@ public class SmallGoalService {
             int targetMonth = rci.getMonth();
 
             if(targetYear == year && targetMonth == month){
+
                 if(rci.getCompleteDay()[day] == 1){
                     return true;
                 }

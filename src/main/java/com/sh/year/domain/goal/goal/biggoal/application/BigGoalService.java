@@ -17,7 +17,7 @@ import com.sh.year.domain.user.domain.repository.UsersRepository;
 import com.sh.year.global.exception.CustomErrorCode;
 import com.sh.year.global.exception.CustomException;
 import com.sh.year.global.log.LogTrace;
-import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeaderDto;
+import com.sh.year.global.resolver.token.userinfo.UserInfoFromHeaderDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;

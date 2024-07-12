@@ -3,8 +3,8 @@ package com.sh.year.domain.goal.review.biggoalreview.api;
 
 import com.sh.year.domain.goal.review.biggoalreview.api.dto.BigGoalReviewReqDto;
 import com.sh.year.domain.goal.review.biggoalreview.application.BigGoalReviewService;
-import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeader;
-import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeaderDto;
+import com.sh.year.global.resolver.token.userinfo.UserInfoFromHeader;
+import com.sh.year.global.resolver.token.userinfo.UserInfoFromHeaderDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

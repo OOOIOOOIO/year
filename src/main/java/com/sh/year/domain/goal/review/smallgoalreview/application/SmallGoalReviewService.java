@@ -9,8 +9,10 @@ import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
 import com.sh.year.domain.goal.goal.smallgoal.domain.repository.SmallGoalRepository;
 import com.sh.year.domain.goal.rule.rule.domain.Rule;
 import com.sh.year.domain.goal.rule.rule.domain.repository.RuleQueryRepositoryImpl;
+import com.sh.year.domain.goal.rule.rule.domain.repository.RuleRepository;
 import com.sh.year.global.exception.CustomErrorCode;
 import com.sh.year.global.exception.CustomException;
+import com.sh.year.global.log.LogTrace;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +31,7 @@ public class SmallGoalReviewService {
 
     private final SmallGoalReviewRepository smallGoalReviewRepository;
     private final SmallGoalRepository smallGoalRepository;
+    private final RuleRepository ruleRepository;
     private final RuleQueryRepositoryImpl ruleQueryRepository;
 
 
@@ -36,10 +39,13 @@ public class SmallGoalReviewService {
      * 작은 후기 리스트로 조회
      *
      */
-    public SmallGoalReviewResListDto getSmallGoalReview(Long smallGoalId, Pageable pageable) {
-        SmallGoal smallGoal = smallGoalRepository.findById(smallGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistSmallGoal));
+    @LogTrace
+    public SmallGoalReviewResListDto getSmallGoalReview(Long ruleId, Pageable pageable) {
+        Rule rule = ruleRepository.findById(ruleId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
 
-        List<SmallGoalReviewResDto> smallGoalReviewResDtos = smallGoalReviewRepository.findAllBySmallGoal(smallGoal, pageable).stream()
+        List<SmallGoalReview> smallGoalReviewList = smallGoalReviewRepository.findAllByRule(rule, pageable);
+
+        List<SmallGoalReviewResDto> smallGoalReviewResDtos = smallGoalReviewList.stream()
                 .map(SmallGoalReviewResDto::new)
                 .collect(Collectors.toList());
 
@@ -49,23 +55,24 @@ public class SmallGoalReviewService {
     }
 
 
+
     /**
      * 작은목표 후기 저장
      */
-    public void saveSmallGoalReview(Long smallGoalId, Long ruleId, SmallGoalReviewReqDto smallGoalReviewReqDto){
-        SmallGoal smallGoal = smallGoalRepository.findById(smallGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistSmallGoal));
+    @LogTrace
+    public void saveSmallGoalReview(Long ruleId, SmallGoalReviewReqDto smallGoalReviewReqDto){
 
-        // review 저장
-        SmallGoalReview smallGoalReview = SmallGoalReview.createSmallGoalReview(smallGoalReviewReqDto);
-        smallGoalReview.setSmallGoal(smallGoal);
-
-        smallGoalReviewRepository.save(smallGoalReview);
-
-        // rci 저장
         LocalDate now = LocalDate.now();
 
         Rule rule = ruleQueryRepository.findRuleAndRuleCompleteInfo(now.getYear(), now.getMonth().getValue(), ruleId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
 
+        // review save
+        SmallGoalReview smallGoalReview = SmallGoalReview.createSmallGoalReview(smallGoalReviewReqDto);
+        smallGoalReview.setRule(rule);
+
+        smallGoalReviewRepository.save(smallGoalReview);
+
+        // rci update
         int today = now.getDayOfMonth();
         byte[] completeDayArr = rule.getRuleCompleteInfoList().get(0).getCompleteDay();
 

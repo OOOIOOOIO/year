@@ -13,7 +13,6 @@ public class SmallGoalUpdateReqDto {
     private String title;
     private String icon;
     private LocalDate endDate;
-    private String contents;
 
 
 }

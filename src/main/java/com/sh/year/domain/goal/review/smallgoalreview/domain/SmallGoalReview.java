@@ -1,8 +1,10 @@
 package com.sh.year.domain.goal.review.smallgoalreview.domain;
 
 import com.sh.year.domain.common.BaseTimeEntity;
+import com.sh.year.domain.goal.goal.common.CompleteStatus;
 import com.sh.year.domain.goal.review.smallgoalreview.api.dto.req.SmallGoalReviewReqDto;
 import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
+import com.sh.year.domain.goal.rule.rule.domain.Rule;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,25 +22,40 @@ public class SmallGoalReview extends BaseTimeEntity {
     private String contents;
     private int starRating;
 
+    @Enumerated(EnumType.STRING)
+    private CompleteStatus completeStatus; // 0 : delay / 1 : comp / -1 : fail
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "smallGoalId")
-    private SmallGoal smallGoal;
+    @JoinColumn(name = "ruleId")
+    private Rule rule;
 
     @Builder
-    private SmallGoalReview(String contents, int starRating) {
+    private SmallGoalReview(String contents, int completeStatus, int starRating) {
         this.contents = contents;
         this.starRating = starRating;
+
+        if(completeStatus == -1){
+            this.completeStatus = CompleteStatus.FAIL;
+        }
+        else if(completeStatus == 1){
+            this.completeStatus = CompleteStatus.DELAY;
+        }
+        else{
+            this.completeStatus = CompleteStatus.COMP;
+        }
+
     }
 
     public static SmallGoalReview createSmallGoalReview(SmallGoalReviewReqDto smallGoalReviewReqDto){
         return SmallGoalReview.builder()
                 .contents(smallGoalReviewReqDto.getContents())
+                .completeStatus(smallGoalReviewReqDto.getCompleteStatus())
                 .starRating(smallGoalReviewReqDto.getStarRating())
                 .build();
     }
 
-    public void setSmallGoal(SmallGoal smallGoal) {
-        this.smallGoal = smallGoal;
+    public void setRule(Rule rule) {
+        this.rule = rule;
     }
 
     public void updateSmallGoalReview(SmallGoalReviewReqDto smallGoalReviewReqDto){

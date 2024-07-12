@@ -4,8 +4,7 @@ package com.sh.year.domain.goal.review.smallgoalreview.api;
 import com.sh.year.domain.goal.review.smallgoalreview.api.dto.req.SmallGoalReviewReqDto;
 import com.sh.year.domain.goal.review.smallgoalreview.api.dto.res.SmallGoalReviewResListDto;
 import com.sh.year.domain.goal.review.smallgoalreview.application.SmallGoalReviewService;
-import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeader;
-import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeaderDto;
+import com.sh.year.global.log.LogTrace;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,11 +38,12 @@ public class SmallGoalReviewController {
             responseCode = "200",
             description = "작은목표 후기 리스트 조회에 성공하였습니다."
     )
-    @GetMapping("/{smallGoalId}")
-    public ResponseEntity<SmallGoalReviewResListDto> getSmallGoalReviewList(@PathVariable("smallGoalId") Long smallGoalId,
+    @GetMapping("/{ruleId}")
+    @LogTrace
+    public ResponseEntity<SmallGoalReviewResListDto> getSmallGoalReviewList(@PathVariable("ruleId") Long ruleId,
                                                       @PageableDefault(size = 5, sort="createdAt", direction = Sort.Direction.DESC) Pageable pageable){
 
-        SmallGoalReviewResListDto smallGoalReviewList = smallGoalReviewService.getSmallGoalReview(smallGoalId, pageable);
+        SmallGoalReviewResListDto smallGoalReviewList = smallGoalReviewService.getSmallGoalReview(ruleId, pageable);
 
         return new ResponseEntity<>(smallGoalReviewList, HttpStatus.OK);
     }
@@ -61,12 +61,12 @@ public class SmallGoalReviewController {
             responseCode = "200",
             description = "작은목표 후기 저장에 성공하였습니다."
     )
-    @PostMapping("/{smallGoalId}/{ruleId}")
-    public ResponseEntity<String> saveSmallGoalReview(@PathVariable("smallGoalId") Long smallGoalId,
-                                                      @PathVariable("ruleId") Long ruleId,
+    @PostMapping("/{ruleId}")
+    @LogTrace
+    public ResponseEntity<String> saveSmallGoalReview(@PathVariable("ruleId") Long ruleId,
                                         @RequestBody SmallGoalReviewReqDto smallGoalReviewReqDto){
 
-        smallGoalReviewService.saveSmallGoalReview(smallGoalId, ruleId, smallGoalReviewReqDto);
+        smallGoalReviewService.saveSmallGoalReview(ruleId, smallGoalReviewReqDto);
 
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
