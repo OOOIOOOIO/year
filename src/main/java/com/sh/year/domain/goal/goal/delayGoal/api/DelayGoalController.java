@@ -5,8 +5,8 @@ import com.sh.year.api.main.controller.dto.res.DelayGoalResDto;
 import com.sh.year.domain.goal.goal.delayGoal.application.DelayGoalService;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.res.SmallGoalResDto;
 import com.sh.year.global.log.LogTrace;
-import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeader;
-import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeaderDto;
+import com.sh.year.global.resolver.token.userinfo.UserInfoFromHeader;
+import com.sh.year.global.resolver.token.userinfo.UserInfoFromHeaderDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -78,7 +78,7 @@ public class DelayGoalController {
             description = "Delay Goal 저장에 성공했습니다."
     )
     @LogTrace
-    @PostMapping("/ruleId")
+    @PostMapping("/{ruleId}")
     public ResponseEntity<String> saveDelayGoal(@PathVariable(value = "ruleId") Long ruleId,
                                                 @UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto){
         delayGoalService.saveDelayGoal(userInfoFromTokenDto, ruleId);
@@ -87,23 +87,23 @@ public class DelayGoalController {
     }
 
 
-    /**
-     * 연기된 목표 삭제
-     */
-    @Operation(
-            summary = "Delay Goal API",
-            description = "Delay Goal 삭제"
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Delay Goal 삭제에 성공했습니다."
-    )
-    @LogTrace
-    @DeleteMapping("/{delayGoalId}")
-    public void deleteDelayGoal(@PathVariable(value = "delayGoalId") Long delayGoalId){
-        delayGoalService.deleteDelayGoal(delayGoalId);
-
-    }
+//    /**
+//     * 연기된 목표 삭제
+//     */
+//    @Operation(
+//            summary = "Delay Goal API",
+//            description = "Delay Goal 삭제"
+//    )
+//    @ApiResponse(
+//            responseCode = "200",
+//            description = "Delay Goal 삭제에 성공했습니다."
+//    )
+//    @LogTrace
+//    @DeleteMapping("/{delayGoalId}")
+//    public void deleteDelayGoal(@PathVariable(value = "delayGoalId") Long delayGoalId){
+//        delayGoalService.deleteDelayGoal(delayGoalId);
+//
+//    }
 
     /**
      * 연기된 목표 성공 처리
@@ -120,7 +120,7 @@ public class DelayGoalController {
     @PatchMapping("/{delayGoalId}")
     public void updateFailStatus(@PathVariable(value = "delayGoalId") Long delayGoalId){
 
-        delayGoalService.setSuceess(delayGoalId);
+        delayGoalService.setSuccess(delayGoalId);
     }
 
 

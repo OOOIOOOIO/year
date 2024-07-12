@@ -8,18 +8,18 @@ import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
 import com.sh.year.domain.goal.rule.rule.domain.Rule;
 import com.sh.year.domain.goal.rule.rule.domain.repository.RuleQueryRepositoryImpl;
 import com.sh.year.domain.goal.rule.rule.domain.repository.RuleRepository;
-import com.sh.year.domain.goal.rule.rulecompleteinfo.domain.RuleCompleteInfo;
 import com.sh.year.domain.goal.rule.rulecompleteinfo.dto.RuleCompleteInfoDto;
 import com.sh.year.domain.user.domain.Users;
 import com.sh.year.domain.user.domain.repository.UsersRepository;
 import com.sh.year.global.exception.CustomErrorCode;
 import com.sh.year.global.exception.CustomException;
-import com.sh.year.global.resolver.tokeninfo.UserInfoFromHeaderDto;
+import com.sh.year.global.resolver.token.userinfo.UserInfoFromHeaderDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class DelayGoalService {
     private final RuleQueryRepositoryImpl ruleQueryRepository;
 
     /**
-     * 연기된 목표 상세 조회 == 상세조회 리스트
+     * 연기된 목표 상세 조회
      */
     public SmallGoalResDto getDelayGoalInfo(Long delayGoalId){
         DelayGoal delayGoal = delayGoalRepository.findById(delayGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistDelayGoal));
@@ -49,7 +49,7 @@ public class DelayGoalService {
 
         List<RuleCompleteInfoDto> ruleCompleteInfoDtoList = smallGoalResDto.getRuleResDto().getRuleCompleteInfoDtoList();
 
-        int progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
+        float progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
 
         smallGoalResDto.setProgress(progress);
 
@@ -73,13 +73,16 @@ public class DelayGoalService {
 
             SmallGoal smallGoal = rule.getSmallGoal();// smallGoal 1:1
 
-            DelayGoalResDto delayGoalResDto = new DelayGoalResDto(smallGoal, rule, delayGoal.getFailStatus(), delayGoal.getDelayGoalId());
+            DelayGoalResDto delayGoalResDto = new DelayGoalResDto(smallGoal, rule, delayGoal.getCompleteStatus(), delayGoal.getDelayGoalId(), delayGoal.getEndDate());
 
             List<RuleCompleteInfoDto> ruleCompleteInfoDtoList = delayGoalResDto.getRuleResDto().getRuleCompleteInfoDtoList();
 
-            int progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
+            float progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
 
             delayGoalResDto.setProgress(progress);
+
+            int completeStatus = checkRuleCompleteStatus(delayGoalResDto.getRuleResDto().getRuleCompleteInfoDtoList(), delayGoal.getCreatedAt().toLocalDate().minusDays(1));
+            delayGoalResDto.getRuleResDto().setCompleteStatus(completeStatus);
 
             delayGoalResDtoList.add(delayGoalResDto);
         }
@@ -114,9 +117,9 @@ public class DelayGoalService {
     /**
      * 연기된 목표 성공 처리
      */
-    public void setSuceess(Long delayGoalId){
+    public void setSuccess(Long delayGoalId){
         DelayGoal delayGoal = delayGoalRepository.findById(delayGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistDelayGoal));
-        LocalDateTime createdAt = delayGoal.getCreatedAt();
+        LocalDateTime createdAt = delayGoal.getCreatedAt().minusDays(1); // 하루전
         int targetDay = createdAt.getDayOfMonth();
 
         Rule rule = delayGoal.getRule(); // rule 1:1
@@ -130,9 +133,8 @@ public class DelayGoalService {
         // rci update
         targetRule.getRuleCompleteInfoList().get(0).updateCompleteDayArr(completeDay);
 
-        // delayGoal 삭제
-
-        delayGoalRepository.deleteById(delayGoalId);
+        // delayGoal completeStatus update
+        delayGoal.updateCompleteStatusToComplete();
 
 
     }
@@ -150,10 +152,11 @@ public class DelayGoalService {
     }
 
 
+
     /**
      * small goal progress 계산
      */
-    private int calculateProgress(List<RuleCompleteInfoDto> ruleCompleteInfoDtoList, int totalDayCnt){
+    private float calculateProgress(List<RuleCompleteInfoDto> ruleCompleteInfoDtoList, int totalDayCnt){
         int cnt = 0;
 
         if(totalDayCnt == 0) return 0;
@@ -166,8 +169,36 @@ public class DelayGoalService {
             }
         }
 
-        return Math.round((cnt * 100) / totalDayCnt);
+        return ((float)cnt / (float)totalDayCnt) * 100;
     }
+
+
+    /**
+     * rule completeStatus 계산
+     */
+    private int checkRuleCompleteStatus(List<RuleCompleteInfoDto> ruleCompleteInfoDtoList, LocalDate targetDay){
+        int year = targetDay.getYear();
+        int month = targetDay.getMonthValue();
+        int day = targetDay.getDayOfMonth();
+
+        for(int i = 0; i < ruleCompleteInfoDtoList.size(); i++){
+            RuleCompleteInfoDto ruleCompleteInfoDto = ruleCompleteInfoDtoList.get(i);
+            int rciYear = ruleCompleteInfoDto.getYear();
+            int rciMonth= ruleCompleteInfoDto.getMonth();
+
+            if(year == rciYear && month == rciMonth){
+                byte[] completeDayArr = ruleCompleteInfoDto.getCompleteDay();
+                if(completeDayArr[day] == 1){
+                    return 1;
+                }
+            }
+
+
+        }
+
+        return 0;
+    }
+
 
 
 

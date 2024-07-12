@@ -1,6 +1,7 @@
 package com.sh.year.api.main.controller.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sh.year.domain.goal.goal.common.CompleteStatus;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.res.RuleResDto;
 import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
 import com.sh.year.domain.goal.rule.rule.domain.Rule;
@@ -20,18 +21,27 @@ public class DelayGoalResDto {
     private String icon;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate endDate;
-    private int failStatus;
+    private int completeStatus;
     private RuleResDto ruleResDto;
     private String progress;
 
-    public DelayGoalResDto(SmallGoal smallGoal, Rule rule, int failStatus, Long delayGoalId) {
+    public DelayGoalResDto(SmallGoal smallGoal, Rule rule, CompleteStatus completeStatus, Long delayGoalId, LocalDate endDate) {
         this.delayGoalId = delayGoalId;
         this.smallGoalId = smallGoal.getSmallGoalId();
         this.title = smallGoal.getTitle();
         this.icon = smallGoal.getIcon();
-        this.endDate = smallGoal.getEndDate();
-        this.failStatus = failStatus;
+        this.endDate = endDate;
         this.ruleResDto = new RuleResDto(rule);
+
+        if(completeStatus.equals(CompleteStatus.FAIL)){
+            this.completeStatus = -1;
+        }
+        else if(completeStatus.equals(CompleteStatus.DELAY)){
+            this.completeStatus = 0;
+        }
+        else{
+            this.completeStatus = 1;
+        }
 
     }
 
