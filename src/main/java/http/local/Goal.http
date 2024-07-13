@@ -1,10 +1,38 @@
+
+### accessToken 재발급
+POST localhost:7777/api/token/reissue/access
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+
+
+### refreshToken 재발급 --> 그냥 kakao로그인으로 튕기기
+POST localhost:7777/api/token/reissue/refresh
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+
+### user 중복 조회
+GET localhost:7777//api/users
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
+
+# ============================================================================================================
+# ============================================================================================================
+# ============================================================================================================
+
+
 ### Main 조회
 GET localhost:7777/api/main?page=7
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
 
+
+
 ### Small Goal Reviw save
-POST localhost:7777/api/smallgoal/review/5/5
+POST localhost:7777/api/smallgoal/review/2/2
 Content-Type: application/json
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
@@ -15,12 +43,13 @@ refresh_token: {{refresh_token}}
 
 }
 
-
-### Rule Complete info update
-PUT localhost:7777/api/goal/smallgoal/routine/comp/1
+### Small Goal Reviw 리스트 조회
+GET localhost:7777/api/smallgoal/review/2
 Content-Type: application/json
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
+
+
 
 
 
@@ -34,7 +63,7 @@ refresh_token: {{refresh_token}}
 # ============================================================================================================
 
 ### Big Goal 상세 조회
-GET localhost:7777/api/goal/biggoal/2
+GET localhost:7777/api/goal/biggoal/1
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
 
@@ -99,7 +128,7 @@ refresh_token: {{refresh_token}}
 # ============================================================================================================
 
 ### Small Goal 상세조회
-GET localhost:7777/api/goal/smallgoal/1
+GET localhost:7777/api/goal/smallgoal/2
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
 
@@ -243,16 +272,22 @@ refresh_token: {{refresh_token}}
 # ============================================================================================================
 # ============================================================================================================
 
-### Small Goal Reviw save
-POST localhost:7777/api/smallgoal/review/{smallGoalId}/{ruleId}
+
+### Delay Goal save
+POST localhost:7777/api/goal/delaygoal/11
 Content-Type: application/json
 Authorization: {{Authorization}}
 refresh_token: {{refresh_token}}
 
-{
-  "contents": "후기",
-  "starRating": 3
 
-}
+### Delay Goal get list
+GET localhost:7777/api/goal/delaygoal/list
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
 
 
+### Delay Goal update to success
+PATCH localhost:7777/api/goal/delaygoal/1
+Content-Type: application/json
+Authorization: {{Authorization}}
+refresh_token: {{refresh_token}}
