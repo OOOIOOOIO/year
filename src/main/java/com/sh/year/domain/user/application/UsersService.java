@@ -36,10 +36,10 @@ public class UsersService {
 
     public int isUserExist(UserInfoFromHeaderDto userInfoFromHeaderDto) {
         if(usersQueryRepository.findByEmailAndProvider(userInfoFromHeaderDto.getEmail(), userInfoFromHeaderDto.getProvider()).isEmpty()){
-            return 1;
+            return 0;
         }
 
-        return 0;
+        return 1;
     }
 
 
