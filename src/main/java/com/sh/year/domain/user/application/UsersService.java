@@ -7,6 +7,7 @@ import com.sh.year.domain.user.domain.repository.UsersQueryRepositoryImpl;
 import com.sh.year.domain.user.domain.repository.UsersRepository;
 import com.sh.year.global.exception.CustomErrorCode;
 import com.sh.year.global.exception.CustomException;
+import com.sh.year.global.resolver.token.userinfo.UserInfoFromHeaderDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,27 +34,15 @@ public class UsersService {
 
     }
 
+    public int isUserExist(UserInfoFromHeaderDto userInfoFromHeaderDto) {
+        if(usersQueryRepository.findByEmailAndProvider(userInfoFromHeaderDto.getEmail(), userInfoFromHeaderDto.getProvider()).isEmpty()){
+            return 1;
+        }
+
+        return 0;
+    }
 
 
-
-
-
-    /**
-     * 회원 조회 - 중복 방지
-     */
-//    private boolean isDuplicateUsername(String username){
-//
-//        return !usersRepository.findByUsername(username).isPresent();
-//    }
-
-    /**
-     * 닉네임 수정
-     */
-//    public void updateNickname(long userId, String nickname){
-//        Users users = usersRepository.findById(userId).orElseThrow(() -> new CustomException(CustomErrorCode.UserNotFoundException));
-//
-//        users.changeNickname(nickname);
-//    }
 
 
 }
