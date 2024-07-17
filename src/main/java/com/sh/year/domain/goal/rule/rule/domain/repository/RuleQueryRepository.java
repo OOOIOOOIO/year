@@ -6,5 +6,7 @@ import java.util.Optional;
 
 public interface RuleQueryRepository {
 
-    Optional<Rule> findRuleAndRuleCompleteInfo(int year, int month, Long ruleId);
+    Optional<Rule> findRuleCompleteInfoUsingYearAndMonth(int year, int month, Long ruleId);
+
+    Optional<Rule> findRuleAlertInfoUsingYearAndMonth(int year, int month, Long ruleId);
 }

@@ -5,7 +5,6 @@ import com.sh.year.domain.goal.review.smallgoalreview.api.dto.res.SmallGoalRevie
 import com.sh.year.domain.goal.review.smallgoalreview.api.dto.res.SmallGoalReviewResListDto;
 import com.sh.year.domain.goal.review.smallgoalreview.domain.SmallGoalReview;
 import com.sh.year.domain.goal.review.smallgoalreview.domain.repository.SmallGoalReviewRepository;
-import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
 import com.sh.year.domain.goal.goal.smallgoal.domain.repository.SmallGoalRepository;
 import com.sh.year.domain.goal.rule.rule.domain.Rule;
 import com.sh.year.domain.goal.rule.rule.domain.repository.RuleQueryRepositoryImpl;
@@ -64,7 +63,7 @@ public class SmallGoalReviewService {
 
         LocalDate now = LocalDate.now();
 
-        Rule rule = ruleQueryRepository.findRuleAndRuleCompleteInfo(now.getYear(), now.getMonth().getValue(), ruleId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
+        Rule rule = ruleQueryRepository.findRuleCompleteInfoUsingYearAndMonth(now.getYear(), now.getMonth().getValue(), ruleId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
 
         // review save
         SmallGoalReview smallGoalReview = SmallGoalReview.createSmallGoalReview(smallGoalReviewReqDto);

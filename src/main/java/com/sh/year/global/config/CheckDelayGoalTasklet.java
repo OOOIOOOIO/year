@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CheckCompleteRuleInfoTasklet implements Tasklet {
+public class CheckDelayGoalTasklet implements Tasklet {
 
     /**
      * 여기서 로직 실행
@@ -25,13 +25,13 @@ public class CheckCompleteRuleInfoTasklet implements Tasklet {
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
         log.info("==============");
-        log.info("====== 여긴 delay =======");
+        log.info("====== 여긴 fail =======");
         log.info("==============");
         return RepeatStatus.FINISHED;
     }
 
     /**
-     * 시나리오
+     * 시나리오ee
      *
      * 00시 1초(자정 딱 지나서)
      * LocalDate.now().minusDays(1)로 년, 월, 일날을 가져온다.(이전날임)

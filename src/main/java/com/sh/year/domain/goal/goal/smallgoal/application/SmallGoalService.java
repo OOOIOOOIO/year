@@ -1,6 +1,5 @@
 package com.sh.year.domain.goal.goal.smallgoal.application;
 
-import com.sh.year.api.main.controller.dto.res.BigGoalMainResDto;
 import com.sh.year.api.main.controller.dto.res.SmallGoalListForTodayAlertResDto;
 import com.sh.year.api.main.controller.dto.res.TodayAlertSmallGoalInterface;
 import com.sh.year.domain.goal.goal.biggoal.domain.BigGoal;
@@ -244,7 +243,7 @@ public class SmallGoalService {
     public void updateRuleCompleteInfo(Long ruleId) {
         LocalDate now = LocalDate.now();
 
-        Rule rule = ruleQueryRepository.findRuleAndRuleCompleteInfo(now.getYear(), now.getMonth().getValue(), ruleId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
+        Rule rule = ruleQueryRepository.findRuleCompleteInfoUsingYearAndMonth(now.getYear(), now.getMonth().getValue(), ruleId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
 
         int today = now.getDayOfMonth();
         byte[] completeDayArr = rule.getRuleCompleteInfoList().get(0).getCompleteDay();

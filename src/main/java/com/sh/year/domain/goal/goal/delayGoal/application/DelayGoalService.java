@@ -125,7 +125,7 @@ public class DelayGoalService {
 
         Rule rule = delayGoal.getRule(); // rule 1:1
 
-        Rule targetRule = ruleQueryRepository.findRuleAndRuleCompleteInfo(createdAt.getYear(), createdAt.getMonth().getValue(), rule.getRuleId()).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
+        Rule targetRule = ruleQueryRepository.findRuleCompleteInfoUsingYearAndMonth(createdAt.getYear(), createdAt.getMonth().getValue(), rule.getRuleId()).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistRule));
 
         byte[] completeDay = targetRule.getRuleCompleteInfoList().get(0).getCompleteDay();
 

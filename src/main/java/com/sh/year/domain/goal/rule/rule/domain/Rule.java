@@ -47,7 +47,7 @@ public class Rule extends BaseTimeEntity {
     @OneToMany(mappedBy = "rule", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<RuleAlertInfo> ruleAlertInfoList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "rule", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "rule", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<DelayGoal> delayGoalList = new ArrayList<>();
 
     @OneToMany(mappedBy = "rule", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
