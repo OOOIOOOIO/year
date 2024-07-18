@@ -13,10 +13,18 @@ import java.util.Optional;
 public interface DelayGoalRepository extends JpaRepository<DelayGoal, Long> {
     List<DelayGoal> findAllByUsers(Users users);
 
+
     @Query("select d " +
             "from DelayGoal d " +
             "where d.users.userId = :userId and d.completeStatus not in(com.sh.year.domain.goal.goal.common.CompleteStatus.COMP)")
     List<DelayGoal> findAllByUsersAndCompleteStatus(Long userId);
+
+
+    @Query("select d " +
+            "from DelayGoal d " +
+            "where d.completeStatus =com.sh.year.domain.goal.goal.common.CompleteStatus.DELAY")
+    List<DelayGoal> findAllOfDelayStatusByCompleteStatus();
+
 
     Optional<DelayGoal> findByRule(Rule rule);
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 import static com.sh.year.domain.goal.rule.rule.domain.QRule.rule;
+import static com.sh.year.domain.goal.rule.rulealertinfo.domain.QRuleAlertInfo.ruleAlertInfo;
 import static com.sh.year.domain.goal.rule.rulecompleteinfo.domain.QRuleCompleteInfo.*;
 
 @Repository
@@ -18,7 +19,7 @@ public class RuleQueryRepositoryImpl implements RuleQueryRepository{
 
     private final JPAQueryFactory queryFactory;
     @Override
-    public Optional<Rule> findRuleAndRuleCompleteInfo(int year, int month, Long ruleId) {
+    public Optional<Rule> findRuleCompleteInfoUsingYearAndMonth(int year, int month, Long ruleId) {
         return Optional.ofNullable(queryFactory
                 .select(rule)
                 .from(rule, rule)
@@ -29,5 +30,18 @@ public class RuleQueryRepositoryImpl implements RuleQueryRepository{
                 .fetchOne());
 
 
+    }
+
+    @Override
+    public Optional<Rule> findRuleAlertInfoUsingYearAndMonth(int year, int month, Long ruleId) {
+
+        return Optional.ofNullable(queryFactory
+                .select(rule)
+                .from(rule, rule)
+                .join(rule.ruleAlertInfoList, ruleAlertInfo).fetchJoin()
+                .where(ruleAlertInfo.year.eq(year),
+                        ruleAlertInfo.month.eq(month),
+                        ruleAlertInfo.rule.ruleId.eq(ruleId))
+                .fetchOne());
     }
 }

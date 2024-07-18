@@ -36,7 +36,7 @@ public class RuleRepositoryTest {
 
         // when
 //        RuleCompleteInfo ruleCompleteInfo = ruleCompleteInfoRepository.findByYearAndMonthAndRule(year, month, rule).get();
-        Rule rule = ruleQueryRepository.findRuleAndRuleCompleteInfo(year, month, ruleId).get();
+        Rule rule = ruleQueryRepository.findRuleCompleteInfoUsingYearAndMonth(year, month, ruleId).get();
 
         Long ruleId1 = rule.getRuleId();
 
