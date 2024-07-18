@@ -43,7 +43,7 @@ public class DelayGoal extends BaseTimeEntity {
 
     public static DelayGoal createDelayGoal(Rule rule, Users users){
         return DelayGoal.builder()
-                .endDate(LocalDate.now().plusDays(6)) // 시작일 포함 7일
+                .endDate(LocalDate.now().plusDays(2)) // 시작일 포함 3일
                 .completeStatus(CompleteStatus.DELAY) //default : 0
                 .rule(rule)
                 .users(users)
@@ -53,6 +53,10 @@ public class DelayGoal extends BaseTimeEntity {
 
     public void updateCompleteStatusToComplete(){
         this.completeStatus = CompleteStatus.COMP;
+    }
+
+    public void updateCompleteStatusToFail(){
+        this.completeStatus = CompleteStatus.FAIL;
     }
 
     public void setRule(Rule rule) {

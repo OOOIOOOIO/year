@@ -1,4 +1,4 @@
-package com.sh.year.global.config;
+package com.sh.year.global.batch;
 
 import com.sh.year.global.log.LogTrace;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +23,8 @@ public class BatchClient {
     private final Job createJob;
 
 
+
+
     /**
      * step1 : delayGoal 생성
      * step2 : failGoal 생성
@@ -31,11 +33,11 @@ public class BatchClient {
      *
      * 지연goal 성공은 createdAy -1
      */
-//    @Scheduled(cron = "0 0 0 * * ?")
+//    @Scheduled(cron = "0/10 * * * * *") // 10초마다 실행
 //    @Scheduled(cron = "0/1 * * * * ?")
 
     @LogTrace
-    @Scheduled(cron = "0/10 * * * * *") // 10초마다 실행
+    @Scheduled(cron = "1 0 0 * * *") // 00시 00분 1초에 시작
     public void runCheckCompleteRuleInfo() {
         log.info("===========================================");
         log.info("일정에 대한 반복 배치를 시작합니다.");
@@ -52,8 +54,6 @@ public class BatchClient {
             log.error("일정을 생성하는 배치를 실패하였습니다. : ", e);
         }
     }
-
-
 
 
 }
