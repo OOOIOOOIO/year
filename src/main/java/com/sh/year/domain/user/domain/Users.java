@@ -40,9 +40,8 @@ public class Users extends BaseTimeEntity {
 
 
     @Builder
-    public Users(String email, String picture, String provider, Role role) {
+    public Users(String email, String provider, Role role) {
         this.email = email;
-        this.picture = picture;
         this.provider = provider;
         this.role = role;
     }
@@ -72,10 +71,9 @@ public class Users extends BaseTimeEntity {
     /**
      * user 생성
      */
-    public static Users createUser(String email, String picture, String provider, Role role){
+    public static Users createUser(String email, String provider, Role role){
         return Users.builder()
                 .email(email)
-                .picture(picture)
                 .provider(provider)
                 .role(role)
                 .build();

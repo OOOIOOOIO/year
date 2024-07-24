@@ -1,4 +1,4 @@
-package com.sh.year.global.oauth;
+package com.sh.year.global.security;
 
 import com.sh.year.domain.user.domain.Role;
 import com.sh.year.domain.user.domain.Users;

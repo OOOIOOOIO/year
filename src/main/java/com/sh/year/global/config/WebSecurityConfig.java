@@ -5,9 +5,7 @@ import com.sh.year.global.jwt.AuthEntryPointJwt;
 import com.sh.year.global.jwt.AuthTokenFilter;
 import com.sh.year.global.jwt.JwtExceptionHandlerFilter;
 import com.sh.year.global.jwt.JwtUtils;
-import com.sh.year.global.oauth.CustomOAuth2UserService;
-import com.sh.year.global.oauth.CustomUserDetailsService;
-import com.sh.year.global.oauth.handler.OAuth2AuthenticationSuccessHandlerImpl;
+import com.sh.year.global.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +14,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -36,8 +33,6 @@ public class WebSecurityConfig {  // extends WebSecurityConfigurerAdapte, Spring
     private final AuthEntryPointJwt authEntryPointJwt;
 //    private final AuthTokenFilter authTokenFilter;
     private final JwtExceptionHandlerFilter jwtExceptionHandlerFilter;
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final OAuth2AuthenticationSuccessHandlerImpl oAuth2AuthenticationSuccessHandler;
     private final JwtUtils jwtUtils;
     private final CustomUserDetailsService customUserDetailsService;
     private final TokenService tokenService;
@@ -70,6 +65,7 @@ public class WebSecurityConfig {  // extends WebSecurityConfigurerAdapte, Spring
                 )
                 .authorizeHttpRequests(authorizeRequest ->
                         authorizeRequest
+                                .requestMatchers("/api/login/**").permitAll()
                                 .requestMatchers("/api/token/reissue/**").permitAll()
                                 .requestMatchers("/login/oauth2/code/**").permitAll()
                                 .requestMatchers("/login/oauth2/redirect/**").permitAll()
@@ -83,18 +79,9 @@ public class WebSecurityConfig {  // extends WebSecurityConfigurerAdapte, Spring
                                 .anyRequest().authenticated()
                 )
 
-                .exceptionHandling(handling -> handling.authenticationEntryPoint(authEntryPointJwt))
-
-                .oauth2Login(oauth -> oauth.successHandler(oAuth2AuthenticationSuccessHandler)
-                        .userInfoEndpoint(endpoint -> endpoint.userService(customOAuth2UserService))
-                        .successHandler(oAuth2AuthenticationSuccessHandler)
-//                        .failureHandler()
-
-                );
-        //실행순서 : userInfoEndpoint().userService -> successHandler()
+                .exceptionHandling(handling -> handling.authenticationEntryPoint(authEntryPointJwt));
 
 
-//        http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class); // 여기서 jwt 인증
         http.addFilterBefore(new AuthTokenFilter(jwtUtils, customUserDetailsService, tokenService), UsernamePasswordAuthenticationFilter.class); // 여기서 jwt 인증
         http.addFilterBefore(jwtExceptionHandlerFilter, AuthTokenFilter.class); // jwt 예외처리 필터
 
@@ -114,26 +101,5 @@ public class WebSecurityConfig {  // extends WebSecurityConfigurerAdapte, Spring
         };
     }
 
-    /**
-     * spirng security 6.X 부터 람다식으로 바뀜 쒯
-     *
-     * authorizeRequests deprecated
-     *
-     *                 .authorizeRequests()
-     *                 .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile",).permitAll() //정적리소스 물어보기
-     *                 .antMatchers("/api/users/**").permitAll()
-     *                 .antMatchers("/api/issue").permitAll()
-     *                 .antMatchers("/api/**").permitAll()
-     *
-     *                 대신
-     *
-     *                 .authorizeHttpRequests()
-     *                 .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile",).permitAll() //정적리소스 물어보기
-     *                 .requestMatchers("/api/users/**").permitAll()
-     *                 .requestMatchers("/api/issue").permitAll()
-     *                 .requestMatchers("/api/**").permitAll()
-     *                 .anyRequest().authenticated();
-     *
-     */
 
 }

@@ -3,7 +3,7 @@ package com.sh.year.global.jwt;
 import com.sh.year.global.common.RedisConst;
 import com.sh.year.global.exception.JwtCustomErrorCode;
 import com.sh.year.global.exception.JwtCustomException;
-import com.sh.year.global.oauth.CustomUserDetailsService;
+import com.sh.year.global.security.CustomUserDetailsService;
 import com.sh.year.api.jwt.application.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -51,7 +51,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
 //        String[] excludePath = {"/api/token/**"};
         String[] excludePath = {
-                "/error",
+                "/api/login/kakao",
                 "/api/token/reissue/access",
                 "/api/token/reissue/refresh",
                 "/login/oauth2/redirect",
@@ -66,7 +66,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 "/swagger-ui/index.css",
                 "/swagger-ui/swagger-ui.css",
                 "/api-docs/swagger-config",
-                "/api-docs/YEAR%20API"
+                "/api-docs/YEAR%20API",
+                "/error"
 
 
         };
