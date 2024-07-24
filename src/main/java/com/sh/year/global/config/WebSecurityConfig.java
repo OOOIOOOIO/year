@@ -9,6 +9,7 @@ import com.sh.year.global.oauth.CustomOAuth2UserService;
 import com.sh.year.global.oauth.CustomUserDetailsService;
 import com.sh.year.global.oauth.handler.OAuth2AuthenticationSuccessHandlerImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,6 +41,9 @@ public class WebSecurityConfig {  // extends WebSecurityConfigurerAdapte, Spring
     private final JwtUtils jwtUtils;
     private final CustomUserDetailsService customUserDetailsService;
     private final TokenService tokenService;
+
+    @Value("${cors.address}")
+    private String corsAddress;
 
 
 
@@ -104,7 +108,7 @@ public class WebSecurityConfig {  // extends WebSecurityConfigurerAdapte, Spring
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowedHeaders(Collections.singletonList("*"));
             config.setAllowedMethods(Collections.singletonList("*"));
-            config.setAllowedOriginPatterns(Collections.singletonList("http://211.42.156.199:3000"));
+            config.setAllowedOriginPatterns(Collections.singletonList(corsAddress));
             config.setAllowCredentials(true);
             return config;
         };
