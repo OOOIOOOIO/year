@@ -23,8 +23,6 @@ public class BatchClient {
     private final Job createJob;
 
 
-
-
     /**
      * step1 : delayGoal 생성
      * step2 : failGoal 생성
@@ -44,8 +42,7 @@ public class BatchClient {
         log.info("===========================================");
 
         JobParameters jobParameters = new JobParametersBuilder()
-                .addLong("test", System.currentTimeMillis())
-//                .addLocalDate("date", LocalDate.now().minusDays(1))
+                .addLocalDate("date", LocalDate.now())
                 .toJobParameters();
 
         try {

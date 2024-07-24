@@ -51,7 +51,6 @@ public class BatchConfig {
                                               Step createCheckCompleteRuleInfoStep,
                                               Step createCheckDelayGoalStep) {
         return new JobBuilder("checkCompleteRuleInfo", jobRepository)
-                .incrementer(new RunIdIncrementer())
                 .start(createCheckCompleteRuleInfoStep)
                 .next(createCheckDelayGoalStep)
                 .build();
