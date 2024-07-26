@@ -32,7 +32,8 @@ import java.util.Map;
 public class KakaoLoginClient {
 
     private final RestTemplate restTemplate;
-    private static final String BASE_URL = "https://kauth.kakao.com";
+    private static final String TOKEN_BASE_URL = "https://kauth.kakao.com";
+    private static final String INFO_BASE_URL = "https://kapi.kakao.com";
     private static final String GRANT_TYPE = "authorization_code";
     private static final String PROVIDER = "kakao";
     @Value("${kakao.client-id}")
@@ -63,7 +64,7 @@ public class KakaoLoginClient {
 
             HttpEntity httpEntity = generateHttpEntityWithBody(httpHeaders, kakaoAccessTokenReqDto.toMultiValueMap());
 
-            KakaoAccessTokenResDto kakaoAccessTokenResDto = restTemplate.exchange(BASE_URL + "/oauth/token", HttpMethod.POST, httpEntity, KakaoAccessTokenResDto.class).getBody();
+            KakaoAccessTokenResDto kakaoAccessTokenResDto = restTemplate.exchange(TOKEN_BASE_URL + "/oauth/token", HttpMethod.POST, httpEntity, KakaoAccessTokenResDto.class).getBody();
 
             accessToken = kakaoAccessTokenResDto.getAccess_token();
 
@@ -92,13 +93,17 @@ public class KakaoLoginClient {
             HttpEntity httpEntity = generateHttpEntityWithBody(httpHeaders, null);
 
 //            JSONObject body = restTemplate.exchange(BASE_URL + "/v2/user/me", HttpMethod.POST, httpEntity, JSONObject.class).getBody();
-            String body = restTemplate.exchange(BASE_URL + "/v2/user/me", HttpMethod.POST, httpEntity, String.class).getBody();
+            String body = restTemplate.exchange(INFO_BASE_URL + "/v2/user/me", HttpMethod.POST, httpEntity, String.class).getBody();
+
+//            log.info("======= body : " + body);
+
             JsonElement parse = new JsonParser().parse(body);
 
             JsonObject kakaoAccount = parse.getAsJsonObject().get("kakao_account").getAsJsonObject();
 
             String email = kakaoAccount.getAsJsonObject().get("email").getAsString();
 
+//            log.info("email : " + email);
             return new KakaoUserInfoResDto(email, PROVIDER);
 
         }catch (Exception e){

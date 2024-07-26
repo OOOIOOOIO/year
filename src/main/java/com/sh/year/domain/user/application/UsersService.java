@@ -58,13 +58,13 @@ public class UsersService {
     }
 
     public Long isUserExist(KakaoUserInfoResDto kakaoUserInfoResDto) {
-        Optional<Users> byEmailAndProvider = usersQueryRepository.findByEmailAndProvider(kakaoUserInfoResDto.getEmail(), kakaoUserInfoResDto.getProvider());
+        Optional<Users> user = usersQueryRepository.findByEmailAndProvider(kakaoUserInfoResDto.getEmail(), kakaoUserInfoResDto.getProvider());
 
-        if(byEmailAndProvider.isEmpty()){
-            return -1L;
+        if(!user.isEmpty()){
+            return user.get().getUserId();
         }
 
-        return byEmailAndProvider.get().getUserId();
+        return -1L;
     }
 
 

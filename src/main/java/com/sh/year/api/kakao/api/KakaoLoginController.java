@@ -6,7 +6,10 @@ import com.sh.year.api.kakao.api.dto.KakaoLoginResDto;
 import com.sh.year.api.kakao.api.dto.KakaoUserInfoResDto;
 import com.sh.year.domain.user.application.UsersService;
 import com.sh.year.global.jwt.JwtUtils;
+import com.sh.year.global.log.LogTrace;
 import com.sh.year.global.util.kakao.KakaoLoginClient;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Token Controller", description = "Token API")
+@Tag(name = "Kakao Login Controller", description = "Kakao Login API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -40,6 +43,15 @@ public class KakaoLoginController {
      * @param code
      * @return
      */
+    @Operation(
+            summary = "Kakao Login API, RefreshToken 만료시 재로그인",
+            description = "Kakao Login API, RefreshToken 만료시 재로그인"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Kakao 로그인에 성공하였습니다."
+    )
+    @LogTrace
     @GetMapping("/kakao")
     public ResponseEntity<KakaoLoginResDto> kakaoLogin(@RequestParam("code") String code) {
         String kakaoAccessToken = kakaoLoginClient.getAccessToken(code);
@@ -51,7 +63,7 @@ public class KakaoLoginController {
         boolean isExist = false;
         Long userId = -1L;
 
-        if(!(userExist == -1L)){
+        if(userExist != -1L){
             isExist = true;
             userId = userExist; //기존 userId
         }

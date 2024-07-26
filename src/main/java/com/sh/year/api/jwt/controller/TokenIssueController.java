@@ -3,10 +3,13 @@ package com.sh.year.api.jwt.controller;
 import com.sh.year.api.jwt.application.TokenService;
 import com.sh.year.api.jwt.controller.dto.TokenIssueResDto;
 import com.sh.year.global.jwt.JwtUtils;
+import com.sh.year.global.log.LogTrace;
 import com.sh.year.global.resolver.token.reissue.TokenForReIssueFromHeader;
 import com.sh.year.global.resolver.token.reissue.TokenForReIssueFromHeaderDto;
 import com.sh.year.global.resolver.token.userinfo.UserInfoFromHeader;
 import com.sh.year.global.resolver.token.userinfo.UserInfoFromHeaderDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +42,18 @@ public class TokenIssueController {
      * J006
      * --> accessToken 재발급
      */
+    /**
+     * 카카오 최초 로그인 후 사용자 정보 수정
+     */
+    @Operation(
+            summary = "AccessToken 만료시",
+            description = "AccessToken 재발급"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "AccessToken 재발급에 성공하였습니다."
+    )
+    @LogTrace
     @PostMapping("/access")
     public ResponseEntity<String> reissueAccessToken(@TokenForReIssueFromHeader TokenForReIssueFromHeaderDto tokenForReIssueFromHeaderDto) {
 
