@@ -38,7 +38,7 @@ public class BatchClient {
     @Scheduled(cron = "1 0 0 * * *") // 00시 00분 1초에 시작
     public void runCheckCompleteRuleInfo() {
         log.info("===========================================");
-        log.info("일정에 대한 반복 배치를 시작합니다.");
+        log.info("delayGoal, failGoal 배치 시작.");
         log.info("===========================================");
 
         JobParameters jobParameters = new JobParametersBuilder()
@@ -48,7 +48,7 @@ public class BatchClient {
         try {
             jobLauncher.run(createJob, jobParameters);
         } catch (Exception e) {
-            log.error("일정을 생성하는 배치를 실패하였습니다. : ", e);
+            log.error("delayGoal, failGoal 생성 배치 실패. : ", e);
         }
     }
 

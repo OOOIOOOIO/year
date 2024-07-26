@@ -37,7 +37,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BatchConfig {
 
-    private final EntityManagerFactory entityManagerFactory;
     private final CheckDelayGoalTasklet checkDelayGoalTasklet;
     private final RuleRepository ruleRepository;
     private final RuleQueryRepositoryImpl ruleQueryRepository;
@@ -78,6 +77,7 @@ public class BatchConfig {
     @Bean
     @StepScope
     public RepositoryItemReader<Rule> trRuleReader(){
+        log.info("====== DELAY Goal Batch Reader =======");
 
         return new RepositoryItemReaderBuilder<Rule>()
                 .name("trRuleReader")
@@ -98,6 +98,7 @@ public class BatchConfig {
         return new ItemProcessor<Rule, DelayGoal>() {
             @Override
             public DelayGoal process(Rule rule) throws Exception {
+                log.info("====== DELAY Goal Batch Processor ======= ruleId : " + rule.getRuleId());
 
 
                 LocalDate yesterday = LocalDate.now().minusDays(1);
@@ -130,6 +131,7 @@ public class BatchConfig {
     @Bean
     @StepScope
     public RepositoryItemWriter<DelayGoal> trRuleWriter() {
+        log.info("====== DELAY Goal Batch writer =======");
         return new RepositoryItemWriterBuilder<DelayGoal>()
                 .repository(delayGoalRepository)
                 .methodName("save")
@@ -138,7 +140,6 @@ public class BatchConfig {
 //        return null;
 
     }
-
 
     /**
      * ==========================================================================================
