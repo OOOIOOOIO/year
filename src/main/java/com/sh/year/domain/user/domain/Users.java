@@ -22,7 +22,6 @@ public class Users extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
     private String email;
-    private String picture;
     private String provider;
     private String nickname;
     private String profileImg;
@@ -81,7 +80,6 @@ public class Users extends BaseTimeEntity {
 
     public Users update(String email, String picture, String provider){
         this.email = email;
-        this.picture = picture;
         this.provider = provider;
 
         return this;
