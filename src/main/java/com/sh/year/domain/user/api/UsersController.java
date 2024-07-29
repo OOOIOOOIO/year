@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Tag(name = "User", description = "User API")
@@ -24,22 +25,45 @@ public class UsersController {
     private final UsersService usersService;
 
     /**
-     * 카카오 최초 로그인 후 사용자 정보 수정
+     * 카카오 최초 로그인 후 첫 사용자 정보 수정
      */
     @Operation(
-            summary = "Update User Info",
+            summary = "Login 후 처음 User Info 수정",
             description = "유저 정보 수정 "
     )
     @ApiResponse(
             responseCode = "200",
-            description = "유저 정보 수정에 성공하였습니다."
+            description = "로그인 후 유저 정보 수정에 성공하였습니다."
     )
     @LogTrace
     @PutMapping("")
     public ResponseEntity<String> updateUserInfo(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto,
-                                                 UserInfoUpdateReqDto userInfoUpdateReqDto){
+                                                 @RequestParam("img") MultipartFile file,
+                                                 @RequestPart UserInfoUpdateReqDto userInfoUpdateReqDto){
 
-        usersService.updateUserInfo(userInfoFromHeaderDto.getUserId(), userInfoUpdateReqDto);
+        usersService.updateUserInfo(userInfoFromHeaderDto.getUserId(), userInfoUpdateReqDto, file);
+
+        return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+
+    /**
+     * 사용자 프로필(정보) 수정
+     */
+    @Operation(
+            summary = "Update User Profile Info",
+            description = "사용자 프로필(정보) 수정 "
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "사용자 프로필 수정에 성공하였습니다."
+    )
+    @LogTrace
+    @PutMapping("/profile")
+    public ResponseEntity<String> updateUserProfile(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto,
+                                                    @RequestParam("img") MultipartFile file,
+                                                    @RequestPart UserInfoUpdateReqDto userInfoUpdateReqDto){
+
+        usersService.updateUserInfo(userInfoFromHeaderDto.getUserId(), userInfoUpdateReqDto, file);
 
         return new ResponseEntity<>("success", HttpStatus.OK);
     }

@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class UserInfoUpdateReqDto {
 
     private String nickname;
-    private String profileImg;
     private String instagramAccount;
     private String stateMessage;
 

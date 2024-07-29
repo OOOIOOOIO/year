@@ -85,9 +85,9 @@ public class Users extends BaseTimeEntity {
         return this;
     }
 
-    public void updateUserInfo(UserInfoUpdateReqDto userInfoUpdateReqDto) {
+    public void updateUserInfo(UserInfoUpdateReqDto userInfoUpdateReqDto, String newFileName) {
         this.nickname = userInfoUpdateReqDto.getNickname();
-        this.profileImg = userInfoUpdateReqDto.getProfileImg();
+        this.profileImg = newFileName;
         this.instagramAccount = userInfoUpdateReqDto.getInstagramAccount();
         this.stateMessage = userInfoUpdateReqDto.getStateMessage();
     }
