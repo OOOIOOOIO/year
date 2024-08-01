@@ -31,7 +31,6 @@ public class KakaoLoginController {
     private final JwtUtils jwtUtils;
     private final UsersService usersService;
     private final TokenService tokenService;
-    private static final String BEARER = "Bearer ";
 
 
     /**
@@ -74,12 +73,13 @@ public class KakaoLoginController {
 
 
         // token 발급
-        String jwtAccessToken = BEARER + jwtUtils.generateAccessToken(userId, userInfo.getEmail(), userInfo.getProvider());
+        String jwtAccessToken = jwtUtils.generateAccessToken(userId, userInfo.getEmail(), userInfo.getProvider());
         String jwtRefreshToken = jwtUtils.generateRefreshToken(userId, userInfo.getEmail(), userInfo.getProvider());
 
         // redis 저장
         tokenService.uploadAccessTokenToRedis(jwtAccessToken, userId);
         tokenService.uploadRefreshTokenToRedis(jwtRefreshToken, userId);
+        log.info("refersh Token : " + jwtRefreshToken);
 
         return new ResponseEntity<>(new KakaoLoginResDto(jwtAccessToken, jwtRefreshToken, isExist), HttpStatus.OK);
     }
