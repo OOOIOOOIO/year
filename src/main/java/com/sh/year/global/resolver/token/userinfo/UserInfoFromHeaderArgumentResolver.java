@@ -33,7 +33,6 @@ public class UserInfoFromHeaderArgumentResolver implements HandlerMethodArgument
         log.info("=========UserInfoFromHeaderArgumentResolver==========");
 
         String accessToken = jwtUtils.getAccessTokenFromHeader((HttpServletRequest) webRequest.getNativeRequest());
-        String refreshToken = jwtUtils.getRefreshTokenFromHeader((HttpServletRequest) webRequest.getNativeRequest());
 
         JwtClaimDto claimFromAccessToken = jwtUtils.getClaimFromAccessToken(accessToken);
 

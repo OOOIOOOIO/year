@@ -51,10 +51,11 @@ public class BatchConfig {
                                               Step createCheckDelayGoalStep) {
         return new JobBuilder("checkCompleteRuleInfo", jobRepository)
                 .start(createCheckCompleteRuleInfoStep)
+//                .on("FAILED")
+//                .to
                 .next(createCheckDelayGoalStep)
                 .build();
     }
-
 
 
 
@@ -69,8 +70,16 @@ public class BatchConfig {
         return new StepBuilder("checkCompleteRuleInfo", jobRepository)
                 .<Rule, DelayGoal>chunk(500, transactionManager)
                 .reader(trRuleReader())
+                .faultTolerant()
+                .skip(Exception.class)
+                .skipLimit(10)
                 .processor(trRuleProcessor())
                 .writer(trRuleWriter())
+                .faultTolerant()
+                .skip(Exception.class)
+                .skipLimit(5)
+                .retry(Exception.class) // exception 정해주기
+                .retryLimit(2)
                 .build();
     }
 
@@ -91,6 +100,7 @@ public class BatchConfig {
 
     /**
      * 여기서 rci, rai 비교 후 delayGoal 생성
+     * @Transactional(propagation = Propagation.REQUIRES_NEW)
      */
     @Bean
     @StepScope

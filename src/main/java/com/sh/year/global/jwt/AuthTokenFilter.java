@@ -174,7 +174,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private String getRefreshTokenFromRedis(String refreshToken){
         log.info("==== Get Refresh Token From Redis ====");
-        JwtClaimDto claimFromToken = jwtUtils.getClaimFromAccessToken(refreshToken);
+        JwtClaimDto claimFromToken = jwtUtils.getClaimFromRefreshToken(refreshToken);
 
         String refreshTokenFromRedis = tokenService.getTokenFromRedis(RedisConst.REFRESH_TOKEN.prefix() + claimFromToken.getUserId());
         log.info("refreshTokenFromRedis : " + refreshTokenFromRedis);

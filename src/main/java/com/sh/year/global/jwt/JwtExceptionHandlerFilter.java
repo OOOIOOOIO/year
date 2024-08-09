@@ -37,6 +37,7 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
         } catch (UnsupportedJwtException e) {
             handleJwtCustomException(response, new JwtCustomException((JwtCustomErrorCode.UnsupportedJwtException)));
         } catch (IllegalArgumentException e) {
+            log.error("============ ERROR " + e.getMessage());
             handleCustomException(response, new CustomException((CustomErrorCode.IllegalArgumentException)));
         } catch (UsernameNotFoundException e) {
             handleCustomException(response, new CustomException((CustomErrorCode.UsernameNotFoundException)));

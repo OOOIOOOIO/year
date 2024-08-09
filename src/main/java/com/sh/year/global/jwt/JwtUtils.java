@@ -37,7 +37,7 @@ public class JwtUtils {
      */
     public String getAccessTokenFromHeader(HttpServletRequest request) {
 
-        log.info("=========getAccessTokenFromHeader==========");
+        log.info("========= Get AccessToken From Header ==========");
 
         String accessToken = request.getHeader(ACCESS_TOKEN_HEADER_NAME).substring(BEARER.length());
         log.info("=========" + accessToken + "===========");
@@ -50,7 +50,7 @@ public class JwtUtils {
      * header에서 refresh_token 가져오기
      */
     public String getRefreshTokenFromHeader(HttpServletRequest request) {
-        log.info("=========getRefreshTokenFromHeader==========");
+        log.info("========= Get RefreshToken From Header ==========");
         String refreshToken = request.getHeader(REFRESH_TOKEN_HEADER_NAME);
         log.info("=========" + refreshToken + "===========");
 

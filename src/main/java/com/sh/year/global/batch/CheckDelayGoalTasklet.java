@@ -23,6 +23,9 @@ public class CheckDelayGoalTasklet implements Tasklet {
     private final DelayGoalQueryRepositoryImpl delayGoalQueryRepository;
 
 
+    /**
+     * Reader + Writer로만 구성해서 Chunk로 구현하기
+     */
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
         log.info("====== DELAY -> FAIL 상태 변경 Batch========");
