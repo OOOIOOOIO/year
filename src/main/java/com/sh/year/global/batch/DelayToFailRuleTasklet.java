@@ -1,6 +1,6 @@
 package com.sh.year.global.batch;
 
-import com.sh.year.domain.goal.goal.delayGoal.domain.repository.DelayGoalQueryRepositoryImpl;
+import com.sh.year.domain.goal.rule.delayrule.domain.repository.DelayRuleQueryRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.StepContribution;
@@ -18,9 +18,9 @@ import java.time.LocalDate;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CheckDelayGoalTasklet implements Tasklet {
+public class DelayToFailRuleTasklet implements Tasklet {
 
-    private final DelayGoalQueryRepositoryImpl delayGoalQueryRepository;
+    private final DelayRuleQueryRepositoryImpl delayRuleQueryRepository;
 
 
     /**
@@ -31,7 +31,7 @@ public class CheckDelayGoalTasklet implements Tasklet {
         log.info("====== DELAY -> FAIL 상태 변경 Batch========");
         LocalDate yesterday = LocalDate.now().minusDays(1);
 
-        delayGoalQueryRepository.bulkUpdateAboutStatusDelayToFail(yesterday);
+        delayRuleQueryRepository.bulkUpdateAboutStatusDelayToFail(yesterday);
 
         return RepeatStatus.FINISHED;
     }

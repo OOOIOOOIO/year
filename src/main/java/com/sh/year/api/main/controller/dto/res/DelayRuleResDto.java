@@ -13,7 +13,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DelayGoalResDto {
+public class DelayRuleResDto {
 
     private Long delayGoalId;
     private Long smallGoalId;
@@ -25,7 +25,7 @@ public class DelayGoalResDto {
     private RuleResDto ruleResDto;
     private String progress;
 
-    public DelayGoalResDto(SmallGoal smallGoal, Rule rule, CompleteStatus completeStatus, Long delayGoalId, LocalDate endDate) {
+    public DelayRuleResDto(SmallGoal smallGoal, Rule rule, CompleteStatus completeStatus, Long delayGoalId, LocalDate endDate) {
         this.delayGoalId = delayGoalId;
         this.smallGoalId = smallGoal.getSmallGoalId();
         this.title = smallGoal.getTitle();

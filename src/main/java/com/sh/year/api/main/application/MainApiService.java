@@ -1,12 +1,12 @@
 package com.sh.year.api.main.application;
 
 import com.sh.year.api.main.controller.dto.res.BigGoalMainResDto;
-import com.sh.year.api.main.controller.dto.res.DelayGoalResDto;
+import com.sh.year.api.main.controller.dto.res.DelayRuleResDto;
 import com.sh.year.api.main.controller.dto.res.MainResDto;
 import com.sh.year.api.main.controller.dto.res.SmallGoalListForTodayAlertResDto;
 import com.sh.year.domain.goal.goal.biggoal.application.BigGoalService;
 import com.sh.year.domain.goal.goal.biggoal.domain.BigGoal;
-import com.sh.year.domain.goal.goal.delayGoal.application.DelayGoalService;
+import com.sh.year.domain.goal.rule.delayrule.application.DelayRuleService;
 import com.sh.year.domain.goal.goal.smallgoal.application.SmallGoalService;
 import com.sh.year.global.resolver.token.userinfo.UserInfoFromHeaderDto;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class MainApiService {
 
     private final BigGoalService bigGoalService;
     private final SmallGoalService smallGoalService;
-    private final DelayGoalService delayGoalService;
+    private final DelayRuleService delayRuleService;
     public MainResDto mainView(UserInfoFromHeaderDto userInfoFromTokenDto,
                                @PageableDefault(size = 5, sort="createdAt", direction = Sort.Direction.DESC) Pageable pageable){
 
@@ -39,9 +39,29 @@ public class MainApiService {
         List<SmallGoalListForTodayAlertResDto> todayAlertSmallGoalList = smallGoalService.getSmallGoalListForTodayAlert(bigGoalList);
 
         // 유예 리스트 조회
-        List<DelayGoalResDto> delayGoalList = delayGoalService.getDelayGoalList(userInfoFromTokenDto);
+        List<DelayRuleResDto> delayGoalList = delayRuleService.getDelayruleList(userInfoFromTokenDto);
 
-        return new MainResDto(bigGoalListForMain, todayAlertSmallGoalList, delayGoalList);
+        // 생성
+        MainResDto mainResDto = new MainResDto(bigGoalListForMain, todayAlertSmallGoalList, delayGoalList);
+
+        // total progress
+        float totalProgress = getTotalProgress(bigGoalListForMain);
+        mainResDto.setTotalProgress(totalProgress);
+
+        return mainResDto;
+    }
+
+    private float getTotalProgress(List<BigGoalMainResDto> bigGoalListForMain){
+
+        float totalProgress = 0f;
+
+        for(BigGoalMainResDto bigGoalMainResDto: bigGoalListForMain){
+            totalProgress += Float.parseFloat(bigGoalMainResDto.getProgress());
+
+
+        }
+
+        return totalProgress / (float)bigGoalListForMain.size();
     }
 
 

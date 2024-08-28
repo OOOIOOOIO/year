@@ -9,9 +9,9 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DelayGoalListResDto {
-    private List<DelayGoalResDto> delayGoalList;
+    private List<DelayRuleResDto> delayGoalList;
 
-    public DelayGoalListResDto(List<DelayGoalResDto> delayGoalList) {
+    public DelayGoalListResDto(List<DelayRuleResDto> delayGoalList) {
         this.delayGoalList = delayGoalList;
     }
 }

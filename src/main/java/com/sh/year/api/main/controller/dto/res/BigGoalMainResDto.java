@@ -31,6 +31,7 @@ public class BigGoalMainResDto {
         this.progress = String.format("%.5f", progress);
     }
 
+
     public void setSmallGoalCnt(Integer smallGoalCnt) {
         this.smallGoalCnt = smallGoalCnt;
     }

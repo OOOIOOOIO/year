@@ -37,7 +37,7 @@ public class BigGoalController {
      */
     @Operation(
             summary = "큰목표 상세조회 API",
-            description = "큰목표"
+            description = "큰목표 상세 조회"
     )
     @ApiResponse(
             responseCode = "200",
@@ -57,7 +57,7 @@ public class BigGoalController {
      */
     @Operation(
             summary = "큰목표 수정 API",
-            description = "큰목표"
+            description = "큰목표 수정"
     )
     @ApiResponse(
             responseCode = "200",
@@ -79,7 +79,7 @@ public class BigGoalController {
      */
     @Operation(
             summary = "큰목표 리스트로 조회 API",
-            description = "큰목표, 페이징처리"
+            description = "큰목표 리스트로 조회"
     )
     @ApiResponse(
             responseCode = "200",
@@ -100,7 +100,7 @@ public class BigGoalController {
      */
     @Operation(
             summary = "큰목표 저장 API",
-            description = "큰목표"
+            description = "큰목표 저장"
     )
     @ApiResponse(
             responseCode = "200",
@@ -123,7 +123,7 @@ public class BigGoalController {
      */
     @Operation(
             summary = "큰목표 삭제 API",
-            description = "큰목표"
+            description = "큰목표 삭제"
     )
     @ApiResponse(
             responseCode = "200",
@@ -143,7 +143,7 @@ public class BigGoalController {
      */
     @Operation(
             summary = "큰목표 공유여부 변경 API",
-            description = "큰목표"
+            description = "큰목표 공유여부 변경"
     )
     @ApiResponse(
             responseCode = "200",
@@ -162,12 +162,12 @@ public class BigGoalController {
      * 큰목표 달성여부 변경
      */
     @Operation(
-            summary = "큰목표 달성여부 변경 API",
-            description = "큰목표"
+            summary = "큰목표 달성여부 100% 달성시 성공여부 변경 API",
+            description = "큰목표 달성여부 100% 달성시 성공여부 변경"
     )
     @ApiResponse(
             responseCode = "200",
-            description = "큰목표 달성여부 변경에 성공하였습니다."
+            description = "큰목표 성공여부 변경에 성공하였습니다."
     )
     @LogTrace
     @PutMapping("/comp/{bigGoalId}")

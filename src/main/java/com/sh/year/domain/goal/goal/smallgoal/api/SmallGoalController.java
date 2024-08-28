@@ -6,6 +6,8 @@ import com.sh.year.domain.goal.goal.smallgoal.api.dto.res.SmallGoalResDto;
 import com.sh.year.domain.goal.goal.smallgoal.application.SmallGoalService;
 import com.sh.year.global.common.ResponseConst;
 import com.sh.year.global.log.LogTrace;
+import com.sh.year.global.resolver.token.userinfo.UserInfoFromHeader;
+import com.sh.year.global.resolver.token.userinfo.UserInfoFromHeaderDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +33,7 @@ public class SmallGoalController {
      */
     @Operation(
             summary = "작은목표 상세조회 API",
-            description = "작은목표"
+            description = "작은목표 상세 조회"
     )
     @ApiResponse(
             responseCode = "200",
@@ -39,9 +41,10 @@ public class SmallGoalController {
     )
     @LogTrace
     @GetMapping("/{smallGoalId}")
-    public ResponseEntity<SmallGoalResDto> getGoalInfo(@PathVariable(value = "smallGoalId") Long smallGoalId){
+    public ResponseEntity<SmallGoalResDto> getGoalInfo(@PathVariable(value = "smallGoalId") Long smallGoalId,
+                                                       @UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto){
 
-        SmallGoalResDto smallGoalInfo = smallGoalService.getSmallGoalInfo(smallGoalId);
+        SmallGoalResDto smallGoalInfo = smallGoalService.getSmallGoalInfo(smallGoalId, userInfoFromHeaderDto);
 
         return new ResponseEntity<>(smallGoalInfo, HttpStatus.OK);
 
@@ -52,7 +55,7 @@ public class SmallGoalController {
      */
     @Operation(
             summary = "작은목표 리스트로 조회 API",
-            description = "작은목표"
+            description = "작은목표 리스트 조회"
     )
     @ApiResponse(
             responseCode = "200",
@@ -72,7 +75,7 @@ public class SmallGoalController {
      */
     @Operation(
             summary = "작은목표 저장 API",
-            description = "작은목표"
+            description = "작은목표 저장"
     )
     @ApiResponse(
             responseCode = "200",
@@ -94,7 +97,7 @@ public class SmallGoalController {
      */
     @Operation(
             summary = "작은목표 수정 API",
-            description = "작은목표"
+            description = "작은목표 수정"
     )
     @ApiResponse(
             responseCode = "200",
@@ -114,7 +117,7 @@ public class SmallGoalController {
      */
     @Operation(
             summary = "작은목표 삭제 API",
-            description = "작은목표"
+            description = "작은목표 삭제"
     )
     @ApiResponse(
             responseCode = "200",
@@ -134,7 +137,7 @@ public class SmallGoalController {
      */
     @Operation(
             summary = "작은목표 100% 달성시 달성여부 변경 API",
-            description = "작은목표"
+            description = "작은목표 100% 달성 시 달성여부 변경"
     )
     @ApiResponse(
             responseCode = "200",
@@ -153,12 +156,12 @@ public class SmallGoalController {
      * 작은목표 루틴 달성여부 변경
      */
     @Operation(
-            summary = "작은목표 루틴 달성여부 변경 API",
-            description = "작은목표"
+            summary = "작은목표 루틴 성공 처리 API",
+            description = "작은목표 루틴 성공 처리"
     )
     @ApiResponse(
             responseCode = "200",
-            description = "작은목표 루틴 달성여부 변경 성공하였습니다."
+            description = "작은목표 루틴 성공 처리에 성공하였습니다."
     )
     @LogTrace
     @PutMapping("/routine/comp/{ruleId}")

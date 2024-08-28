@@ -1,6 +1,7 @@
 package com.sh.year.domain.goal.goal.smallgoal.api.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sh.year.api.main.controller.dto.res.DelayRuleResDto;
 import com.sh.year.domain.goal.goal.common.CompleteStatus;
 import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
 import lombok.AccessLevel;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,6 +25,8 @@ public class SmallGoalResDto {
     private RuleResDto ruleResDto;
     private String progress;
 
+    private List<DelayRuleResDto> delayGoalList;
+
     public SmallGoalResDto(SmallGoal smallGoal) {
         this.smallGoalId = smallGoal.getSmallGoalId();
         this.title = smallGoal.getTitle();
@@ -35,5 +39,9 @@ public class SmallGoalResDto {
     public void setProgress(float progress) {
 
         this.progress = String.format("%.5f", progress);
+    }
+
+    public void setDelayGoalList(List<DelayRuleResDto> delayGoalList){
+        this.delayGoalList = delayGoalList;
     }
 }

@@ -1,4 +1,4 @@
-package com.sh.year.domain.goal.goal.delayGoal.domain;
+package com.sh.year.domain.goal.rule.delayrule.domain;
 
 
 import com.sh.year.domain.common.BaseTimeEntity;
@@ -16,11 +16,11 @@ import java.time.LocalDate;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DelayGoal extends BaseTimeEntity {
+public class DelayRule extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long delayGoalId;
+    private Long delayRuleId;
     private LocalDate endDate;
     @Enumerated(EnumType.STRING)
     private CompleteStatus completeStatus; // 0 : delay / 1 : comp / -1 : fail
@@ -34,15 +34,15 @@ public class DelayGoal extends BaseTimeEntity {
     private Rule rule;
 
     @Builder
-    private DelayGoal(LocalDate endDate, CompleteStatus completeStatus, Rule rule, Users users) {
+    private DelayRule(LocalDate endDate, CompleteStatus completeStatus, Rule rule, Users users) {
         this.endDate = endDate;
         this.completeStatus = completeStatus;
         this.rule = rule;
         this.users = users;
     }
 
-    public static DelayGoal createDelayGoal(Rule rule, Users users){
-        return DelayGoal.builder()
+    public static DelayRule createDelayGoal(Rule rule, Users users){
+        return DelayRule.builder()
                 .endDate(LocalDate.now().plusDays(2)) // 시작일 포함 3일
                 .completeStatus(CompleteStatus.DELAY) //default : 0
                 .rule(rule)

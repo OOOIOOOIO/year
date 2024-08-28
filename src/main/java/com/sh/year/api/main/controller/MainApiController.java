@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Main View", description = "Main View API")
+@Tag(name = "Main", description = "메인 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -31,7 +31,7 @@ public class MainApiController {
      * 큰목표 상세보기
      */
     @Operation(
-            summary = "Main view API",
+            summary = "Main에서 큰 목표들과 Today 보여줄 목표 보여주기 API",
             description = "큰 목표들과 Today 보여줄 목표 보여주기"
     )
     @ApiResponse(

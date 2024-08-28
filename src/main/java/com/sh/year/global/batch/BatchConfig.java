@@ -1,12 +1,11 @@
 package com.sh.year.global.batch;
 
-import com.sh.year.domain.goal.goal.delayGoal.domain.DelayGoal;
-import com.sh.year.domain.goal.goal.delayGoal.domain.repository.DelayGoalRepository;
+import com.sh.year.domain.goal.rule.delayrule.domain.DelayRule;
+import com.sh.year.domain.goal.rule.delayrule.domain.repository.DelayRuleRepository;
 import com.sh.year.domain.goal.rule.rule.domain.Rule;
 import com.sh.year.domain.goal.rule.rule.domain.repository.RuleQueryRepositoryImpl;
 import com.sh.year.domain.goal.rule.rule.domain.repository.RuleRepository;
 import com.sh.year.domain.user.domain.Users;
-import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -14,7 +13,6 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
@@ -37,10 +35,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BatchConfig {
 
-    private final CheckDelayGoalTasklet checkDelayGoalTasklet;
+    private final DelayToFailRuleTasklet delayToFailRuleTasklet;
     private final RuleRepository ruleRepository;
     private final RuleQueryRepositoryImpl ruleQueryRepository;
-    private final DelayGoalRepository delayGoalRepository;
+    private final DelayRuleRepository delayRuleRepository;
 
     /**
      * 일정을 반복 타입에 맞게 만드는 Job1
@@ -48,12 +46,10 @@ public class BatchConfig {
     @Bean
     public Job createCheckCompleteRuleInfoJob(JobRepository jobRepository,
                                               Step createCheckCompleteRuleInfoStep,
-                                              Step createCheckDelayGoalStep) {
+                                              Step createDelayToFailRuleStep) {
         return new JobBuilder("checkCompleteRuleInfo", jobRepository)
                 .start(createCheckCompleteRuleInfoStep)
-//                .on("FAILED")
-//                .to
-                .next(createCheckDelayGoalStep)
+                .next(createDelayToFailRuleStep)
                 .build();
     }
 
@@ -67,8 +63,8 @@ public class BatchConfig {
     public Step createCheckCompleteRuleInfoStep(JobRepository jobRepository,
                                                 PlatformTransactionManager transactionManager
     ) {
-        return new StepBuilder("checkCompleteRuleInfo", jobRepository)
-                .<Rule, DelayGoal>chunk(500, transactionManager)
+        return new StepBuilder("createCheckCompleteRuleInfoStep", jobRepository)
+                .<Rule, DelayRule>chunk(500, transactionManager)
                 .reader(trRuleReader())
                 .faultTolerant()
                 .skip(Exception.class)
@@ -104,10 +100,10 @@ public class BatchConfig {
      */
     @Bean
     @StepScope
-    public ItemProcessor<Rule, DelayGoal> trRuleProcessor() {
-        return new ItemProcessor<Rule, DelayGoal>() {
+    public ItemProcessor<Rule, DelayRule> trRuleProcessor() {
+        return new ItemProcessor<Rule, DelayRule>() {
             @Override
-            public DelayGoal process(Rule rule) throws Exception {
+            public DelayRule process(Rule rule) throws Exception {
                 log.info("====== DELAY Goal Batch Processor ======= ruleId : " + rule.getRuleId());
 
 
@@ -128,7 +124,7 @@ public class BatchConfig {
                         if(compDays[day] == 0){
                             // delayGoal 생성
                             Users users = rule.getSmallGoal().getBigGoal().getUsers();
-                            return DelayGoal.createDelayGoal(rule, users);
+                            return DelayRule.createDelayGoal(rule, users);
                         }
                     }
                 }
@@ -140,10 +136,10 @@ public class BatchConfig {
 
     @Bean
     @StepScope
-    public RepositoryItemWriter<DelayGoal> trRuleWriter() {
+    public RepositoryItemWriter<DelayRule> trRuleWriter() {
         log.info("====== DELAY Goal Batch writer =======");
-        return new RepositoryItemWriterBuilder<DelayGoal>()
-                .repository(delayGoalRepository)
+        return new RepositoryItemWriterBuilder<DelayRule>()
+                .repository(delayRuleRepository)
                 .methodName("save")
                 .build();
 
@@ -162,9 +158,9 @@ public class BatchConfig {
      */
     @Bean
     @JobScope
-    public Step createCheckDelayGoalStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new StepBuilder("checkDelayGoal", jobRepository)
-                .tasklet(checkDelayGoalTasklet, transactionManager)
+    public Step createDelayToFailRuleStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+        return new StepBuilder("createDelayToFailRuleStep", jobRepository)
+                .tasklet(delayToFailRuleTasklet, transactionManager)
                 .build();
     }
 

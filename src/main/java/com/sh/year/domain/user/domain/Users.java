@@ -2,7 +2,7 @@ package com.sh.year.domain.user.domain;
 
 import com.sh.year.domain.common.BaseTimeEntity;
 import com.sh.year.domain.goal.goal.biggoal.domain.BigGoal;
-import com.sh.year.domain.goal.goal.delayGoal.domain.DelayGoal;
+import com.sh.year.domain.goal.rule.delayrule.domain.DelayRule;
 import com.sh.year.domain.user.api.dto.UserInfoUpdateReqDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -35,7 +35,7 @@ public class Users extends BaseTimeEntity {
     private List<BigGoal> bigGoalList = new ArrayList<>();
 
     @OneToMany(mappedBy = "users", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
-    private List<DelayGoal> delayGoalList = new ArrayList<>();
+    private List<DelayRule> delayRuleList = new ArrayList<>();
 
 
     @Builder
@@ -59,12 +59,12 @@ public class Users extends BaseTimeEntity {
         bigGoal.setUsers(this);
     }
 
-    public void addDelayGoal(DelayGoal delayGoal){
-        if(delayGoal.getUsers() != null){
-            delayGoal.getUsers().getBigGoalList().remove(delayGoal);
+    public void addDelayGoal(DelayRule delayRule){
+        if(delayRule.getUsers() != null){
+            delayRule.getUsers().getBigGoalList().remove(delayRule);
         }
-        this.delayGoalList.add(delayGoal);
-        delayGoal.setUsers(this);
+        this.delayRuleList.add(delayRule);
+        delayRule.setUsers(this);
     }
 
     /**

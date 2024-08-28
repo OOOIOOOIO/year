@@ -17,7 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Small Goal Review", description = "후기 API")
+@Tag(name = "Small Goal Review", description = "작은목표 후기 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -32,7 +32,7 @@ public class SmallGoalReviewController {
      */
     @Operation(
             summary = "작은목표 후기 리스트 조회 API",
-            description = "큰목표"
+            description = "작은목표 후기 리스트 조회"
     )
     @ApiResponse(
             responseCode = "200",
@@ -55,7 +55,7 @@ public class SmallGoalReviewController {
      */
     @Operation(
             summary = "작은목표 후기 저장 API",
-            description = "큰목표"
+            description = "작은목표 후기 저ㅈ작은"
     )
     @ApiResponse(
             responseCode = "200",

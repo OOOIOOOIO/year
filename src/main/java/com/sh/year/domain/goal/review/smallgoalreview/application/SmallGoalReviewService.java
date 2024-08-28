@@ -56,7 +56,7 @@ public class SmallGoalReviewService {
 
 
     /**
-     * 작은목표 후기 저장
+     * 작은목표 후기 저장(멀쩡한 애)
      */
     @LogTrace
     public void saveSmallGoalReview(Long ruleId, SmallGoalReviewReqDto smallGoalReviewReqDto){

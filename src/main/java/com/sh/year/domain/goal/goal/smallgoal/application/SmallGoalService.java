@@ -1,5 +1,6 @@
 package com.sh.year.domain.goal.goal.smallgoal.application;
 
+import com.sh.year.api.main.controller.dto.res.DelayRuleResDto;
 import com.sh.year.api.main.controller.dto.res.SmallGoalListForTodayAlertResDto;
 import com.sh.year.api.main.controller.dto.res.TodayAlertSmallGoalInterface;
 import com.sh.year.domain.goal.goal.biggoal.domain.BigGoal;
@@ -10,6 +11,7 @@ import com.sh.year.domain.goal.goal.smallgoal.api.dto.res.SmallGoalResDto;
 import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
 import com.sh.year.domain.goal.goal.smallgoal.domain.repository.SmallGoalQueryRepositoryImpl;
 import com.sh.year.domain.goal.goal.smallgoal.domain.repository.SmallGoalRepository;
+import com.sh.year.domain.goal.rule.delayrule.application.DelayRuleService;
 import com.sh.year.domain.goal.rule.rule.domain.Rule;
 import com.sh.year.domain.goal.rule.rule.domain.repository.RuleQueryRepositoryImpl;
 import com.sh.year.domain.goal.rule.rule.domain.repository.RuleRepository;
@@ -20,6 +22,7 @@ import com.sh.year.domain.goal.rule.rulerepeatday.domain.RuleRepeatDay;
 import com.sh.year.global.exception.CustomErrorCode;
 import com.sh.year.global.exception.CustomException;
 import com.sh.year.global.log.LogTrace;
+import com.sh.year.global.resolver.token.userinfo.UserInfoFromHeaderDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -47,6 +50,7 @@ public class SmallGoalService {
     private final SmallGoalQueryRepositoryImpl smallGoalQueryRepository;
     private final RuleQueryRepositoryImpl ruleQueryRepository;
     private final RuleRepository ruleRepository;
+    private final DelayRuleService delayRuleService;
 
 
 
@@ -54,7 +58,7 @@ public class SmallGoalService {
      * 작은목표 상세 조회
      */
     @LogTrace
-    public SmallGoalResDto getSmallGoalInfo(Long smallGoalId){
+    public SmallGoalResDto getSmallGoalInfo(Long smallGoalId, UserInfoFromHeaderDto userInfoFromHeaderDto){
 
         SmallGoal smallGoal = smallGoalQueryRepository.findSmallGoalBySmallGoalId(smallGoalId).orElseThrow(() -> new CustomException(CustomErrorCode.NotExistSmallGoal));
 
@@ -71,6 +75,9 @@ public class SmallGoalService {
             smallGoalResDto.getRuleResDto().setCompleteStatus(0);
         }
 
+        // 유예 리스트 조회
+        List<DelayRuleResDto> delayGoalList = delayRuleService.getDelayruleList(userInfoFromHeaderDto);
+        smallGoalResDto.setDelayGoalList(delayGoalList);
 
         smallGoalResDto.setProgress(progress);
 

@@ -2,7 +2,7 @@ package com.sh.year.domain.goal.rule.rule.domain;
 
 
 import com.sh.year.domain.common.BaseTimeEntity;
-import com.sh.year.domain.goal.goal.delayGoal.domain.DelayGoal;
+import com.sh.year.domain.goal.rule.delayrule.domain.DelayRule;
 import com.sh.year.domain.goal.goal.smallgoal.api.dto.req.RuleReqDto;
 import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
 import com.sh.year.domain.goal.review.smallgoalreview.domain.SmallGoalReview;
@@ -48,7 +48,7 @@ public class Rule extends BaseTimeEntity {
     private List<RuleAlertInfo> ruleAlertInfoList = new ArrayList<>();
 
     @OneToMany(mappedBy = "rule", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
-    private List<DelayGoal> delayGoalList = new ArrayList<>();
+    private List<DelayRule> delayRuleList = new ArrayList<>();
 
     @OneToMany(mappedBy = "rule", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<SmallGoalReview> smallGoalReviewList = new ArrayList<>();
@@ -117,13 +117,13 @@ public class Rule extends BaseTimeEntity {
         this.ruleAlertInfoList.add(ruleAlertInfo);
     }
 
-    public void addDelayGoal(DelayGoal delayGoal){
-        if(delayGoal.getRule() != null){
-            delayGoal.getRule().getDelayGoalList().remove(delayGoal);
+    public void addDelayGoal(DelayRule delayRule){
+        if(delayRule.getRule() != null){
+            delayRule.getRule().getDelayRuleList().remove(delayRule);
         }
-        delayGoal.setRule(this);
+        delayRule.setRule(this);
 
-        this.delayGoalList.add(delayGoal);
+        this.delayRuleList.add(delayRule);
     }
 
 

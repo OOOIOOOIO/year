@@ -37,7 +37,7 @@ public class SmallGoalReview extends BaseTimeEntity {
         if(completeStatus == -1){
             this.completeStatus = CompleteStatus.FAIL;
         }
-        else if(completeStatus == 1){
+        else if(completeStatus == 0){
             this.completeStatus = CompleteStatus.DELAY;
         }
         else{

@@ -10,16 +10,22 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MainResDto {
 
+    private String totalProgress;
     private List<BigGoalMainResDto> bigGoalMainResDtoList;
     private List<SmallGoalListForTodayAlertResDto> smallGoalListForTodayAlertResDtoList;
+    private List<DelayRuleResDto> delayRuleResDtoList;
 
-    private List<DelayGoalResDto> delayGoalResDtoList;
 
     public MainResDto(List<BigGoalMainResDto> bigGoalMainResDtoList,
                       List<SmallGoalListForTodayAlertResDto> smallGoalListForTodayAlertResDtoList,
-                      List<DelayGoalResDto> delayGoalResDtoList) {
+                      List<DelayRuleResDto> delayRuleResDtoList) {
         this.bigGoalMainResDtoList = bigGoalMainResDtoList;
         this.smallGoalListForTodayAlertResDtoList = smallGoalListForTodayAlertResDtoList;
-        this.delayGoalResDtoList = delayGoalResDtoList;
+        this.delayRuleResDtoList = delayRuleResDtoList;
     }
+
+    public void setTotalProgress(float totalProgress) {
+        this.totalProgress = String.format("%.5f", totalProgress);
+    }
+
 }

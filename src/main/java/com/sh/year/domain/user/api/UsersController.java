@@ -1,5 +1,6 @@
 package com.sh.year.domain.user.api;
 
+import com.sh.year.domain.user.api.dto.UserInfoResDto;
 import com.sh.year.domain.user.api.dto.UserInfoUpdateReqDto;
 import com.sh.year.domain.user.application.UsersService;
 import com.sh.year.global.log.LogTrace;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
-@Tag(name = "User", description = "User API")
+@Tag(name = "User", description = "회원 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
@@ -24,44 +25,44 @@ public class UsersController {
 
     private final UsersService usersService;
 
+
     /**
-     * 카카오 최초 로그인 후 첫 사용자 정보 수정
+     * 마이페이지, 회원 정보 불러오기
      */
     @Operation(
-            summary = "Login 후 처음 User Info 수정",
-            description = "유저 정보 수정 "
+            summary = "마이페이지, 회원 정보 조회 API",
+            description = "회원 정보 조회 "
     )
     @ApiResponse(
             responseCode = "200",
-            description = "로그인 후 유저 정보 수정에 성공하였습니다."
+            description = "회원 정보 조회에 성공하였습니다."
+    )
+    @LogTrace
+    @GetMapping("")
+    public ResponseEntity<UserInfoResDto> getUserInfo(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto){
+
+        UserInfoResDto userInfo = usersService.getUserInfo(userInfoFromHeaderDto.getUserId());
+
+        return new ResponseEntity<>(userInfo, HttpStatus.OK);
+    }
+
+
+    /**
+     * 카카오 최초 로그인 후 & 사용자 정보 수정
+     */
+    @Operation(
+            summary = "최초 로그인 후 & MyPage사용자 정보 수정 API",
+            description = "최초 로그인 후 & MyPage사용자 정보 수정"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "유저 정보 수정에 성공하였습니다."
     )
     @LogTrace
     @PutMapping("")
     public ResponseEntity<String> updateUserInfo(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto,
-                                                 @RequestParam("img") MultipartFile file,
-                                                 @RequestPart UserInfoUpdateReqDto userInfoUpdateReqDto){
-
-        usersService.updateUserInfo(userInfoFromHeaderDto.getUserId(), userInfoUpdateReqDto, file);
-
-        return new ResponseEntity<>("success", HttpStatus.OK);
-    }
-
-    /**
-     * 사용자 프로필(정보) 수정
-     */
-    @Operation(
-            summary = "Update User Profile Info",
-            description = "사용자 프로필(정보) 수정 "
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "사용자 프로필 수정에 성공하였습니다."
-    )
-    @LogTrace
-    @PutMapping("/profile")
-    public ResponseEntity<String> updateUserProfile(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto,
-                                                    @RequestParam("img") MultipartFile file,
-                                                    @RequestPart UserInfoUpdateReqDto userInfoUpdateReqDto){
+                                                 @RequestPart(value = "img", required = false) MultipartFile file,
+                                                 @RequestPart(value = "userInfo") UserInfoUpdateReqDto userInfoUpdateReqDto){
 
         usersService.updateUserInfo(userInfoFromHeaderDto.getUserId(), userInfoUpdateReqDto, file);
 
@@ -70,10 +71,10 @@ public class UsersController {
 
 
     /**
-     * 유저 확인
+     * 유저 유무 확인
      */
     @Operation(
-            summary = "Check User Existence",
+            summary = "유저가 존재하는지 확인 API",
             description = "유저 존재 유무 확인 "
     )
     @ApiResponse(
@@ -81,7 +82,7 @@ public class UsersController {
             description = "존재 시 1, 없을 시 0 반환"
     )
     @LogTrace
-    @GetMapping("")
+    @GetMapping("/check")
     public ResponseEntity<Integer> updateUserInfo(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromHeaderDto){
 
         int userExist = usersService.isUserExist(userInfoFromHeaderDto);
