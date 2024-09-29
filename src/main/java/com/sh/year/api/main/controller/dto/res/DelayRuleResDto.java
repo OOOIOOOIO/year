@@ -1,10 +1,10 @@
 package com.sh.year.api.main.controller.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.sh.year.domain.goal.goal.common.CompleteStatus;
-import com.sh.year.domain.goal.goal.smallgoal.api.dto.res.RuleResDto;
-import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
-import com.sh.year.domain.goal.rule.rule.domain.Rule;
+import com.sh.year.domain.common.CompleteStatus;
+import com.sh.year.domain.smallgoal.smallgoal.api.dto.res.RuleResDto;
+import com.sh.year.domain.smallgoal.smallgoal.domain.SmallGoal;
+import com.sh.year.domain.rule.rule.domain.Rule;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

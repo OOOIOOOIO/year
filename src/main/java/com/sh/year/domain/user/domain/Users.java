@@ -1,8 +1,8 @@
 package com.sh.year.domain.user.domain;
 
 import com.sh.year.domain.common.BaseTimeEntity;
-import com.sh.year.domain.goal.goal.biggoal.domain.BigGoal;
-import com.sh.year.domain.goal.rule.delayrule.domain.DelayRule;
+import com.sh.year.domain.biggoal.biggoal.domain.BigGoal;
+import com.sh.year.domain.rule.delayrule.domain.DelayRule;
 import com.sh.year.domain.user.api.dto.UserInfoUpdateReqDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

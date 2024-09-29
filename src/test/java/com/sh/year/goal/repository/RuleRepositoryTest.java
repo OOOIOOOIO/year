@@ -1,10 +1,10 @@
 package com.sh.year.goal.repository;
 
-import com.sh.year.domain.goal.rule.rule.domain.Rule;
-import com.sh.year.domain.goal.rule.rule.domain.repository.RuleQueryRepositoryImpl;
-import com.sh.year.domain.goal.rule.rule.domain.repository.RuleRepository;
-import com.sh.year.domain.goal.rule.rulecompleteinfo.domain.RuleCompleteInfo;
-import com.sh.year.domain.goal.rule.rulecompleteinfo.domain.repository.RuleCompleteInfoRepository;
+import com.sh.year.domain.rule.rule.domain.Rule;
+import com.sh.year.domain.rule.rule.domain.repository.RuleQueryRepositoryImpl;
+import com.sh.year.domain.rule.rule.domain.repository.RuleRepository;
+import com.sh.year.domain.rule.rulecompleteinfo.domain.RuleCompleteInfo;
+import com.sh.year.domain.rule.rulecompleteinfo.domain.repository.RuleCompleteInfoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

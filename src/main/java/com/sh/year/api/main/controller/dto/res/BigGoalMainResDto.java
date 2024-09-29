@@ -1,7 +1,7 @@
 package com.sh.year.api.main.controller.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.sh.year.domain.goal.goal.biggoal.domain.BigGoal;
+import com.sh.year.domain.biggoal.biggoal.domain.BigGoal;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

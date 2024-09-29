@@ -2,10 +2,10 @@ package com.sh.year.goal.repository;
 
 import com.sh.year.api.main.controller.dto.res.SmallGoalListForTodayAlertResDto;
 import com.sh.year.api.main.controller.dto.res.TodayAlertSmallGoalInterface;
-import com.sh.year.domain.goal.goal.smallgoal.domain.repository.SmallGoalRepository;
-import com.sh.year.domain.goal.rule.rule.domain.Rule;
-import com.sh.year.domain.goal.rule.rule.domain.repository.RuleRepository;
-import com.sh.year.domain.goal.rule.rulecompleteinfo.dto.RuleCompleteInfoDto;
+import com.sh.year.domain.smallgoal.smallgoal.domain.repository.SmallGoalRepository;
+import com.sh.year.domain.rule.rule.domain.Rule;
+import com.sh.year.domain.rule.rule.domain.repository.RuleRepository;
+import com.sh.year.domain.rule.rulecompleteinfo.dto.RuleCompleteInfoDto;
 import com.sh.year.global.exception.CustomErrorCode;
 import com.sh.year.global.exception.CustomException;
 import jakarta.transaction.Transactional;

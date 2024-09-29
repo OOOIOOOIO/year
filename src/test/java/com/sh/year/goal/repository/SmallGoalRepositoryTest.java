@@ -1,8 +1,8 @@
 package com.sh.year.goal.repository;
 
 
-import com.sh.year.domain.goal.goal.smallgoal.domain.SmallGoal;
-import com.sh.year.domain.goal.goal.smallgoal.domain.repository.SmallGoalQueryRepositoryImpl;
+import com.sh.year.domain.smallgoal.smallgoal.domain.SmallGoal;
+import com.sh.year.domain.smallgoal.smallgoal.domain.repository.SmallGoalQueryRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

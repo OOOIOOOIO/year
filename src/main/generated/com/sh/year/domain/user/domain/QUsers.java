@@ -22,12 +22,12 @@ public class QUsers extends EntityPathBase<Users> {
 
     public final com.sh.year.domain.common.QBaseTimeEntity _super = new com.sh.year.domain.common.QBaseTimeEntity(this);
 
-    public final ListPath<com.sh.year.domain.goal.goal.biggoal.domain.BigGoal, com.sh.year.domain.goal.goal.biggoal.domain.QBigGoal> bigGoalList = this.<com.sh.year.domain.goal.goal.biggoal.domain.BigGoal, com.sh.year.domain.goal.goal.biggoal.domain.QBigGoal>createList("bigGoalList", com.sh.year.domain.goal.goal.biggoal.domain.BigGoal.class, com.sh.year.domain.goal.goal.biggoal.domain.QBigGoal.class, PathInits.DIRECT2);
+    public final ListPath<com.sh.year.domain.biggoal.biggoal.domain.BigGoal, com.sh.year.domain.biggoal.biggoal.domain.QBigGoal> bigGoalList = this.<com.sh.year.domain.biggoal.biggoal.domain.BigGoal, com.sh.year.domain.biggoal.biggoal.domain.QBigGoal>createList("bigGoalList", com.sh.year.domain.biggoal.biggoal.domain.BigGoal.class, com.sh.year.domain.biggoal.biggoal.domain.QBigGoal.class, PathInits.DIRECT2);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
-    public final ListPath<com.sh.year.domain.goal.rule.delayrule.domain.DelayRule, com.sh.year.domain.goal.rule.delayrule.domain.QDelayRule> delayRuleList = this.<com.sh.year.domain.goal.rule.delayrule.domain.DelayRule, com.sh.year.domain.goal.rule.delayrule.domain.QDelayRule>createList("delayRuleList", com.sh.year.domain.goal.rule.delayrule.domain.DelayRule.class, com.sh.year.domain.goal.rule.delayrule.domain.QDelayRule.class, PathInits.DIRECT2);
+    public final ListPath<com.sh.year.domain.rule.delayrule.domain.DelayRule, com.sh.year.domain.rule.delayrule.domain.QDelayRule> delayRuleList = this.<com.sh.year.domain.rule.delayrule.domain.DelayRule, com.sh.year.domain.rule.delayrule.domain.QDelayRule>createList("delayRuleList", com.sh.year.domain.rule.delayrule.domain.DelayRule.class, com.sh.year.domain.rule.delayrule.domain.QDelayRule.class, PathInits.DIRECT2);
 
     public final StringPath email = createString("email");
 

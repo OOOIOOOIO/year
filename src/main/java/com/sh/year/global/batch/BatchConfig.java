@@ -1,10 +1,10 @@
 package com.sh.year.global.batch;
 
-import com.sh.year.domain.goal.rule.delayrule.domain.DelayRule;
-import com.sh.year.domain.goal.rule.delayrule.domain.repository.DelayRuleRepository;
-import com.sh.year.domain.goal.rule.rule.domain.Rule;
-import com.sh.year.domain.goal.rule.rule.domain.repository.RuleQueryRepositoryImpl;
-import com.sh.year.domain.goal.rule.rule.domain.repository.RuleRepository;
+import com.sh.year.domain.rule.delayrule.domain.DelayRule;
+import com.sh.year.domain.rule.delayrule.domain.repository.DelayRuleRepository;
+import com.sh.year.domain.rule.rule.domain.Rule;
+import com.sh.year.domain.rule.rule.domain.repository.RuleQueryRepositoryImpl;
+import com.sh.year.domain.rule.rule.domain.repository.RuleRepository;
 import com.sh.year.domain.user.domain.Users;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,8 +1,6 @@
 package com.sh.year.goal.appiication.SmallGoalServiceTest;
 
-import com.sh.year.domain.goal.goal.smallgoal.application.SmallGoalService;
-import com.sh.year.domain.goal.rule.rule.domain.Rule;
-import com.sh.year.domain.goal.rule.rulecompleteinfo.domain.RuleCompleteInfo;
+import com.sh.year.domain.smallgoal.smallgoal.application.SmallGoalService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

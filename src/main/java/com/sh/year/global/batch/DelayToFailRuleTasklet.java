@@ -1,6 +1,6 @@
 package com.sh.year.global.batch;
 
-import com.sh.year.domain.goal.rule.delayrule.domain.repository.DelayRuleQueryRepositoryImpl;
+import com.sh.year.domain.rule.delayrule.domain.repository.DelayRuleQueryRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.StepContribution;
