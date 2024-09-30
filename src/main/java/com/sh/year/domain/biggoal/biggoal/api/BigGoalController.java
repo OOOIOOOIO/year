@@ -175,7 +175,7 @@ public class BigGoalController {
             description = "성공한 큰목표 상세 조회에 성공하였습니다."
     )
     @LogTrace
-    @GetMapping("/comp/{bigGoalId}")
+    @GetMapping("/comp/info/{bigGoalId}")
     public ResponseEntity<BigGoalCompleteInfoResDto> getCompleteBigGoalInfo(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto,
                                                                     @PathVariable(value = "bigGoalId") Long bigGoalId){
 
