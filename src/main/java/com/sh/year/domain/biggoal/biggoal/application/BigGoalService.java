@@ -171,14 +171,14 @@ public class BigGoalService {
 
             if(currentYear == year) currentYearCompleteBigGoalCnt = bigGoalList.size();
 
-            float totalProgress = 0f;
+            float totalProgress = 0f; // 해당 연도 전체의 progress
             BigGoalCompleteYearAndProgressResDto bigGoalCompleteYearAndProgressResDto = new BigGoalCompleteYearAndProgressResDto(year);
 
             for(BigGoal bigGoal : bigGoalList){
 
                 List<SmallGoal> smallGoalList = bigGoal.getSmallGoalList();
 
-                float progress = calculateBigGoalProgressByEntity(smallGoalList);;
+                float progress = calculateBigGoalProgressByEntity(smallGoalList);
 
                 totalProgress += progress;
 
@@ -223,7 +223,7 @@ public class BigGoalService {
 
             bigGoalMainResDto.setSmallGoalCnt(smallGoalSize);
 
-            float progress = 100f;
+            float progress = calculateBigGoalProgressByEntity(smallGoalList); // bigGoal 별 progress
 
             bigGoalMainResDto.setProgress(progress);
 
