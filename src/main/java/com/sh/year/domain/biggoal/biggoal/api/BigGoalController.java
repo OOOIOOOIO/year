@@ -89,7 +89,7 @@ public class BigGoalController {
     public ResponseEntity<BigGoalListResDto> getBigGoalList(@UserInfoFromHeader UserInfoFromHeaderDto userInfoFromTokenDto,
                                                             @PageableDefault(size = 5, sort="createdAt", direction = Sort.Direction.DESC) Pageable pageable){
 
-        List<BigGoalMainResDto> bigGoalList = bigGoalService.getBigGoalPaging(userInfoFromTokenDto, pageable);
+        List<BigGoalMainResDto> bigGoalList = bigGoalService.getBigGoalList(userInfoFromTokenDto, pageable);
 
         return new ResponseEntity<>(new BigGoalListResDto(bigGoalList), HttpStatus.OK);
     }

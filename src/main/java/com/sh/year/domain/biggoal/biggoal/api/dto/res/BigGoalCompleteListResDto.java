@@ -14,7 +14,7 @@ public class BigGoalCompleteListResDto {
     private int currentYearBigGoalCnt;
     private List<BigGoalMainResDto> bigGoalMainResDtoList;
 
-    public BigGoalCompleteListResDto(int currentYearBㅋigGoalCnt, List<BigGoalMainResDto> bigGoalMainResDtoList) {
+    public BigGoalCompleteListResDto(int currentYearBigGoalCnt, List<BigGoalMainResDto> bigGoalMainResDtoList) {
         this.currentYearBigGoalCnt = currentYearBigGoalCnt;
         this.bigGoalMainResDtoList = bigGoalMainResDtoList;
     }

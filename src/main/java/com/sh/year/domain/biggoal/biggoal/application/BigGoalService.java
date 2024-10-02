@@ -73,14 +73,48 @@ public class BigGoalService {
     /**
      * 큰 목표 리스트 조회 페이징 처리
      *
+     * 성취한 목표 제외
+     *
      */
     @LogTrace
-    public List<BigGoalMainResDto> getBigGoalPaging(UserInfoFromHeaderDto userInfoFromTokenDto,
+    public List<BigGoalMainResDto> getMainViewAPi(UserInfoFromHeaderDto userInfoFromTokenDto,
+                                                  Pageable pageable){
+        List<BigGoal> bigGoalList = bigGoalRepository.findAllByUsersAndCompleteStatusNotComp(userInfoFromTokenDto.getUserId(), pageable);
+
+        List<BigGoalMainResDto> bigGoalMainResDtoList = new ArrayList<>();
+
+        for(BigGoal bigGoal : bigGoalList){
+
+            BigGoalMainResDto bigGoalMainResDto = new BigGoalMainResDto(bigGoal);
+
+            List<SmallGoal> smallGoalList = bigGoal.getSmallGoalList();
+
+            int smallGoalSize = smallGoalList.size();
+
+            bigGoalMainResDto.setSmallGoalCnt(smallGoalSize);
+
+            float progress = calculateBigGoalProgressByEntity(smallGoalList);
+
+            bigGoalMainResDto.setProgress(progress);
+
+            bigGoalMainResDtoList.add(bigGoalMainResDto);
+
+        }
+
+        return bigGoalMainResDtoList;
+
+    }
+
+    /**
+     * 큰 목표 리스트 조회 페이징 처리
+     *
+     */
+    @LogTrace
+    public List<BigGoalMainResDto> getBigGoalList(UserInfoFromHeaderDto userInfoFromTokenDto,
                                                   Pageable pageable){
         Users users = getUsers(userInfoFromTokenDto);
 
         List<BigGoal> bigGoalList = bigGoalRepository.findAllByUsers(users, pageable);
-
 
         List<BigGoalMainResDto> bigGoalMainResDtoList = new ArrayList<>();
 
