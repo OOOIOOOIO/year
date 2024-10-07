@@ -29,12 +29,22 @@ public class MainApiService {
     public MainResDto mainView(UserInfoFromHeaderDto userInfoFromTokenDto,
                                @PageableDefault(size = 5, sort="createdAt", direction = Sort.Direction.DESC) Pageable pageable){
 
-        // bigGoal 리스트 조회, 페이징
-//        List<BigGoalMainResDto> bigGoalListForMain = bigGoalService.getBigGoalListForMain(userInfoFromTokenDto);
-        List<BigGoalMainResDto> bigGoalListForMain = bigGoalService.getBigGoalPaging(userInfoFromTokenDto, pageable);
 
-        // bigGoal 전체 조회
+        /**
+         * 1. 완료된 BigGoal 제외한 BigGoal List 조회
+         *
+         * 2. 그 BigGoal들 중에서 오늘 알림이 필요한 애들 SmallGoal 리스트 조회
+         *
+         * 3. 완료된 BigGoal 제외하고 그리고 유예된 애들 조회
+         *
+         */
+        // bigGoal 리스트 조회, 페이징(COMP 제외)
+//        List<BigGoalMainResDto> bigGoalListForMain = bigGoalService.getBigGoalListForMain(userInfoFromTokenDto);
+        List<BigGoalMainResDto> bigGoalListForMain = bigGoalService.getMainViewAPi(userInfoFromTokenDto, pageable);
+
+        // bigGoal 전체 조회(COMP 제외)
         List<BigGoal> bigGoalList = bigGoalService.getBigGoalListForMain(userInfoFromTokenDto);
+
         // today smallGoal 리스트 조회
         List<SmallGoalListForTodayAlertResDto> todayAlertSmallGoalList = smallGoalService.getSmallGoalListForTodayAlert(bigGoalList);
 

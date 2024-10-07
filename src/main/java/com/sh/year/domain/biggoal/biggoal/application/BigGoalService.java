@@ -315,7 +315,7 @@ public class BigGoalService {
     public List<BigGoal> getBigGoalListForMain(UserInfoFromHeaderDto userInfoFromHeaderDto){
 //        List<BigGoal> bigGoalList = bigGoalQueryRepository.getBigGoalListByUserId(userInfoFromHeaderDto.getUserId());
         Users users = getUsers(userInfoFromHeaderDto);
-        List<BigGoal> bigGoalList = bigGoalRepository.findAllByUsers(users);
+        List<BigGoal> bigGoalList = bigGoalRepository.findAllByUsersAndCompleteStatusNotComp(users.getUserId());
 
         return bigGoalList;
 

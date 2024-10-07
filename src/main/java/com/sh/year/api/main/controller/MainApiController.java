@@ -28,7 +28,7 @@ public class MainApiController {
 
     private final MainApiService mainApiService;
     /**
-     * 큰목표 상세보기
+     * Main
      */
     @Operation(
             summary = "Main에서 큰 목표들과 Today 보여줄 목표 보여주기 API",

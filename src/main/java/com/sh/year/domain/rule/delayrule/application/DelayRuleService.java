@@ -1,6 +1,7 @@
 package com.sh.year.domain.rule.delayrule.application;
 
 import com.sh.year.api.main.controller.dto.res.DelayRuleResDto;
+import com.sh.year.domain.common.CompleteStatus;
 import com.sh.year.domain.smallgoal.review.api.dto.req.SmallGoalReviewReqDto;
 import com.sh.year.domain.smallgoal.review.domain.SmallGoalReview;
 import com.sh.year.domain.smallgoal.review.domain.repository.SmallGoalReviewRepository;
@@ -76,18 +77,23 @@ public class DelayRuleService {
 
             SmallGoal smallGoal = rule.getSmallGoal();// smallGoal 1:1
 
-            DelayRuleResDto delayRuleResDto = new DelayRuleResDto(smallGoal, rule, delayRule.getCompleteStatus(), delayRule.getDelayRuleId(), delayRule.getEndDate());
+            if(!(smallGoal.getBigGoal().getCompleteStatus().equals(CompleteStatus.COMP))){ // bigGoal
+                DelayRuleResDto delayRuleResDto = new DelayRuleResDto(smallGoal, rule, delayRule.getCompleteStatus(), delayRule.getDelayRuleId(), delayRule.getEndDate());
 
-            List<RuleCompleteInfoDto> ruleCompleteInfoDtoList = delayRuleResDto.getRuleResDto().getRuleCompleteInfoDtoList();
+                List<RuleCompleteInfoDto> ruleCompleteInfoDtoList = delayRuleResDto.getRuleResDto().getRuleCompleteInfoDtoList();
 
-            float progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
+                float progress = calculateProgress(ruleCompleteInfoDtoList, ruleCompleteInfoDtoList.get(0).getTotalDayCnt());
 
-            delayRuleResDto.setProgress(progress);
+                delayRuleResDto.setProgress(progress);
 
-            int completeStatus = checkRuleCompleteStatus(delayRuleResDto.getRuleResDto().getRuleCompleteInfoDtoList(), delayRule.getCreatedAt().toLocalDate().minusDays(1));
-            delayRuleResDto.getRuleResDto().setCompleteStatus(completeStatus);
+                int completeStatus = checkRuleCompleteStatus(delayRuleResDto.getRuleResDto().getRuleCompleteInfoDtoList(), delayRule.getCreatedAt().toLocalDate().minusDays(1));
+                delayRuleResDto.getRuleResDto().setCompleteStatus(completeStatus);
 
-            delayRuleResDtoList.add(delayRuleResDto);
+                delayRuleResDtoList.add(delayRuleResDto);
+
+            }
+
+
         }
 
         return delayRuleResDtoList;

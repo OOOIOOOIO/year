@@ -22,6 +22,12 @@ public interface BigGoalRepository extends JpaRepository<BigGoal, Long> {
             "and bg.completeStatus != com.sh.year.domain.common.CompleteStatus.COMP")
     List<BigGoal> findAllByUsersAndCompleteStatusNotComp(@Param(value = "userId") Long userId, Pageable pageable);
 
+    @Query(value = "select bg " +
+            "from BigGoal bg " +
+            "where bg.users.userId = :userId " +
+            "and bg.completeStatus != com.sh.year.domain.common.CompleteStatus.COMP")
+    List<BigGoal> findAllByUsersAndCompleteStatusNotComp(@Param(value = "userId") Long userId);
+
     // 전체 성공한
     @Query(value = "select bg " +
             "from BigGoal bg " +
